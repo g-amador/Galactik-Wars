@@ -1,0 +1,262 @@
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\background.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\blank.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_able.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_mute.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_ready.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_talking.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\gradient.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\scifi_over.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\B1_stars.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\blueSpace.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\circle.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\network.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_back.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_rocket.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pea_proj.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\space1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\space2.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\space3.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\sunnySpace.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\starfield.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\gamefont.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\Lucida Console.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\menufont.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid1.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_rocket.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\pea_proj.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_pencil.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_saucer.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_wedge.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_pencil.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_saucer.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_wedge.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\sphere.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid1%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_back%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_rocket%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pea_proj%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\GalactikWars.xgs
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xwb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xwb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xsb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xsb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.exe
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.pdb
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.obj.x86.Debug.Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.Resources.resources
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.csproj.GenerateResource.Cache
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.exe
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.pdb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\background.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\blank.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_able.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_mute.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_ready.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_talking.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\gradient.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\circle.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\network.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_back.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_rocket.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pea_proj.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\starfield.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\gamefont.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\Lucida Console.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\menufont.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_rocket.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\pea_proj.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_pencil.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_saucer.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_wedge.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_pencil.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_saucer.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_wedge.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\sphere.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_back%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_rocket%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pea_proj%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\GalactikWars.xgs
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xwb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xwb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xsb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xsb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.exe
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.pdb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.obj.x86.Debug.Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.Resources.resources
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.csproj.GenerateResource.Cache
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.exe
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.pdb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid2.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid2%0.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid2.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\aurora.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\galaxy.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula2.xnb
+C:\Documents and Settings\NoSoulApophis\desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\planets.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\multicolored.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\background.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\blank.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_able.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_mute.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_ready.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_talking.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\gradient.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\circle.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\network.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_back.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_rocket.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pea_proj.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p1_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p2_diff_v1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\starfield.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid2.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\aurora.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\galaxy.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula2.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\planets.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\multicolored.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\gamefont.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\Lucida Console.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\menufont.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid1.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_rocket.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\pea_proj.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid2.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_pencil.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_saucer.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_wedge.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_pencil.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_saucer.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_wedge.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\sphere.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_back%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_rocket%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pea_proj%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid2%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p1_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p2_diff_v1%0.xnb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\GalactikWars.xgs
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xwb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xwb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xsb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xsb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.exe
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.pdb
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.obj.x86.Debug.Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.Resources.resources
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.csproj.GenerateResource.Cache
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.exe
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.pdb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\background.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\blank.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_able.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_mute.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_ready.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_talking.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\gradient.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\circle.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\network.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_back.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_rocket.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pea_proj.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p1_diff_v1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p2_diff_v1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p1_diff_v1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p2_diff_v1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p1_diff_v1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p2_diff_v1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\starfield.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid2.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\aurora.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\galaxy.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula2.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\planets.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\multicolored.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\gamefont.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\Lucida Console.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\menufont.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid1.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_rocket.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\pea_proj.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid2.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_pencil.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_saucer.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_wedge.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_pencil.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_saucer.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_wedge.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\sphere.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid1%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_back%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_rocket%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pea_proj%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid2%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p1_diff_v1%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p1_diff_v1%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p1_diff_v1%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p2_diff_v1%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p2_diff_v1%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p2_diff_v1%0.xnb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\GalactikWars.xgs
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xwb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xwb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Effects.xsb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Audio\Music.xsb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.exe
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\GalactikWars.pdb
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.obj.x86.Debug.Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.Resources.resources
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.csproj.GenerateResource.Cache
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.exe
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\obj\x86\Debug\GalactikWars.pdb

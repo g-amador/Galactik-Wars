@@ -1,0 +1,5 @@
+Content\Audio\GalactikWars.xgs
+Content\Audio\Effects.xwb
+Content\Audio\Music.xwb
+Content\Audio\Effects.xsb
+Content\Audio\Music.xsb

@@ -1,0 +1,8 @@
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\NoSoulApophis\desktop\GalactikWars\GalactikWars\Content\obj\x86\Debug\Audio\GalactikWars.xml
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\NoSoulApophis\Desktop\xna_cadeira\GalactikWars\GalactikWars\Content\obj\x86\Debug\Audio\GalactikWars.xml
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\NoSoulApophis\Desktop\CD\GalactikWars\GalactikWars\Content\obj\x86\Debug\Audio\GalactikWars.xml
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\Content\obj\x86\Debug\Audio\GalactikWars.xml

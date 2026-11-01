@@ -1,0 +1,702 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline" xmlns:Graphics="Microsoft.Xna.Framework.Graphics" xmlns:Processors="Microsoft.Xna.Framework.Content.Pipeline.Processors">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>background.png</Source>
+      <Name>background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\background.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>blank.png</Source>
+      <Name>blank</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\blank.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>chat_able.png</Source>
+      <Name>chat_able</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_able.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>chat_mute.png</Source>
+      <Name>chat_mute</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_mute.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>chat_ready.png</Source>
+      <Name>chat_ready</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_ready.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>chat_talking.png</Source>
+      <Name>chat_talking</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\chat_talking.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>gradient.png</Source>
+      <Name>gradient</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\gradient.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\asteroid1.tga</Source>
+      <Name>Textures\asteroid1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid1.xnb</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\circle.tga</Source>
+      <Name>Textures\circle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\circle.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\network.tga</Source>
+      <Name>Textures\network</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\network.xnb</Output>
+      <Time>2008-05-09T19:08:20+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\p1_back.tga</Source>
+      <Name>Textures\p1_back</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_back.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\p1_rocket.tga</Source>
+      <Name>Textures\p1_rocket</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\p1_rocket.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\pea_proj.tga</Source>
+      <Name>Textures\pea_proj</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pea_proj.xnb</Output>
+      <Time>2008-05-21T00:01:26+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\pencil_p1_diff_v1.tga</Source>
+      <Name>Textures\pencil_p1_diff_v1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p1_diff_v1.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\pencil_p2_diff_v1.tga</Source>
+      <Name>Textures\pencil_p2_diff_v1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\pencil_p2_diff_v1.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\saucer_p1_diff_v1.tga</Source>
+      <Name>Textures\saucer_p1_diff_v1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p1_diff_v1.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\saucer_p2_diff_v1.tga</Source>
+      <Name>Textures\saucer_p2_diff_v1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\saucer_p2_diff_v1.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\wedge_p1_diff_v1.tga</Source>
+      <Name>Textures\wedge_p1_diff_v1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p1_diff_v1.xnb</Output>
+      <Time>2008-03-06T16:15:12+00:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\wedge_p2_diff_v1.tga</Source>
+      <Name>Textures\wedge_p2_diff_v1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\wedge_p2_diff_v1.xnb</Output>
+      <Time>2007-05-08T15:18:52+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\starfield.dds</Source>
+      <Name>Textures\starfield</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\starfield.xnb</Output>
+      <Time>2008-03-06T18:02:12+00:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\asteroid2.tga</Source>
+      <Name>Textures\asteroid2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\asteroid2.xnb</Output>
+      <Time>2007-05-08T14:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\aurora.tga</Source>
+      <Name>Textures\aurora</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\aurora.xnb</Output>
+      <Time>2008-06-18T04:06:52+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\galaxy.tga</Source>
+      <Name>Textures\galaxy</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\galaxy.xnb</Output>
+      <Time>2008-06-18T04:10:40+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\nebula.tga</Source>
+      <Name>Textures\nebula</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula.xnb</Output>
+      <Time>2008-06-18T03:59:40+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\nebula2.tga</Source>
+      <Name>Textures\nebula2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\nebula2.xnb</Output>
+      <Time>2008-06-18T04:25:16+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\planets.tga</Source>
+      <Name>Textures\planets</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\planets.xnb</Output>
+      <Time>2008-06-18T04:01:26+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\multicolored.png</Source>
+      <Name>Textures\multicolored</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Textures\multicolored.xnb</Output>
+      <Time>2008-04-02T21:26:56+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Fonts\gamefont.spritefont</Source>
+      <Name>Fonts\gamefont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\gamefont.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>Fonts\Lucida Console.spritefont</Source>
+      <Name>Fonts\Lucida Console</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\Lucida Console.xnb</Output>
+      <Time>2008-03-26T17:17:26+00:00</Time>
+    </Item>
+    <Item>
+      <Source>Fonts\menufont.spritefont</Source>
+      <Name>Fonts\menufont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Fonts\menufont.xnb</Output>
+      <Time>2007-11-26T11:34:30+00:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\asteroid1.x</Source>
+      <Name>Models\asteroid1</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid1.xnb</Output>
+      <Time>2008-04-01T04:44:18+01:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\asteroid1%0.xml</Key>
+        <Value>2008-07-07T16:53:20+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid1%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\p1_rocket.x</Source>
+      <Name>Models\p1_rocket</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_rocket.xnb</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\p1_rocket%0.xml</Key>
+        <Value>2008-07-07T16:53:20+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_back%0.xnb</Request>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_rocket%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\pea_proj.x</Source>
+      <Name>Models\pea_proj</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\pea_proj.xnb</Output>
+      <Time>2008-04-01T04:44:18+01:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\pea_proj%0.xml</Key>
+        <Value>2008-07-07T16:53:20+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pea_proj%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\asteroid2.x</Source>
+      <Name>Models\asteroid2</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\asteroid2.xnb</Output>
+      <Time>2007-05-08T14:18:48+01:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\asteroid2%0.xml</Key>
+        <Value>2008-07-07T16:53:22+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid2%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\p1_pencil.fbx</Source>
+      <Name>Models\p1_pencil</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_pencil.xnb</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\p1_pencil%0.xml</Key>
+        <Value>2008-07-07T16:53:24+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p1_diff_v1%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\p1_saucer.fbx</Source>
+      <Name>Models\p1_saucer</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_saucer.xnb</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\p1_saucer%0.xml</Key>
+        <Value>2008-07-07T16:53:26+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p1_diff_v1%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\p1_wedge.fbx</Source>
+      <Name>Models\p1_wedge</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p1_wedge.xnb</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\p1_wedge%0.xml</Key>
+        <Value>2008-07-07T16:53:28+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p1_diff_v1%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\p2_pencil.fbx</Source>
+      <Name>Models\p2_pencil</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_pencil.xnb</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\p2_pencil%0.xml</Key>
+        <Value>2008-07-07T16:53:30+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p2_diff_v1%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\p2_saucer.fbx</Source>
+      <Name>Models\p2_saucer</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_saucer.xnb</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\p2_saucer%0.xml</Key>
+        <Value>2008-07-07T16:53:34+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p2_diff_v1%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\p2_wedge.fbx</Source>
+      <Name>Models\p2_wedge</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\p2_wedge.xnb</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\p2_wedge%0.xml</Key>
+        <Value>2008-07-07T16:53:38+01:00</Value>
+      </Dependency>
+      <Request>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p2_diff_v1%0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>Models\sphere.fbx</Source>
+      <Name>Models\sphere</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\Models\sphere.xnb</Output>
+      <Time>2008-05-04T00:29:18+01:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Models\sphere%0.xml</Key>
+        <Value>2008-07-07T16:53:38+01:00</Value>
+      </Dependency>
+    </Item>
+    <Item>
+      <Source>Models\asteroid1.x</Source>
+      <Importer>XImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\asteroid1%0.xml</Output>
+      <Time>2008-04-01T04:44:18+01:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\asteroid1.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid1%0.xnb</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\p1_rocket.x</Source>
+      <Importer>XImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\p1_rocket%0.xml</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\p1_back.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_back%0.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\p1_rocket.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\p1_rocket%0.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\pea_proj.x</Source>
+      <Importer>XImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\pea_proj%0.xml</Output>
+      <Time>2008-04-01T04:44:18+01:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\pea_proj.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pea_proj%0.xnb</Output>
+      <Time>2008-05-21T00:01:26+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\asteroid2.x</Source>
+      <Importer>XImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\asteroid2%0.xml</Output>
+      <Time>2007-05-08T14:18:48+01:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\asteroid2.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\asteroid2%0.xnb</Output>
+      <Time>2007-05-08T14:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\p1_pencil.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\p1_pencil%0.xml</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\pencil_p1_diff_v1.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p1_diff_v1%0.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\p1_saucer.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\p1_saucer%0.xml</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\saucer_p1_diff_v1.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p1_diff_v1%0.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\p1_wedge.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\p1_wedge%0.xml</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\wedge_p1_diff_v1.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p1_diff_v1%0.xnb</Output>
+      <Time>2008-03-06T16:15:12+00:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\p2_pencil.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\p2_pencil%0.xml</Output>
+      <Time>2007-05-08T15:18:48+01:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\pencil_p2_diff_v1.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\pencil_p2_diff_v1%0.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\p2_saucer.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\p2_saucer%0.xml</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\saucer_p2_diff_v1.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\saucer_p2_diff_v1%0.xnb</Output>
+      <Time>2007-05-08T15:18:50+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\p2_wedge.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\p2_wedge%0.xml</Output>
+      <Time>2008-03-26T14:54:54+00:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\wedge_p2_diff_v1.tga</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Graphics:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\textures\wedge_p2_diff_v1%0.xnb</Output>
+      <Time>2007-05-08T15:18:52+01:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\sphere.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Models\sphere%0.xml</Output>
+      <Time>2008-05-04T00:29:18+01:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <RootDirectory>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\Content\</RootDirectory>
+      <LoggerRootDirectory>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\</LoggerRootDirectory>
+      <IntermediateDirectory>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>D:\CADEIRAS\SDTF\PRATICA\jogo\GalactikWars\GalactikWars\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>c:\Program Files\Microsoft XNA\XNA Game Studio\v2.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2007-11-28T12:08:00+00:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>c:\Program Files\Microsoft XNA\XNA Game Studio\v2.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2007-11-28T12:08:42+00:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>c:\Program Files\Microsoft XNA\XNA Game Studio\v2.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2007-11-28T12:08:30+00:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>c:\Program Files\Microsoft XNA\XNA Game Studio\v2.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2007-11-28T12:07:44+00:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\WINDOWS\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\2.0.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2008-05-03T03:17:17.96875+01:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
