@@ -188,7 +188,7 @@ namespace GalactikWars
             //Draw the menu title.
             Vector2 titlePosition = new Vector2(400, 60);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
-            Color titleColor = new Color(192, 192, 192, TransitionAlpha);
+            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.50f;
 
             titlePosition.Y -= transitionOffset * 100;

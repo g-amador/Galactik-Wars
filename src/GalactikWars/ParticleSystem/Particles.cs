@@ -17,9 +17,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
+
 #endregion
 
 namespace GalactikWars
@@ -248,17 +246,17 @@ namespace GalactikWars
                     {
                         if (part[i].lifeSpan > 17)
                         {
-                            color = new Color(0, 0, (byte)random.Next(0, 100), 255);
+                            color = new Color((byte)0, (byte)0, (byte)random.Next(0, 100), (byte)255);
                         }
 
                         if (part[i].lifeSpan > 10 && part[i].lifeSpan < 17)
                         {
-                            color = new Color(0, 0, (byte)random.Next(145, 185), 255);
+                            color = new Color((byte)0, (byte)0, (byte)random.Next(145, 185), (byte)255);
                         }
 
                         if (part[i].lifeSpan > 5 && part[i].lifeSpan < 10)
                         {
-                            color = new Color(0, 0, (byte)random.Next(200, 255), 255);
+                            color = new Color((byte)0, (byte)0, (byte)random.Next(200, 255), (byte)255);
                         }
 
                         if (part[i].used == true)
@@ -279,17 +277,17 @@ namespace GalactikWars
                     {
                         if (part[i].lifeSpan > 17)
                         {
-                            color = new Color((byte)random.Next(175, 255), (byte)random.Next(150, 255), (byte)random.Next(100, 255), 255);
+                            color = new Color((byte)random.Next(175, 255), (byte)random.Next(150, 255), (byte)random.Next(100, 255), (byte)255);
                         }
 
                         if (part[i].lifeSpan > 10 && part[i].lifeSpan < 17)
                         {
-                            color = new Color((byte)random.Next(150, 175), (byte)random.Next(75, 150), (byte)random.Next(50, 100), 255);
+                            color = new Color((byte)random.Next(150, 175), (byte)random.Next(75, 150), (byte)random.Next(50, 100), (byte)255);
                         }
 
                         if (part[i].lifeSpan > 5 && part[i].lifeSpan < 10)
                         {
-                            color = new Color((byte)random.Next(0, 150), (byte)random.Next(0, 75), (byte)random.Next(0, 50), 255);
+                            color = new Color((byte)random.Next(0, 150), (byte)random.Next(0, 75), (byte)random.Next(0, 50), (byte)255);
                         }
 
                         if (part[i].used == true)

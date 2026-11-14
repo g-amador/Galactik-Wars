@@ -10,8 +10,7 @@
 #region Using Statements
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.GamerServices;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -35,7 +34,7 @@ namespace GalactikWars
         ///Constructor fills in the menu contents.
         ///</summary>
         public CreateOrFindSessionScreen(NetworkSessionType sessionType)
-            : base(GetMenuTitle(sessionType))
+            : base(Resources.Multiplayer)
         {
             this.sessionType = sessionType;
 
@@ -53,25 +52,6 @@ namespace GalactikWars
             MenuEntries.Add(createSessionMenuEntry);
             MenuEntries.Add(findSessionsMenuEntry);
             MenuEntries.Add(backMenuEntry);
-        }
-
-
-        ///<summary>
-        ///Helper chooses an appropriate menu title for the specified session type.
-        ///</summary>
-        static string GetMenuTitle(NetworkSessionType sessionType)
-        {
-            switch (sessionType)
-            {
-                case NetworkSessionType.PlayerMatch:
-                    return Resources.PlayerMatch;
-
-                case NetworkSessionType.SystemLink:
-                    return Resources.SystemLink;
-
-                default:
-                    throw new NotSupportedException();
-            }
         }
 
 
@@ -105,10 +85,6 @@ namespace GalactikWars
             {
                 ScreenManager.AddScreen(new NetworkErrorScreen(exception));
             }
-            catch (GamerPrivilegeException exception)
-            {
-                ScreenManager.AddScreen(new NetworkErrorScreen(exception));
-            }
         }
 
 
@@ -131,10 +107,6 @@ namespace GalactikWars
                 ScreenManager.AddScreen(new LobbyScreen(networkSession));
             }
             catch (NetworkException exception)
-            {
-                ScreenManager.AddScreen(new NetworkErrorScreen(exception));
-            }
-            catch (GamerPrivilegeException exception)
             {
                 ScreenManager.AddScreen(new NetworkErrorScreen(exception));
             }
@@ -162,10 +134,6 @@ namespace GalactikWars
                 ScreenManager.AddScreen(busyScreen);
             }
             catch (NetworkException exception)
-            {
-                ScreenManager.AddScreen(new NetworkErrorScreen(exception));
-            }
-            catch (GamerPrivilegeException exception)
             {
                 ScreenManager.AddScreen(new NetworkErrorScreen(exception));
             }
@@ -200,10 +168,6 @@ namespace GalactikWars
                 }
             }
             catch (NetworkException exception)
-            {
-                ScreenManager.AddScreen(new NetworkErrorScreen(exception));
-            }
-            catch (GamerPrivilegeException exception)
             {
                 ScreenManager.AddScreen(new NetworkErrorScreen(exception));
             }

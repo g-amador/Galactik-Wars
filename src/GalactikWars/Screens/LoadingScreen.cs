@@ -13,7 +13,7 @@ using System.Threading;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Net;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -195,7 +195,7 @@ namespace GalactikWars
                 Vector2 textSize = font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;
 
-                Color color = new Color(255, 255, 255, TransitionAlpha);
+                Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
                 //Animate the number of dots after our "Loading..." message.
                 loadAnimationTimer += gameTime.ElapsedGameTime;
@@ -253,8 +253,8 @@ namespace GalactikWars
                                                       TimeSpan.TicksPerSecond /
                                                       Stopwatch.Frequency);
 
-            return new GameTime(loadStartTime.TotalRealTime + elapsedTime, elapsedTime,
-                                loadStartTime.TotalGameTime + elapsedTime, elapsedTime);
+            return new GameTime(loadStartTime.TotalGameTime + elapsedTime,
+                                elapsedTime);
         }
 
 

@@ -411,6 +411,15 @@ namespace GalactikWars {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiplayer.
+        /// </summary>
+        internal static string Multiplayer {
+            get {
+                return ResourceManager.GetString("Multiplayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LIVE.
         /// </summary>
         internal static string PlayerMatch {

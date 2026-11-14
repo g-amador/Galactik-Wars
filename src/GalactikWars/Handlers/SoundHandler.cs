@@ -3,16 +3,19 @@
 //SoundHandler.cs
 //
 //Author: GNPA & STX
-//Copyright (C) Microsoft Corporation. All rights reserved.
+//Ported from the XNA XACT audio engine to MonoGame SoundEffect playback.
+//The original XACT project (GalactikWars.xap) defined cues for effects and
+//music; this class keeps the same cue based API while loading the .wav
+//files through the MonoGame content pipeline instead.
 //-----------------------------------------------------------------------------
 #endregion
 
 #region Using Statements
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 #endregion
 
 namespace GalactikWars
@@ -25,77 +28,206 @@ namespace GalactikWars
         public static float musicVolume = GameVariables.defaultMusicVolume;
         public static float effectsVolume = GameVariables.defaultEffectsVolume;
 
-        //Audio components
-        public AudioEngine audioEngine;
-        public WaveBank effectsWaveBank;
-        public SoundBank effectsSoundBank;
-        public WaveBank musicsWaveBank;
-        public SoundBank musicsSoundBank;
+        //Cue names
+        const string EffectsDirectory = "Audio/Waves/Effects/";
+        const string MusicDirectory = "Audio/Waves/Music/";
 
-        //Cues 
-        public Cue myEngineSound = null;
-        public Cue othersEngineSound = null;
-        public Cue music = null;
+        //Music cues, matching the cue names from the original XACT project.
+        static readonly string[] musicCues =
+        {
+            "music", "music1", "music2", "music3", "music4", "music5",
+            "gameOver",
+        };
 
-        private float timeDelta = 0.0f;
+        //Loaded sound banks
+        Dictionary<string, SoundEffect> effectSounds;
+        Dictionary<string, SoundEffect> musicSounds;
+
+        //Cues
+        Cue myEngineSound = null;
+        Cue othersEngineSound = null;
+        Cue music = null;
+
+        float timeDelta = 0.0f;
+
+        bool loaded = false;
 
         Random random = new Random();
 
         #endregion Fields
 
+        #region Cue Wrapper
+
+        ///<summary>
+        ///Minimal replacement for the XACT Cue class: wraps a
+        ///SoundEffectInstance and exposes the play state API the game uses.
+        ///</summary>
+        class Cue
+        {
+            readonly SoundEffect sound;
+            SoundEffectInstance instance;
+
+            public string Name { get; private set; }
+
+            public Cue(SoundEffect sound, string name, bool looped)
+            {
+                this.sound = sound;
+                Name = name;
+                Looped = looped;
+            }
+
+            public bool Looped { get; private set; }
+
+            public bool IsPlaying
+            {
+                get { return instance != null && !instance.IsDisposed &&
+                              instance.State == SoundState.Playing; }
+            }
+
+            public bool IsPaused
+            {
+                get { return instance != null && !instance.IsDisposed &&
+                              instance.State == SoundState.Paused; }
+            }
+
+            public void Play()
+            {
+                Stop();
+
+                instance = sound.CreateInstance();
+                instance.IsLooped = Looped;
+                instance.Volume = Looped ? musicVolume : effectsVolume;
+                instance.Play();
+            }
+
+            public void Pause()
+            {
+                if (IsPlaying)
+                {
+                    instance.Pause();
+                }
+            }
+
+            public void Resume()
+            {
+                if (IsPaused)
+                {
+                    instance.Resume();
+                }
+            }
+
+            public void Stop()
+            {
+                if (instance != null)
+                {
+                    if (!instance.IsDisposed && instance.State != SoundState.Stopped)
+                    {
+                        instance.Stop();
+                    }
+                    instance.Dispose();
+                    instance = null;
+                }
+            }
+
+            ///<summary>
+            ///Applies the current volume category, called every update so
+            ///runtime volume changes take effect immediately.
+            ///</summary>
+            public void UpdateVolume(float volume)
+            {
+                if (instance != null && !instance.IsDisposed)
+                {
+                    instance.Volume = volume;
+                }
+            }
+        }
+
+        #endregion
+
         #region Initialization, Unload and Update
 
-        public SoundHandler()
-        { 
+        ///<summary>
+        ///Loads the sound banks from the content pipeline. Must be called
+        ///from LoadContent before any sound is played.
+        ///</summary>
+        public void Load(ContentManager content)
+        {
+            if (loaded)
+            {
+                return;
+            }
+
+            effectSounds = new Dictionary<string, SoundEffect>();
+            musicSounds = new Dictionary<string, SoundEffect>();
+
             try
             {
-                //Initialize audio objects.
-                audioEngine = new AudioEngine("Content\\Audio\\GalactikWars.xgs");
-                effectsWaveBank = new WaveBank(audioEngine, "Content\\Audio\\Effects.xwb");
-                effectsSoundBank = new SoundBank(audioEngine, "Content\\Audio\\Effects.xsb");
-                musicsWaveBank = new WaveBank(audioEngine, "Content\\Audio\\Music.xwb");
-                musicsSoundBank = new SoundBank(audioEngine, "Content\\Audio\\Music.xsb");
+                //Initialize the effect bank.
+                foreach (string name in effectCueNames)
+                {
+                    effectSounds[name] = content.Load<SoundEffect>(
+                        EffectsDirectory + name);
+                }
 
-                music = musicsSoundBank.GetCue("music");
+                //Initialize the music bank.
+                foreach (string name in musicCues)
+                {
+                    musicSounds[name] = content.Load<SoundEffect>(
+                        MusicDirectory + name);
+                }
+
+                music = new Cue(musicSounds["music"], "music", false);
             }
             catch (NoAudioHardwareException)
             {
                 // silently fall back to silence
-                audioEngine = null;
-                effectsWaveBank = null;
-                effectsSoundBank = null;
-                musicsWaveBank = null;
-                musicsSoundBank = null;
+                effectSounds = null;
+                musicSounds = null;
             }
+
+            loaded = true;
         }
+
+        ///<summary>Cue names available in the effects bank.</summary>
+        static readonly string[] effectCueNames =
+        {
+            "engine_1",
+            "engine_2",
+            "explosion1",
+            "explosion2",
+            "explosion3",
+            "explosion4",
+            "hax2_fire",
+            "hyperspace_activate",
+            "phase_collide_ship1",
+            "shield_collide_ship1",
+            "tx0_fire1",
+        };
 
         public void UnLoad()
         {
-            audioEngine.Dispose();
-            effectsWaveBank.Dispose();
-            effectsSoundBank.Dispose();
-            musicsWaveBank.Dispose();
-            musicsSoundBank.Dispose();
-
-            //Cues 
             if (myEngineSound != null)
             {
-                myEngineSound.Dispose();
+                myEngineSound.Stop();
+                myEngineSound = null;
             }
 
             if (othersEngineSound != null)
             {
-                othersEngineSound.Dispose();
+                othersEngineSound.Stop();
+                othersEngineSound = null;
             }
+
             if (music != null)
             {
-                music.Dispose();
+                music.Stop();
+                music = null;
             }
         }
 
         public void Update(GameTime gameTime)
         {
-            if (audioEngine != null)
+            if (musicSounds != null)
             {
                 timeDelta += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -103,45 +235,60 @@ namespace GalactikWars
                 {
                     timeDelta = 0.0f;
 
-                    audioEngine.GetCategory("Music").SetVolume(SoundHandler.musicVolume);
-                    audioEngine.GetCategory("Effects").SetVolume(SoundHandler.effectsVolume);
+                    //Keep the volume categories in sync with the settings.
+                    music.UpdateVolume(musicVolume);
+                    if (myEngineSound != null)
+                    {
+                        myEngineSound.UpdateVolume(effectsVolume);
+                    }
+                    if (othersEngineSound != null)
+                    {
+                        othersEngineSound.UpdateVolume(effectsVolume);
+                    }
 
                     if (!music.IsPlaying)
                     {
                         if (random.NextDouble() <= 0.16)
                         {
-                            music = musicsSoundBank.GetCue("music");
-                            music.Play();
+                            PlayMusic("music");
                         }
                         else if (random.NextDouble() <= 0.32)
                         {
-                            music = musicsSoundBank.GetCue("music1");
-                            music.Play();
+                            PlayMusic("music1");
                         }
                         else if (random.NextDouble() <= 0.48)
                         {
-                            music = musicsSoundBank.GetCue("music2");
-                            music.Play();
+                            PlayMusic("music2");
                         }
                         else if (random.NextDouble() <= 0.64)
                         {
-                            music = musicsSoundBank.GetCue("music3");
-                            music.Play();
+                            PlayMusic("music3");
                         }
                         else if (random.NextDouble() <= 0.8)
                         {
-                            music = musicsSoundBank.GetCue("music4");
-                            music.Play();
+                            PlayMusic("music4");
                         }
                         else
                         {
-                            music = musicsSoundBank.GetCue("music5");
-                            music.Play();
+                            PlayMusic("music5");
                         }
                     }
-                    audioEngine.Update();
                 }
             }
+        }
+
+        ///<summary>
+        ///Switches to the specified music cue, applying the music volume.
+        ///</summary>
+        void PlayMusic(string cue)
+        {
+            if (music != null)
+            {
+                music.Stop();
+            }
+
+            music = new Cue(musicSounds[cue], cue, false);
+            music.Play();
         }
 
         #endregion Initialization and Update
@@ -152,7 +299,7 @@ namespace GalactikWars
 
         public void ResumeMusic()
         {
-            if (audioEngine != null)
+            if (music != null)
             {
                 if (music.IsPaused)
                     music.Resume();
@@ -161,7 +308,7 @@ namespace GalactikWars
 
         public void PauseMusic()
         {
-            if (audioEngine != null)
+            if (music != null)
             {
                 if (music.IsPlaying)
                     music.Pause();
@@ -198,11 +345,12 @@ namespace GalactikWars
 
         public void PlayMyEngineSound()
         {
-            if (audioEngine != null)
+            if (effectSounds != null)
             {
                 if (myEngineSound == null)
                 {
-                    myEngineSound = effectsSoundBank.GetCue("engine_1");
+                    myEngineSound = new Cue(effectSounds["engine_1"],
+                                            "engine_1", true);
                     myEngineSound.Play();
                 }
                 else if (myEngineSound.IsPaused)
@@ -214,11 +362,12 @@ namespace GalactikWars
 
         public void PlayOthersEngineSound()
         {
-            if (audioEngine != null)
+            if (effectSounds != null)
             {
                 if (othersEngineSound == null)
                 {
-                    othersEngineSound = effectsSoundBank.GetCue("engine_2");
+                    othersEngineSound = new Cue(effectSounds["engine_2"],
+                                                "engine_2", true);
                     othersEngineSound.Play();
                 }
                 else if (othersEngineSound.IsPaused)
@@ -232,23 +381,25 @@ namespace GalactikWars
 
         public void PlayCue(string cue)
         {
-            if (audioEngine != null)
+            if (effectSounds != null && effectSounds.ContainsKey(cue))
             {
-                effectsSoundBank.PlayCue(cue);
+                //One-shot cues use the effects volume.
+                Cue oneShot = new Cue(effectSounds[cue], cue, false);
+                oneShot.Play();
             }
         }
 
         public void PlayGameOver()
         {
-            if (audioEngine != null)
+            if (musicSounds != null && musicSounds.ContainsKey("gameOver"))
             {
-                if (!music.Name.Equals("gameOver"))
+                if (music == null || !music.Name.Equals("gameOver"))
                 {
-                    if (music.IsPlaying)
+                    if (music != null && music.IsPlaying)
                     {
-                        music.Stop(AudioStopOptions.Immediate);
+                        music.Stop();
                     }
-                    music = musicsSoundBank.GetCue("gameOver");
+                    music = new Cue(musicSounds["gameOver"], "gameOver", false);
                     music.Play();
                 }
             }

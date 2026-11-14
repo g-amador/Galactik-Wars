@@ -11,7 +11,7 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Net;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -68,6 +68,10 @@ namespace GalactikWars
                                   NetworkSession networkSession)
         {
             Game game = screenManager.Game;
+
+            //Give the session access to the graphics device, used to create
+            //the gamer profile pictures.
+            networkSession.GraphicsDevice = game.GraphicsDevice;
 
             //Register this network session as a service.
             game.Services.AddService(typeof(NetworkSession), networkSession);

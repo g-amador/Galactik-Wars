@@ -12,7 +12,6 @@
 using System;
 using System.Threading;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
@@ -195,11 +194,11 @@ namespace GalactikWars
 
             Vector2 titlePosition = new Vector2(400, 60);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
-            Color titleColor = new Color(192, 192, 192, TransitionAlpha);
+            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.50f;
 
             Vector2 position = new Vector2(100, 150);
-            Color color = new Color(255, 255, 255, TransitionAlpha);
+            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);

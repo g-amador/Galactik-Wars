@@ -9,7 +9,7 @@
 
 #region Using Statements
 using System;
-using Microsoft.Xna.Framework.Net;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -30,24 +30,21 @@ namespace GalactikWars
         {
             //Create our menu entries.
             MenuEntry singlePlayerMenuEntry = new MenuEntry(Resources.SinglePlayer);
-            MenuEntry liveMenuEntry = new MenuEntry(Resources.PlayerMatch);
-            MenuEntry systemLinkMenuEntry = new MenuEntry(Resources.SystemLink);
+            MenuEntry multiplayerMenuEntry = new MenuEntry(Resources.Multiplayer);
             MenuEntry optionsMenuEntry = new MenuEntry(Resources.Options);
             MenuEntry creditsMenuEntry = new MenuEntry(Resources.Credits);
             MenuEntry exitMenuEntry = new MenuEntry(Resources.Exit);
 
             //Hook up menu event handlers.
             singlePlayerMenuEntry.Selected += SinglePlayerMenuEntrySelected;
-            liveMenuEntry.Selected += LiveMenuEntrySelected;
-            systemLinkMenuEntry.Selected += SystemLinkMenuEntrySelected;
+            multiplayerMenuEntry.Selected += MultiplayerMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenu;
             creditsMenuEntry.Selected += CreditsMenu;
             exitMenuEntry.Selected += OnCancel;
 
             //Add entries to the menu.
             MenuEntries.Add(singlePlayerMenuEntry);
-            MenuEntries.Add(liveMenuEntry);
-            MenuEntries.Add(systemLinkMenuEntry);
+            MenuEntries.Add(multiplayerMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(creditsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
@@ -69,20 +66,12 @@ namespace GalactikWars
 
 
         ///<summary>
-        ///Event handler for when the Live menu entry is selected.
+        ///Event handler for when the Multiplayer menu entry is selected.
         ///</summary>
-        void LiveMenuEntrySelected(object sender, EventArgs e)
+        void MultiplayerMenuEntrySelected(object sender, EventArgs e)
         {
-            CreateOrFindSession(NetworkSessionType.PlayerMatch);
-        }
-
-
-        ///<summary>
-        ///Event handler for when the System Link menu entry is selected.
-        ///</summary>
-        void SystemLinkMenuEntrySelected(object sender, EventArgs e)
-        {
-            CreateOrFindSession(NetworkSessionType.SystemLink);
+            ScreenManager.AddScreen(
+                new CreateOrFindSessionScreen(NetworkSessionType.PlayerMatch));
         }
 
         ///<summary>
@@ -100,26 +89,6 @@ namespace GalactikWars
         void CreditsMenu(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new CreditsScreen(null));
-        }
-
-
-        ///<summary>
-        ///Helper method shared by the Live and System Link menu event handlers.
-        ///</summary>
-        void CreateOrFindSession(NetworkSessionType sessionType)
-        {
-            //First, we need to make sure a suitable gamer profile is signed in.
-            ProfileSignInScreen profileSignIn = new ProfileSignInScreen(sessionType);
-
-            //Hook up an event so once the ProfileSignInScreen is happy,
-            //it will activate the CreateOrFindSessionScreen.
-            profileSignIn.ProfileSignedIn += delegate
-            {
-                ScreenManager.AddScreen(new CreateOrFindSessionScreen(sessionType));
-            };
-
-            //Activate the ProfileSignInScreen.
-            ScreenManager.AddScreen(profileSignIn);
         }
 
 

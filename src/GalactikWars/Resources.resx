@@ -215,6 +215,9 @@ B button, Esc = cancel</value>
   <data name="Paused" xml:space="preserve">
     <value>Paused</value>
   </data>
+  <data name="Multiplayer" xml:space="preserve">
+    <value>Multiplayer</value>
+  </data>
   <data name="PlayerMatch" xml:space="preserve">
     <value>LIVE</value>
   </data>

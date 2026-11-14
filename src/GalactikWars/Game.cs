@@ -10,7 +10,6 @@
 #region Using Statements
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.GamerServices;
 #endregion
 
 namespace GalactikWars
@@ -55,7 +54,6 @@ namespace GalactikWars
 
             Components.Add(screenManager);
             Components.Add(new MessageDisplayComponent(this));
-            Components.Add(new GamerServicesComponent(this));
 
             //Activate the first screens.
             screenManager.AddScreen(new BackgroundScreen());

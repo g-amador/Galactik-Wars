@@ -10,16 +10,11 @@
 
 #region Using Statements
 using System;
-using System.Threading;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 #endregion
 
 namespace GalactikWars
@@ -135,6 +130,8 @@ namespace GalactikWars
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
+            soundHandler.Load(content);
+
             if (random.NextDouble() <= 0.17)
             {
                 p.ship.Model = content.Load<Model>("Models/p1_pencil");
@@ -192,7 +189,7 @@ namespace GalactikWars
 
             particlesTexture = content.Load<Texture2D>("Textures/multicolored");
 
-            lucidaConsole = content.Load<SpriteFont>("Fonts/Lucida Console");
+            lucidaConsole = content.Load<SpriteFont>("Fonts/LucidaConsole");
             spriteBatch = ScreenManager.SpriteBatch;
             font = ScreenManager.Font;
         }
@@ -210,12 +207,18 @@ namespace GalactikWars
             if (GameVariables.ScrollingBackgroundIsActive)
                 myBackground.UnLoadContent();
 
-            space1.Dispose();
-            space2.Dispose();
-            space3.Dispose();
-            space4.Dispose();
-            space5.Dispose();
-            particlesTexture.Dispose();
+            if (space1 != null)
+                space1.Dispose();
+            if (space2 != null)
+                space2.Dispose();
+            if (space3 != null)
+                space3.Dispose();
+            if (space4 != null)
+                space4.Dispose();
+            if (space5 != null)
+                space5.Dispose();
+            if (particlesTexture != null)
+                particlesTexture.Dispose();
 
             content.Unload();
         }
@@ -722,13 +725,12 @@ namespace GalactikWars
         {
             Vector2 titlePosition = new Vector2(400, 300);
             Vector2 titleOrigin = font.MeasureString(Resources.GameOver) / 2;
-            Color titleColor = new Color(139, 0, 0, TransitionAlpha);
+            Color titleColor = new Color((byte)139, (byte)0, (byte)0, TransitionAlpha);
 
             float titleScale = 2.0f;
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, 
-                SaveStateMode.None);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
 
             if (GameVariables.ScrollingBackgroundIsActive)
                 myBackground.Draw(spriteBatch);
@@ -794,7 +796,7 @@ namespace GalactikWars
             DrawShooting(p);
             DrawPlayer(p);
 
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             spriteBatch.DrawString(lucidaConsole, "Score: " + p.Score, scorePosition, Color.LightGreen);
             spriteBatch.DrawString(lucidaConsole, "Level: " + GameVariables.CurrentLevel, levelPosition, Color.LightGreen);
@@ -847,15 +849,13 @@ namespace GalactikWars
             
             if (p.ship.IsActive)
             {
-                spriteBatch.Begin(SpriteBlendMode.None,
-                        SpriteSortMode.Immediate, SaveStateMode.None);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
                 DrawModel(p.ship.Model, shipTransformMatrix, p.ship.Transforms);
                 spriteBatch.End();
 
                 if (p.Shield > 0)
                 {
-                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                        SpriteSortMode.Immediate, SaveStateMode.None);
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                     DrawModel(shieldModel, shieldTransform, shieldTransforms);
                     spriteBatch.End();
                 }

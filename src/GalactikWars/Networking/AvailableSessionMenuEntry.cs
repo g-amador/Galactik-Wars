@@ -10,7 +10,7 @@
 #region Using Statements
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Net;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars

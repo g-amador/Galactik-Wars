@@ -10,8 +10,7 @@
 #region Using Statements
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.GamerServices;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -95,10 +94,6 @@ namespace GalactikWars
             {
                 ScreenManager.AddScreen(new NetworkErrorScreen(exception));
             }
-            catch (GamerPrivilegeException exception)
-            {
-                ScreenManager.AddScreen(new NetworkErrorScreen(exception));
-            }
         }
 
 
@@ -122,10 +117,6 @@ namespace GalactikWars
                 availableSessions.Dispose();
             }
             catch (NetworkException exception)
-            {
-                ScreenManager.AddScreen(new NetworkErrorScreen(exception));
-            }
-            catch (GamerPrivilegeException exception)
             {
                 ScreenManager.AddScreen(new NetworkErrorScreen(exception));
             }

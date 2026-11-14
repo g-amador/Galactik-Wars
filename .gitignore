@@ -1,0 +1,23 @@
+# Build artifacts
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+*.user
+*.suo
+*.pidb
+*.userprefs
+
+# Thumbnails
+Thumbs.db
+*.DS_Store
+
+# NuGet
+packages/
+*.nupkg
+
+# VS / Rider / VS Code
+.vs/
+.idea/
+*.swp
+
+# MonoGame content build intermediates are under obj/, covered above

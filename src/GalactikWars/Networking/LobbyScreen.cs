@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Net;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -224,7 +224,7 @@ namespace GalactikWars
 
             Vector2 titlePosition = new Vector2(533, 80);
             Vector2 titleOrigin = font.MeasureString(title) / 2;
-            Color titleColor = new Color(192, 192, 192, TransitionAlpha);
+            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;

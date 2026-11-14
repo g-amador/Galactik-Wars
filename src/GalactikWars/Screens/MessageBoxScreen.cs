@@ -141,7 +141,7 @@ namespace GalactikWars
                                                           (int)textSize.Y + vPad * 2);
 
             //Fade the popup alpha during transitions.
-            Color color = new Color(255, 255, 255, TransitionAlpha);
+            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             spriteBatch.Begin();
 

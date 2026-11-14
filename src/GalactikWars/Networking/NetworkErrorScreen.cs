@@ -10,8 +10,7 @@
 #region Using Statements
 using System;
 using System.Diagnostics;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Net;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -39,12 +38,6 @@ namespace GalactikWars
         {
             Trace.WriteLine(string.Format("Network operation threw {0}: {1}",
                                           exception, exception.Message));
-
-            //Is this a GamerPrivilegeException?
-            if (exception is GamerPrivilegeException)
-            {
-                return Resources.ErrorGamerPrivilege;
-            }
 
             //Is it a NetworkSessionJoinException?
             NetworkSessionJoinException joinException = exception as

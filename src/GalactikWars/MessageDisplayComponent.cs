@@ -163,11 +163,11 @@ namespace GalactikWars
 
                     //Draw the message text, with a drop shadow.
                     spriteBatch.DrawString(font, message.Text, position + Vector2.One,
-                                           new Color(0, 0, 0, alpha), 0,
+                                           new Color((byte)0, (byte)0, (byte)0, alpha), 0,
                                            origin, scale, SpriteEffects.None, 0);
 
                     spriteBatch.DrawString(font, message.Text, position,
-                                           new Color(255, 255, 255, alpha), 0,
+                                           new Color((byte)255, (byte)255, (byte)255, alpha), 0,
                                            origin, scale, SpriteEffects.None, 0);
                 }
 

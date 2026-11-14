@@ -10,16 +10,12 @@
 
 #region Using Statements
 using System;
-using System.Threading;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
+using GalactikWars.Net;
 #endregion
 
 namespace GalactikWars
@@ -140,6 +136,8 @@ namespace GalactikWars
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
+            soundHandler.Load(content);
+
             if (random.NextDouble() <= 0.17)
             {
                 LoadPlayerModel("Models/p1_pencil");
@@ -193,7 +191,7 @@ namespace GalactikWars
 
             particlesTexture = content.Load<Texture2D>("Textures/multicolored");
 
-            lucidaConsole = content.Load<SpriteFont>("Fonts/Lucida Console");
+            lucidaConsole = content.Load<SpriteFont>("Fonts/LucidaConsole");
             spriteBatch = ScreenManager.SpriteBatch;
             font = ScreenManager.Font;
 
@@ -757,12 +755,11 @@ namespace GalactikWars
         {
             Vector2 titlePosition = new Vector2(400, 60);
             Vector2 titleOrigin = font.MeasureString(Resources.Scores) / 2;
-            Color titleColor = new Color(192, 192, 192, TransitionAlpha);
+            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.5f;
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteBlendMode.None,
-                SpriteSortMode.Immediate, SaveStateMode.None);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
             spriteBatch.Draw(stars, new Rectangle(0, 0, 800, 600), Color.White);
 
             spriteBatch.End();
@@ -796,8 +793,7 @@ namespace GalactikWars
                 DrawShooting(players[networkSession.AllGamers.IndexOf(gamer)]);
                 DrawPlayer(players[networkSession.AllGamers.IndexOf(gamer)]);
 
-                spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                    SpriteSortMode.Immediate, SaveStateMode.None);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
                 if (!gamer.IsDisposed && gamer.IsLocal && players[playerID].ship.IsActive)
                 {
@@ -852,8 +848,7 @@ namespace GalactikWars
 
             spriteBatch.End();
 
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                    SpriteSortMode.Immediate, SaveStateMode.None);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             spriteBatch.DrawString(lucidaConsole, "Score: " +
                 players[playerID].Score, scorePosition, Color.LightGreen);
@@ -878,15 +873,13 @@ namespace GalactikWars
 
             if (p.ship.IsActive)
             {
-                spriteBatch.Begin(SpriteBlendMode.None,
-                        SpriteSortMode.Immediate, SaveStateMode.None);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
                 DrawModel(p.ship.Model, shipTransformMatrix, p.ship.Transforms);
                 spriteBatch.End();
 
                 if (p.Shield > 0)
                 {
-                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                        SpriteSortMode.Immediate, SaveStateMode.None);
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                     DrawModel(shieldModel, shieldTransform, shieldTransforms);
                     spriteBatch.End();
                 }

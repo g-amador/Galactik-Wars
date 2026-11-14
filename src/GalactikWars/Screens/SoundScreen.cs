@@ -2,7 +2,6 @@
 using System;
 using System.Threading;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
@@ -249,7 +248,7 @@ namespace GalactikWars
             Rectangle backgroundRectangle = new Rectangle(0, 0, viewport.Width, viewport.Height);
 
             //Fade the popup alpha during transitions.
-            Color color = new Color(255, 255, 255, TransitionAlpha);
+            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             spriteBatch.Begin();
 
