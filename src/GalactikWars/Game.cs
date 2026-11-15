@@ -8,12 +8,15 @@
 #endregion
 
 #region Using Statements
+using GalactikWars.ScreenManager;
+using GalactikWars.Screens;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 #endregion
 
 namespace GalactikWars
 {
+
     ///<summary>
     ///Sample showing how to manage the different game states involved in
     ///implementing a networked game, with menus for creating, searching,
@@ -24,9 +27,14 @@ namespace GalactikWars
     public class NetworkStateManagementGame : Microsoft.Xna.Framework.Game
     {
         #region Fields
-        
-        GraphicsDeviceManager graphics;
-        ScreenManager screenManager;
+
+        private readonly GraphicsDeviceManager graphics;
+        private readonly GalactikWars.ScreenManager.ScreenManager screenManager;
+
+        /// <summary>
+        /// Keyboard state from the previous frame, used to detect F11 presses.
+        /// </summary>
+        private KeyboardState previousKeyboard;
 
         #endregion
 
@@ -38,27 +46,57 @@ namespace GalactikWars
         ///</summary>
         public NetworkStateManagementGame()
         {
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "assets";
 
-            graphics = new GraphicsDeviceManager(this);
-
-            graphics.PreferredBackBufferWidth = GraphicsDeviceManager.DefaultBackBufferWidth;
-            graphics.PreferredBackBufferHeight = GraphicsDeviceManager.DefaultBackBufferHeight;
-            graphics.IsFullScreen = GameVariables.FullScreen;
+            graphics = new GraphicsDeviceManager(this)
+            {
+                //A default window large enough to show every control screen entry,
+                //and resizable (with maximize button) so users can adjust it.
+                PreferredBackBufferWidth = GameVariables.ScreenWidth,
+                PreferredBackBufferHeight = GameVariables.ScreenHeight,
+                IsFullScreen = GameVariables.FullScreen
+            };
             graphics.ApplyChanges();
+
+            Window.AllowUserResizing = true;
 
             this.IsMouseVisible = GameVariables.MouseVisible;
 
             //Create components.
-            screenManager = new ScreenManager(this);
+            screenManager = new GalactikWars.ScreenManager.ScreenManager(this);
 
             Components.Add(screenManager);
             Components.Add(new MessageDisplayComponent(this));
 
             //Activate the first screens.
             screenManager.AddScreen(new BackgroundScreen());
-            screenManager.AddScreen(new MainMenuScreen());            
+            screenManager.AddScreen(new MainMenuScreen());
         }
+
+        #endregion
+
+        #region Update
+
+
+        ///<summary>
+        ///Handles the global fullscreen hotkey (F11). Everything else is
+        ///delegated to the ScreenManager component.
+        ///</summary>
+        protected override void Update(GameTime gameTime)
+        {
+            KeyboardState keyboard = Keyboard.GetState();
+
+            if (keyboard.IsKeyDown(Keys.F11) &&
+                previousKeyboard.IsKeyUp(Keys.F11))
+            {
+                graphics.ToggleFullScreen();
+            }
+
+            previousKeyboard = keyboard;
+
+            base.Update(gameTime);
+        }
+
 
         #endregion
 
@@ -86,11 +124,11 @@ namespace GalactikWars
     ///<summary>
     ///The main entry point for the application.
     ///</summary>
-    static class Program
+    internal static class Program
     {
-        static void Main()
+        private static void Main()
         {
-            using (NetworkStateManagementGame game = new NetworkStateManagementGame())
+            using (NetworkStateManagementGame game = new())
             {
                 game.Run();
             }

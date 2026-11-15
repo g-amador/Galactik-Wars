@@ -8,22 +8,24 @@
 #endregion
 
 #region Using Statements
-using System;
-using Microsoft.Xna.Framework;
+using GalactikWars.Handlers;
 using GalactikWars.Net;
+using GalactikWars.Screens;
+using Microsoft.Xna.Framework;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
     ///<summary>
     ///This menu screen lets the user choose whether to create a new
     ///network session, or search for an existing session to join.
     ///</summary>
-    class CreateOrFindSessionScreen : MenuScreen
+    internal class CreateOrFindSessionScreen : MenuScreen
     {
         #region Fields
 
-        NetworkSessionType sessionType;
+        private readonly NetworkSessionType sessionType;
 
         #endregion
 
@@ -39,9 +41,9 @@ namespace GalactikWars
             this.sessionType = sessionType;
 
             //Create our menu entries.
-            MenuEntry createSessionMenuEntry = new MenuEntry(Resources.CreateSession);
-            MenuEntry findSessionsMenuEntry = new MenuEntry(Resources.FindSessions);
-            MenuEntry backMenuEntry = new MenuEntry(Resources.Back);
+            MenuEntry createSessionMenuEntry = new(Resources.CreateSession);
+            MenuEntry findSessionsMenuEntry = new(Resources.FindSessions);
+            MenuEntry backMenuEntry = new(Resources.Back);
 
             //Hook up menu event handlers.
             createSessionMenuEntry.Selected += CreateSessionMenuEntrySelected;
@@ -55,6 +57,18 @@ namespace GalactikWars
         }
 
 
+        ///<summary>
+        ///The lobby track plays across all the multiplayer session screens.
+        ///</summary>
+        public override void Update(GameTime gameTime,
+                                    bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            ScreenManager.SoundHandler.PlayTrack(SoundHandler.LobbyTrack);
+
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+
         #endregion
 
         #region Event Handlers
@@ -63,7 +77,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the Create Session menu entry is selected.
         ///</summary>
-        void CreateSessionMenuEntrySelected(object sender, EventArgs e)
+        private void CreateSessionMenuEntrySelected(object sender, EventArgs e)
         {
             try
             {
@@ -75,7 +89,7 @@ namespace GalactikWars
 
                 //Activate the network busy screen, which will display
                 //an animation until this operation has completed.
-                NetworkBusyScreen busyScreen = new NetworkBusyScreen(asyncResult);
+                NetworkBusyScreen busyScreen = new(asyncResult);
 
                 busyScreen.OperationCompleted += CreateSessionOperationCompleted;
 
@@ -92,7 +106,7 @@ namespace GalactikWars
         ///Event handler for when the asynchronous create network session
         ///operation has completed.
         ///</summary>
-        void CreateSessionOperationCompleted(object sender,
+        private void CreateSessionOperationCompleted(object sender,
                                              OperationCompletedEventArgs e)
         {
             try
@@ -116,7 +130,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the Find Sessions menu entry is selected.
         ///</summary>
-        void FindSessionsMenuEntrySelected(object sender, EventArgs e)
+        private void FindSessionsMenuEntrySelected(object sender, EventArgs e)
         {
             try
             {
@@ -127,7 +141,7 @@ namespace GalactikWars
 
                 //Activate the network busy screen, which will display
                 //an animation until this operation has completed.
-                NetworkBusyScreen busyScreen = new NetworkBusyScreen(asyncResult);
+                NetworkBusyScreen busyScreen = new(asyncResult);
 
                 busyScreen.OperationCompleted += FindSessionsOperationCompleted;
 
@@ -144,7 +158,7 @@ namespace GalactikWars
         ///Event handler for when the asynchronous find network sessions
         ///operation has completed.
         ///</summary>
-        void FindSessionsOperationCompleted(object sender,
+        private void FindSessionsOperationCompleted(object sender,
                                             OperationCompletedEventArgs e)
         {
             try

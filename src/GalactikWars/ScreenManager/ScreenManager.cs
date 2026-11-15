@@ -8,15 +8,15 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Diagnostics;
-using System.Collections.Generic;
+using GalactikWars.Handlers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Diagnostics;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.ScreenManager
 {
     ///<summary>
     ///The screen manager is a component which manages one or more GameScreen
@@ -28,18 +28,18 @@ namespace GalactikWars
     {
         #region Fields
 
-        List<GameScreen> screens = new List<GameScreen>();
-        List<GameScreen> screensToUpdate = new List<GameScreen>();
+        private readonly List<GameScreen> screens = [];
+        private readonly List<GameScreen> screensToUpdate = [];
 
-        InputState input = new InputState();
+        private readonly InputState input = new();
 
-        SpriteBatch spriteBatch;
-        SpriteFont font;
-        Texture2D blankTexture;
+        private SpriteBatch spriteBatch;
+        private SpriteFont font;
+        private Texture2D blankTexture;
 
-        bool isInitialized;
+        private bool isInitialized;
 
-        bool traceEnabled;
+        private bool traceEnabled;
 
         #endregion
 
@@ -78,6 +78,18 @@ namespace GalactikWars
         }
 
 
+        ///<summary>
+        ///A single shared sound handler, loaded once and driven from Update so
+        ///music and effects work across every screen, not just gameplay.
+        ///</summary>
+        public SoundHandler SoundHandler
+        {
+            get { return soundHandler; }
+        }
+
+        private readonly SoundHandler soundHandler = new();
+
+
         #endregion
 
         #region Initialization
@@ -112,8 +124,11 @@ namespace GalactikWars
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/menufont");
-            blankTexture = content.Load<Texture2D>("blank");
+            font = content.Load<SpriteFont>("fonts/menufont");
+            blankTexture = content.Load<Texture2D>("ui/blank");
+
+            //Load the shared sound banks once, for every screen.
+            SoundHandler.Load(content);
 
             //Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
@@ -149,12 +164,17 @@ namespace GalactikWars
             //Read the keyboard and gamepad.
             input.Update();
 
+            //Drive the shared audio (music auto-selection, volume categories).
+            SoundHandler.Update(gameTime);
+
             //Make a copy of the master screen list, to avoid confusion if
             //the process of updating one screen adds or removes others.
             screensToUpdate.Clear();
 
             foreach (GameScreen screen in screens)
+            {
                 screensToUpdate.Add(screen);
+            }
 
             bool otherScreenHasFocus = !Game.IsActive;
             bool coveredByOtherScreen = false;
@@ -163,15 +183,15 @@ namespace GalactikWars
             while (screensToUpdate.Count > 0)
             {
                 //Pop the topmost screen off the waiting list.
-                GameScreen screen = screensToUpdate[screensToUpdate.Count - 1];
+                GameScreen screen = screensToUpdate[^1];
 
                 screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
 
                 //Update the screen.
                 screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-                if (screen.ScreenState == ScreenState.TransitionOn ||
-                    screen.ScreenState == ScreenState.Active)
+                if (screen.ScreenState is ScreenState.TransitionOn or
+                    ScreenState.Active)
                 {
                     //If this is the first active screen we came across,
                     //give it a chance to handle input.
@@ -185,25 +205,31 @@ namespace GalactikWars
                     //If this is an active non-popup, inform any subsequent
                     //screens that they are covered by it.
                     if (!screen.IsPopup)
+                    {
                         coveredByOtherScreen = true;
+                    }
                 }
             }
 
             //Print debug trace?
             if (traceEnabled)
+            {
                 TraceScreens();
+            }
         }
 
 
         ///<summary>
         ///Prints a list of all the screens, for debugging.
         ///</summary>
-        void TraceScreens()
+        private void TraceScreens()
         {
-            List<string> screenNames = new List<string>();
+            List<string> screenNames = [];
 
             foreach (GameScreen screen in screens)
+            {
                 screenNames.Add(screen.GetType().Name);
+            }
 
             Trace.WriteLine(string.Join(", ", screenNames.ToArray()));
         }
@@ -217,8 +243,10 @@ namespace GalactikWars
             foreach (GameScreen screen in screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
+                {
                     continue;
-             
+                }
+
                 screen.Draw(gameTime);
             }
         }
@@ -242,7 +270,7 @@ namespace GalactikWars
             {
                 screen.LoadContent();
             }
-            
+
             screens.Add(screen);
         }
 
@@ -260,7 +288,7 @@ namespace GalactikWars
             {
                 screen.UnloadContent();
             }
-            
+
             screens.Remove(screen);
             screensToUpdate.Remove(screen);
         }
@@ -290,7 +318,7 @@ namespace GalactikWars
             spriteBatch.Draw(blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
                              new Color((byte)0, (byte)0, (byte)0, (byte)alpha));
-            
+
             spriteBatch.End();
         }
 

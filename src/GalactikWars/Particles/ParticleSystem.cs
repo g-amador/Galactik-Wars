@@ -1,6 +1,6 @@
 #region File Description
 //-----------------------------------------------------------------------------
-//Particles.cs
+//ParticleSystem.cs
 //
 //Author: GNPA & STX
 //Microsoft XNA Community Game Platform
@@ -9,34 +9,31 @@
 #endregion
 
 #region Using statements
-using System;
-using System.Threading;
-using System.Collections.Generic;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
+using System;
+using System.Collections.Generic;
 
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Particles
 {
-    class Particles : GameScreen
+    internal class ParticleSystem : GameScreen
     {
         #region Fields
 
-        const int ppemitter = 100, ppemitter2 = 100;//The number of a type of particles allowed per emitter.
-        int ppemitterprime, ppemitterprime2;//Real particles per emitter.
-        int i;//Used in for loops.
-        int existingParticles = 0, existingParticles2 = 0;//How many total particles are active.
-        Random random = new Random();
-        Texture2D particlesTexture;
-        
+        private const int ppemitter = 100, ppemitter2 = 100;//The number of a type of particles allowed per emitter.
+        private int ppemitterprime, ppemitterprime2;//Real particles per emitter.
+        private int i;//Used in for loops.
+        private int existingParticles = 0, existingParticles2 = 0;//How many total particles are active.
+        private readonly Random random = new();
+        private Texture2D particlesTexture;
+
         #endregion
 
         #region particlesCreate, particlesUpdate
-        
+
         public void particlesCreate(List<Particle> part, float emitx, float emity, int size, int particle)
         {
             #region Ship Trail
@@ -44,7 +41,7 @@ namespace GalactikWars
             if (particle == 1)
             {
                 ppemitterprime = 0;//We use this to find out how many particles are used in the emitter.
-                
+
                 for (i = 0; i < part.Count; i++)//This cycles through the list of particles to count how many are for the specified emitter. This is the first part in recycling the old particles.
                 {
                     if (part[i].xyorg.X == emitx && part[i].xyorg.Y == emity && part[i].used == true)//Checking if the particle is active and if it belongs to the emitter placed at X,Y position.
@@ -85,19 +82,19 @@ namespace GalactikWars
                     {
                         part.Add(new Particle());//This creates a new particle.
                         //part.Count-1 will give us the most recent particle made.
-                        part[part.Count - 1].xyorg.X = emitx;//The origin of the particle.
-                        part[part.Count - 1].xyorg.Y = emity;//The origin of the particle.
-                        part[part.Count - 1].xyoffset.X = 0;//No movement yet.
-                        part[part.Count - 1].xyoffset.Y = 0;//No movement yet.
+                        part[^1].xyorg.X = emitx;//The origin of the particle.
+                        part[^1].xyorg.Y = emity;//The origin of the particle.
+                        part[^1].xyoffset.X = 0;//No movement yet.
+                        part[^1].xyoffset.Y = 0;//No movement yet.
 
-                        part[part.Count - 1].lifeSpan = random.Next(5, 21);//The lifeSpan of the particle.
-                        part[part.Count - 1].halfLife = 8;// The halfLife of the particle.
-                        part[part.Count - 1].vspd = random.Next(1, 11);//The vspeed of the particle.
-                        part[part.Count - 1].hspd = random.Next(-10, 11);//The hspeed of the particle.
-                        part[part.Count - 1].clr = random.Next(0, 5);//There will be five different random colors in this sample.
-                        part[part.Count - 1].size = size;//The size of the particle.
+                        part[^1].lifeSpan = random.Next(5, 21);//The lifeSpan of the particle.
+                        part[^1].halfLife = 8;// The halfLife of the particle.
+                        part[^1].vspd = random.Next(1, 11);//The vspeed of the particle.
+                        part[^1].hspd = random.Next(-10, 11);//The hspeed of the particle.
+                        part[^1].clr = random.Next(0, 5);//There will be five different random colors in this sample.
+                        part[^1].size = size;//The size of the particle.
 
-                        part[part.Count - 1].used = true;//We're using it.
+                        part[^1].used = true;//We're using it.
                         existingParticles += 1;//We add to the total count.
                         ppemitterprime += 1;//Adding to the count.
                     }
@@ -111,7 +108,7 @@ namespace GalactikWars
             if (particle == 2)
             {
                 ppemitterprime2 = 0;//We use this to find out how many particles are used in the emitter.
-                
+
                 for (i = 0; i < part.Count; i++)//This cycles through the list of particles to count how many are for the specified emitter. This is the first part in recycling the old particles.
                 {
                     if (part[i].xyorg.X == emitx && part[i].xyorg.Y == emity && part[i].used == true)//Checking if the particle is active and if it belongs to the emitter placed at X,Y position.
@@ -152,19 +149,19 @@ namespace GalactikWars
                     {
                         part.Add(new Particle());//This creates a new particle.
                         //part.Count-1 will give us the most recent particle made.
-                        part[part.Count - 1].xyorg.X = emitx;//The origin of the particle.
-                        part[part.Count - 1].xyorg.Y = emity;//The origin of the particle.
-                        part[part.Count - 1].xyoffset.X = 0;//No movement yet.
-                        part[part.Count - 1].xyoffset.Y = 0;//No movement yet.
+                        part[^1].xyorg.X = emitx;//The origin of the particle.
+                        part[^1].xyorg.Y = emity;//The origin of the particle.
+                        part[^1].xyoffset.X = 0;//No movement yet.
+                        part[^1].xyoffset.Y = 0;//No movement yet.
 
-                        part[part.Count - 1].lifeSpan = random.Next(5, 21);//The lifeSpan of the particle.
-                        part[part.Count - 1].halfLife = 8;// The halfLife of the particle.
-                        part[part.Count - 1].vspd = random.Next(1, 11);//The vspeed of the particle.
-                        part[part.Count - 1].hspd = random.Next(-10, 11);//The hspeed of the particle.
-                        part[part.Count - 1].clr = random.Next(0, 5);//There will be five different random colors in this sample.
-                        part[part.Count - 1].size = size;//The size of the particle.
+                        part[^1].lifeSpan = random.Next(5, 21);//The lifeSpan of the particle.
+                        part[^1].halfLife = 8;// The halfLife of the particle.
+                        part[^1].vspd = random.Next(1, 11);//The vspeed of the particle.
+                        part[^1].hspd = random.Next(-10, 11);//The hspeed of the particle.
+                        part[^1].clr = random.Next(0, 5);//There will be five different random colors in this sample.
+                        part[^1].size = size;//The size of the particle.
 
-                        part[part.Count - 1].used = true;//We're using it.
+                        part[^1].used = true;//We're using it.
                         existingParticles2 += 1;//We add to the total count.
                         ppemitterprime2 += 1;//Adding to the count.
                     }
@@ -228,14 +225,14 @@ namespace GalactikWars
 
             #endregion
         }
-        
+
         #endregion
-        
+
         #region drawParticles
 
         public void drawParticles(GameTime gameTime, SpriteBatch spriteBatch, List<Particle> part, int drawParticle, Texture2D particleTexture)
         {
-            Color color = new Color();
+            Color color = new();
             this.particlesTexture = particleTexture;
 
             if (drawParticle == 1)
@@ -249,20 +246,20 @@ namespace GalactikWars
                             color = new Color((byte)0, (byte)0, (byte)random.Next(0, 100), (byte)255);
                         }
 
-                        if (part[i].lifeSpan > 10 && part[i].lifeSpan < 17)
+                        if (part[i].lifeSpan is > 10 and < 17)
                         {
                             color = new Color((byte)0, (byte)0, (byte)random.Next(145, 185), (byte)255);
                         }
 
-                        if (part[i].lifeSpan > 5 && part[i].lifeSpan < 10)
+                        if (part[i].lifeSpan is > 5 and < 10)
                         {
                             color = new Color((byte)0, (byte)0, (byte)random.Next(200, 255), (byte)255);
                         }
 
                         if (part[i].used == true)
                         {
-                            Vector2 prtcl = new Vector2(part[i].xyorg.X, part[i].xyorg.Y);//The X and Y position to draw each particle.
-                            
+                            Vector2 prtcl = new(part[i].xyorg.X, part[i].xyorg.Y);//The X and Y position to draw each particle.
+
                             spriteBatch.Draw(particlesTexture, prtcl, null, color, part[i].rot, Vector2.Zero, part[i].size, SpriteEffects.None, 0);//And we draw it.               
                         }
                     }
@@ -280,19 +277,19 @@ namespace GalactikWars
                             color = new Color((byte)random.Next(175, 255), (byte)random.Next(150, 255), (byte)random.Next(100, 255), (byte)255);
                         }
 
-                        if (part[i].lifeSpan > 10 && part[i].lifeSpan < 17)
+                        if (part[i].lifeSpan is > 10 and < 17)
                         {
                             color = new Color((byte)random.Next(150, 175), (byte)random.Next(75, 150), (byte)random.Next(50, 100), (byte)255);
                         }
 
-                        if (part[i].lifeSpan > 5 && part[i].lifeSpan < 10)
+                        if (part[i].lifeSpan is > 5 and < 10)
                         {
                             color = new Color((byte)random.Next(0, 150), (byte)random.Next(0, 75), (byte)random.Next(0, 50), (byte)255);
                         }
 
                         if (part[i].used == true)
                         {
-                            Vector2 prtcl = new Vector2(part[i].xyorg.X, part[i].xyorg.Y);//The X and Y position to draw each particle.
+                            Vector2 prtcl = new(part[i].xyorg.X, part[i].xyorg.Y);//The X and Y position to draw each particle.
                             spriteBatch.Draw(particlesTexture, prtcl, null, color, part[i].rot, Vector2.Zero, part[i].size, SpriteEffects.None, 0);//And we draw it.
                         }
                     }

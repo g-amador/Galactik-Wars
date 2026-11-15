@@ -93,7 +93,7 @@ namespace FbxToXConverter
                     if (string.Equals(Path.GetFileName(candidate), name,
                                       StringComparison.OrdinalIgnoreCase))
                     {
-                        textureFile = $@"..\Textures\{Path.GetFileName(candidate)}";
+                        textureFile = $@"..\textures\{Path.GetFileName(candidate)}";
                         break;
                     }
                 }

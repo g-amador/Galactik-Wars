@@ -8,36 +8,36 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.ScreenManager
 {
     ///<summary>
     ///Component implements the IMessageDisplay interface. This is used to show
     ///notification messages when interesting events occur, for instance when
     ///gamers join or leave the network session
     ///</summary>
-    class MessageDisplayComponent : DrawableGameComponent, IMessageDisplay
+    internal class MessageDisplayComponent : DrawableGameComponent, IMessageDisplay
     {
         #region Fields
 
-        SpriteBatch spriteBatch;
-        SpriteFont font;
+        private SpriteBatch spriteBatch;
+        private SpriteFont font;
 
         //List of the currently visible notification messages.
-        List<NotificationMessage> messages = new List<NotificationMessage>();
+        private readonly List<NotificationMessage> messages = [];
 
         //Coordinates threadsafe access to the message list.
-        object syncObject = new object();
+        private readonly object syncObject = new();
 
         //Tweakable settings control how long each message is visible.
-        static readonly TimeSpan fadeInTime = TimeSpan.FromSeconds(0.25);
-        static readonly TimeSpan showTime = TimeSpan.FromSeconds(5);
-        static readonly TimeSpan fadeOutTime = TimeSpan.FromSeconds(0.5);
+        private static readonly TimeSpan fadeInTime = TimeSpan.FromSeconds(0.25);
+        private static readonly TimeSpan showTime = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan fadeOutTime = TimeSpan.FromSeconds(0.5);
 
         #endregion
 
@@ -62,7 +62,7 @@ namespace GalactikWars
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            font = Game.Content.Load<SpriteFont>("Fonts/menufont");
+            font = Game.Content.Load<SpriteFont>("fonts/menufont");
         }
 
 
@@ -104,7 +104,9 @@ namespace GalactikWars
                         //Any subsequent messages should be positioned below
                         //this one, unless it has started to fade out.
                         if (message.Age < showTime)
+                        {
                             targetPosition++;
+                        }
                     }
                     else
                     {
@@ -125,9 +127,11 @@ namespace GalactikWars
             {
                 //Early out if there are no messages to display.
                 if (messages.Count == 0)
+                {
                     return;
+                }
 
-                Vector2 position = new Vector2(GraphicsDevice.Viewport.Width - 100, 0);
+                Vector2 position = new(GraphicsDevice.Viewport.Width - 100, 0);
 
                 spriteBatch.Begin();
 
@@ -205,7 +209,7 @@ namespace GalactikWars
         ///<summary>
         ///Helper class stores the position and text of a single notification message.
         ///</summary>
-        class NotificationMessage
+        private class NotificationMessage
         {
             public string Text;
             public float Position;

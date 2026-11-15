@@ -9,9 +9,8 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.IO;
 using Microsoft.Xna.Framework;
+using System.IO;
 #endregion
 
 namespace GalactikWars.Net
@@ -23,7 +22,7 @@ namespace GalactikWars.Net
     {
         #region Fields
 
-        readonly MemoryStream memoryStream;
+        private readonly MemoryStream memoryStream;
 
         #endregion
 
@@ -36,7 +35,7 @@ namespace GalactikWars.Net
             : this(new MemoryStream())
         { }
 
-        PacketWriter(MemoryStream memoryStream)
+        private PacketWriter(MemoryStream memoryStream)
             : base(memoryStream)
         {
             this.memoryStream = memoryStream;

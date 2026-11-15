@@ -9,34 +9,34 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Threading;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 #endregion
 
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     /// <summary>
     /// The options screen is brought up over the top of the main menu
     /// screen, and gives the user a chance to configure the game
     /// in various hopefully useful ways.
     /// </summary>
-    class OptionsMenuScreen : MenuScreen
+    internal class OptionsMenuScreen : MenuScreen
     {
         #region Fields
 
-        int selectedEntry = 0;
-        string menuTitle;
+        private int selectedEntry = 0;
+        private readonly string menuTitle;
 
-        Texture2D gradientTexture;
+        private Texture2D gradientTexture;
 
         #endregion
 
         #region Initialization
-        
+
         ///<summary>
         ///Constructor
         ///</summary>
@@ -45,10 +45,10 @@ namespace GalactikWars
         {
             menuTitle = message;
 
-            MenuEntry controlsMenuEntry = new MenuEntry(Resources.Controls);
-            MenuEntry soundMenuEntry = new MenuEntry(Resources.Sound);
-            MenuEntry backMenuEntry = new MenuEntry(Resources.Back);
-            MenuEntry exitMenuEntry = new MenuEntry(Resources.Exit);
+            MenuEntry controlsMenuEntry = new(Resources.Controls);
+            MenuEntry soundMenuEntry = new(Resources.Sound);
+            MenuEntry backMenuEntry = new(Resources.Back);
+            MenuEntry exitMenuEntry = new(Resources.Exit);
 
             controlsMenuEntry.Selected += controlsMenuEntrySelected;
             soundMenuEntry.Selected += soundMenuEntrySelected;
@@ -75,7 +75,7 @@ namespace GalactikWars
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("background");
+            gradientTexture = content.Load<Texture2D>("ui/background");
         }
         #endregion
 
@@ -89,23 +89,23 @@ namespace GalactikWars
             MenuEntries[selectedEntry].OnSelectEntry();
         }
 
-        void controlsMenuEntrySelected(object sender, EventArgs e)
+        private void controlsMenuEntrySelected(object sender, EventArgs e)
         {
-            ControlsScreen controls = new ControlsScreen(null);
+            ControlsScreen controls = new(null);
 
             ScreenManager.AddScreen(controls);
             LoadingScreen.Load(ScreenManager, true, controls);
         }
 
-        void soundMenuEntrySelected(object sender, EventArgs e)
+        private void soundMenuEntrySelected(object sender, EventArgs e)
         {
-            SoundScreen sound = new SoundScreen(null);
+            SoundScreen sound = new(null);
 
             ScreenManager.AddScreen(sound);
             LoadingScreen.Load(ScreenManager, true, sound);
         }
 
-        void backMenuEntrySelected(object sender, EventArgs e)
+        private void backMenuEntrySelected(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new BackgroundScreen(), new MainMenuScreen());
         }
@@ -115,7 +115,7 @@ namespace GalactikWars
         ///</summary>
         protected override void OnCancel()
         {
-            LoadingScreen.Load(ScreenManager, true, new BackgroundScreen(), 
+            LoadingScreen.Load(ScreenManager, true, new BackgroundScreen(),
                 new MainMenuScreen());
         }
 
@@ -131,7 +131,9 @@ namespace GalactikWars
                 selectedEntry--;
 
                 if (selectedEntry < 0)
+                {
                     selectedEntry = 2;
+                }
             }
 
             //Move to the next menu entry?
@@ -140,7 +142,9 @@ namespace GalactikWars
                 selectedEntry++;
 
                 if (selectedEntry > 2)
+                {
                     selectedEntry = 0;
+                }
             }
 
             //Accept or cancel the menu?
@@ -155,7 +159,7 @@ namespace GalactikWars
         }
 
         #endregion
- 
+
         #region Update and draw
 
 
@@ -184,7 +188,7 @@ namespace GalactikWars
         }
 
 
-         ///<summary>
+        ///<summary>
         ///Draws the menu.
         ///</summary>
         public override void Draw(GameTime gameTime)
@@ -192,17 +196,17 @@ namespace GalactikWars
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
 
-            Vector2 titlePosition = new Vector2(400, 60);
+            Vector2 titlePosition = new(400, 60);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
-            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
+            Color titleColor = new((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.50f;
 
-            Vector2 position = new Vector2(100, 150);
-            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
+            Vector2 position = new(100, 150);
+            Color color = new((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Rectangle backgroundRectangle = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            Vector2 viewportSize = new(viewport.Width, viewport.Height);
+            Rectangle backgroundRectangle = new(0, 0, viewport.Width, viewport.Height);
 
             //Make the menu slide into place during transitions, using a
             //power curve to make things look more interesting (this makes
@@ -210,9 +214,13 @@ namespace GalactikWars
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             if (ScreenState == ScreenState.TransitionOn)
+            {
                 position.X -= transitionOffset * 256;
+            }
             else
+            {
                 position.X += transitionOffset * 512;
+            }
 
             spriteBatch.Begin();
 

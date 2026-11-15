@@ -8,13 +8,14 @@
 #endregion
 
 #region Using Statements
-using System;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
     ///<summary>
     ///When an asynchronous network operation (for instance searching for or joining a
@@ -30,13 +31,13 @@ namespace GalactikWars
     ///operation is in progress, it automatically takes over all user input,
     ///preventing any other menu entries being selected until the operation completes.
     ///</summary>
-    class NetworkBusyScreen : GameScreen
+    internal class NetworkBusyScreen : GameScreen
     {
         #region Fields
 
-        IAsyncResult asyncResult;
-        Texture2D gradientTexture;
-        Texture2D catTexture;
+        private IAsyncResult asyncResult;
+        private Texture2D gradientTexture;
+        private Texture2D catTexture;
 
         #endregion
 
@@ -62,7 +63,6 @@ namespace GalactikWars
             TransitionOffTime = TimeSpan.FromSeconds(0.2);
         }
 
-        
         ///<summary>
         ///Loads graphics content for this screen. This uses the shared ContentManager
         ///provided by the Game class, so the content will remain loaded forever.
@@ -73,8 +73,8 @@ namespace GalactikWars
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("gradient");
-            catTexture = content.Load<Texture2D>("Textures/network");
+            gradientTexture = content.Load<Texture2D>("ui/gradient");
+            catTexture = content.Load<Texture2D>("textures/network");
         }
 
 
@@ -95,11 +95,8 @@ namespace GalactikWars
             if ((asyncResult != null) && asyncResult.IsCompleted)
             {
                 //If so, raise the OperationCompleted event.
-                if (OperationCompleted != null)
-                {
-                    OperationCompleted(this,
-                                       new OperationCompletedEventArgs(asyncResult));
-                }
+                OperationCompleted?.Invoke(this,
+                   new OperationCompletedEventArgs(asyncResult));
 
                 ExitScreen();
 
@@ -123,11 +120,11 @@ namespace GalactikWars
 
             //Center the message text in the viewport.
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+            Vector2 viewportSize = new(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(message);
 
             //Add enough room to spin a cat.
-            Vector2 catSize = new Vector2(catTexture.Width);
+            Vector2 catSize = new(catTexture.Width);
 
             textSize.X = Math.Max(textSize.X, catSize.X);
             textSize.Y += catSize.Y + vPad;
@@ -135,13 +132,13 @@ namespace GalactikWars
             Vector2 textPosition = (viewportSize - textSize) / 2;
 
             //The background includes a border somewhat larger than the text itself.
-            Rectangle backgroundRectangle = new Rectangle((int)textPosition.X - hPad,
+            Rectangle backgroundRectangle = new((int)textPosition.X - hPad,
                                                           (int)textPosition.Y - vPad,
                                                           (int)textSize.X + hPad * 2,
                                                           (int)textSize.Y + vPad * 2);
 
             //Fade the popup alpha during transitions.
-            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
+            Color color = new((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             spriteBatch.Begin();
 
@@ -154,7 +151,7 @@ namespace GalactikWars
             //Draw the spinning cat progress indicator.
             float catRotation = (float)gameTime.TotalGameTime.TotalSeconds * 3;
 
-            Vector2 catPosition = new Vector2(textPosition.X + textSize.X / 2,
+            Vector2 catPosition = new(textPosition.X + textSize.X / 2,
                                               textPosition.Y + textSize.Y -
                                                                         catSize.Y / 2);
 

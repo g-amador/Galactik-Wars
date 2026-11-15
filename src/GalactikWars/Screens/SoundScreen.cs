@@ -1,14 +1,15 @@
 #region Using Statements
-using System;
-using System.Threading;
+using GalactikWars.Handlers;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
-    class SoundScreen : MenuScreen
+    internal class SoundScreen : MenuScreen
     {
         /// <summary>
         /// The controls screen is brought up over the top of the main menu
@@ -17,12 +18,12 @@ namespace GalactikWars
         /// </summary>
         #region Fields
 
-        int selectedEntry = 0;
-        string message = "Music Volume: ";
-        string message2 = "                         Effects Volume: ";
-        float music = SoundHandler.musicVolume * 100, effects = SoundHandler.effectsVolume * 100;
+        private int selectedEntry = 0;
+        private readonly string message = "Music Volume: ";
+        private readonly string message2 = "                         Effects Volume: ";
+        private float music = SoundHandler.musicVolume * 100, effects = SoundHandler.effectsVolume * 100;
 
-        Texture2D gradientTexture;
+        private Texture2D gradientTexture;
 
         #endregion
 
@@ -34,7 +35,7 @@ namespace GalactikWars
         ///</summary>
         public SoundScreen(string message)
                 : this(message, true)
-            { }
+        { }
 
         ///<summary>
         ///Constructor
@@ -42,12 +43,12 @@ namespace GalactikWars
         public SoundScreen(string menuTitle, bool a)
             : base(Resources.Sound)
         {
-            MenuEntry MusicUpMenuEntry = new MenuEntry(Resources.MusicUp);
-            MenuEntry MusicDownMenuEntry = new MenuEntry(Resources.MusicDown);
-            MenuEntry effectsUpMenuEntry = new MenuEntry(Resources.EffectsUp);
-            MenuEntry effectsDownMenuEntry = new MenuEntry(Resources.EffectsDown);
-            MenuEntry backMenuEntry = new MenuEntry(Resources.Back);
-            MenuEntry exitMenuEntry = new MenuEntry(Resources.Exit);
+            MenuEntry MusicUpMenuEntry = new(Resources.MusicUp);
+            MenuEntry MusicDownMenuEntry = new(Resources.MusicDown);
+            MenuEntry effectsUpMenuEntry = new(Resources.EffectsUp);
+            MenuEntry effectsDownMenuEntry = new(Resources.EffectsDown);
+            MenuEntry backMenuEntry = new(Resources.Back);
+            MenuEntry exitMenuEntry = new(Resources.Exit);
 
             MusicUpMenuEntry.Selected += MusicUpMenuEntrySelected;
             MusicDownMenuEntry.Selected += MusicDownMenuEntrySelected;
@@ -78,7 +79,7 @@ namespace GalactikWars
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("background");
+            gradientTexture = content.Load<Texture2D>("ui/background");
         }
 
         #endregion
@@ -97,7 +98,9 @@ namespace GalactikWars
                 selectedEntry--;
 
                 if (selectedEntry < 0)
+                {
                     selectedEntry = 4;
+                }
             }
 
             //Move to the next menu entry?
@@ -106,7 +109,9 @@ namespace GalactikWars
                 selectedEntry++;
 
                 if (selectedEntry > 4)
+                {
                     selectedEntry = 0;
+                }
             }
 
             //Accept or cancel the menu?
@@ -128,9 +133,9 @@ namespace GalactikWars
             MenuEntries[selectedEntry].OnSelectEntry();
         }
 
-        void MusicUpMenuEntrySelected(object sender, EventArgs e)
+        private void MusicUpMenuEntrySelected(object sender, EventArgs e)
         {
-            music = ((music/100) + 0.10f)*100;
+            music = ((music / 100) + 0.10f) * 100;
 
             if (music > 100)
             {
@@ -140,9 +145,9 @@ namespace GalactikWars
             SoundHandler.musicVolume = music / 100;
         }
 
-        void MusicDownMenuEntrySelected(object sender, EventArgs e)
+        private void MusicDownMenuEntrySelected(object sender, EventArgs e)
         {
-            music = ((music/100) - 0.10f)*100;
+            music = ((music / 100) - 0.10f) * 100;
 
             if (music <= 0)
             {
@@ -152,19 +157,19 @@ namespace GalactikWars
             SoundHandler.musicVolume = music / 100;
         }
 
-        void effectsUpMenuEntrySelected(object sender, EventArgs e)
+        private void effectsUpMenuEntrySelected(object sender, EventArgs e)
         {
-            effects = ((effects / 100) + 0.10f)*100;
+            effects = ((effects / 100) + 0.10f) * 100;
 
             if (effects > 100)
             {
                 effects = 100;
             }
 
-            SoundHandler.effectsVolume = effects / 100; 
+            SoundHandler.effectsVolume = effects / 100;
         }
 
-        void effectsDownMenuEntrySelected(object sender, EventArgs e)
+        private void effectsDownMenuEntrySelected(object sender, EventArgs e)
         {
             effects = ((effects / 100) - 0.10f) * 100;
 
@@ -176,7 +181,7 @@ namespace GalactikWars
             SoundHandler.effectsVolume = effects / 100;
         }
 
-        void backMenuEntrySelected(object sender, EventArgs e)
+        private void backMenuEntrySelected(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new BackgroundScreen(), new OptionsMenuScreen(Resources.Options));
         }
@@ -218,7 +223,7 @@ namespace GalactikWars
         }
 
 
-         ///<summary>
+        ///<summary>
         ///Draws the menu.
         ///</summary>
         public override void Draw(GameTime gameTime)
@@ -226,7 +231,7 @@ namespace GalactikWars
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
 
-            Vector2 position = new Vector2(100, 150);
+            Vector2 position = new(100, 150);
 
             //Make the menu slide into place during transitions, using a
             //power curve to make things look more interesting (this makes
@@ -234,21 +239,25 @@ namespace GalactikWars
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             if (ScreenState == ScreenState.TransitionOn)
+            {
                 position.X -= transitionOffset * 256;
+            }
             else
+            {
                 position.X += transitionOffset * 512;
+            }
 
             //Center the message text in the viewport.
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+            Vector2 viewportSize = new(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(message);
-            Vector2 textPosition = new Vector2(100,50);
-            Vector2 textPosition2 = new Vector2(100,50);
+            Vector2 textPosition = new(100, 50);
+            Vector2 textPosition2 = new(100, 50);
 
-            Rectangle backgroundRectangle = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            Rectangle backgroundRectangle = new(0, 0, viewport.Width, viewport.Height);
 
             //Fade the popup alpha during transitions.
-            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
+            Color color = new((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             spriteBatch.Begin();
 
@@ -256,8 +265,8 @@ namespace GalactikWars
             spriteBatch.Draw(gradientTexture, backgroundRectangle, color);
 
             //Draw the message box text.
-            spriteBatch.DrawString(font, message + music +" %", textPosition, color);
-  
+            spriteBatch.DrawString(font, message + music + " %", textPosition, color);
+
             //Draw the message box text.
             spriteBatch.DrawString(font, message2 + effects + " %", textPosition2, color);
 

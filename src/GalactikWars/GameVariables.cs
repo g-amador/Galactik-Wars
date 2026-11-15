@@ -9,14 +9,11 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Text;
 #endregion
 
 namespace GalactikWars
 {
-    class GameVariables
+    internal class GameVariables
     {
         #region Fields
 
@@ -59,7 +56,7 @@ namespace GalactikWars
         public static float PlayfieldSizeY = 25000f;
 
         //Volume Variables
-        public const float defaultMusicVolume = 0.0f;
+        public const float defaultMusicVolume = 0.5f;
         public const float defaultEffectsVolume = 1.0f;
 
         //General Aspect Options
@@ -69,6 +66,11 @@ namespace GalactikWars
         public const bool MouseActive = false;
         public const bool FullScreen = false;
         public static bool _3D = false;
+
+        //Default window size (the old XNA 800x480 was too small to show the
+        //whole controls screen without cutting text off).
+        public const int ScreenWidth = 1280;
+        public const int ScreenHeight = 720;
 
         #endregion
     }

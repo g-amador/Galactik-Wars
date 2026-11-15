@@ -8,15 +8,17 @@
 #endregion
 
 #region Using Statements
-using System;
+using GalactikWars.Handlers;
+using GalactikWars.Net;
+using GalactikWars.ScreenManager;
+using GalactikWars.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using GalactikWars.Net;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
     ///<summary>
     ///The lobby screen provides a place for gamers to congregate before starting
@@ -24,16 +26,16 @@ namespace GalactikWars
     ///and indicates which ones are currently talking. Each gamer can press a button
     ///to mark themselves as ready: gameplay will begin after everyone has done this.
     ///</summary>
-    class LobbyScreen : GameScreen
+    internal class LobbyScreen : GameScreen
     {
         #region Fields
 
-        NetworkSession networkSession;
+        private readonly NetworkSession networkSession;
 
-        Texture2D isReadyTexture;
-        Texture2D hasVoiceTexture;
-        Texture2D isTalkingTexture;
-        Texture2D voiceMutedTexture;
+        private Texture2D isReadyTexture;
+        private Texture2D hasVoiceTexture;
+        private Texture2D isTalkingTexture;
+        private Texture2D voiceMutedTexture;
 
         #endregion
 
@@ -59,10 +61,12 @@ namespace GalactikWars
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            isReadyTexture = content.Load<Texture2D>("chat_ready");
-            hasVoiceTexture = content.Load<Texture2D>("chat_able");
-            isTalkingTexture = content.Load<Texture2D>("chat_talking");
-            voiceMutedTexture = content.Load<Texture2D>("chat_mute");
+            isReadyTexture = content.Load<Texture2D>("ui/chat_ready");
+            hasVoiceTexture = content.Load<Texture2D>("ui/chat_able");
+            isTalkingTexture = content.Load<Texture2D>("ui/chat_talking");
+            voiceMutedTexture = content.Load<Texture2D>("ui/chat_mute");
+
+            ScreenManager.SoundHandler.PlayTrack(SoundHandler.LobbyTrack);
         }
 
 
@@ -124,7 +128,7 @@ namespace GalactikWars
         ///<summary>
         ///Handle MenuSelect inputs by marking ourselves as ready.
         ///</summary>
-        void HandleMenuSelect(LocalNetworkGamer gamer)
+        private void HandleMenuSelect(LocalNetworkGamer gamer)
         {
             if (!gamer.IsReady)
             {
@@ -136,7 +140,7 @@ namespace GalactikWars
                 //everyone has marked themselves ready. If they press select twice
                 //in a row, the first time marks the host ready, then the second
                 //time we ask if they want to force start.
-                MessageBoxScreen messageBox = new MessageBoxScreen(
+                MessageBoxScreen messageBox = new(
                                                     Resources.ConfirmForceStartGame);
 
                 messageBox.Accepted += ConfirmStartGameMessageBoxAccepted;
@@ -150,7 +154,7 @@ namespace GalactikWars
         ///Event handler for when the host selects ok on the "are you sure
         ///you want to start even though not everyone is ready" message box.
         ///</summary>
-        void ConfirmStartGameMessageBoxAccepted(object sender, EventArgs e)
+        private void ConfirmStartGameMessageBoxAccepted(object sender, EventArgs e)
         {
             if (networkSession.SessionState == NetworkSessionState.Lobby)
             {
@@ -163,7 +167,7 @@ namespace GalactikWars
         ///Handle MenuCancel inputs by clearing our ready status, or if it is
         ///already clear, prompting if the user wants to leave the session.
         ///</summary>
-        void HandleMenuCancel(LocalNetworkGamer gamer)
+        private void HandleMenuCancel(LocalNetworkGamer gamer)
         {
             if (gamer.IsReady)
             {
@@ -189,15 +193,19 @@ namespace GalactikWars
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
 
-            Vector2 position = new Vector2(100, 150);
+            Vector2 position = new(100, 150);
 
             //Make the lobby slide into place during transitions.
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             if (ScreenState == ScreenState.TransitionOn)
+            {
                 position.X -= transitionOffset * 256;
+            }
             else
+            {
                 position.X += transitionOffset * 512;
+            }
 
             spriteBatch.Begin();
 
@@ -216,15 +224,17 @@ namespace GalactikWars
                     position.Y = 150;
                 }
                 else
+                {
                     position.Y += ScreenManager.Font.LineSpacing;
+                }
             }
 
             //Draw the screen title.
             string title = Resources.Lobby;
 
-            Vector2 titlePosition = new Vector2(533, 80);
+            Vector2 titlePosition = new(533, 80);
             Vector2 titleOrigin = font.MeasureString(title) / 2;
-            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
+            Color titleColor = new((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
@@ -239,13 +249,13 @@ namespace GalactikWars
         ///<summary>
         ///Helper draws the gamertag and status icons for a single NetworkGamer.
         ///</summary>
-        void DrawGamer(NetworkGamer gamer, Vector2 position)
+        private void DrawGamer(NetworkGamer gamer, Vector2 position)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
 
-            Vector2 iconWidth = new Vector2(34, 0);
-            Vector2 iconOffset = new Vector2(0, 12);
+            Vector2 iconWidth = new(34, 0);
+            Vector2 iconOffset = new(0, 12);
 
             Vector2 iconPosition = position + iconOffset;
 
@@ -279,7 +289,9 @@ namespace GalactikWars
             string text = gamer.Gamertag;
 
             if (gamer.IsHost)
+            {
                 text += Resources.HostSuffix;
+            }
 
             Color color = (gamer.IsLocal) ? Color.Yellow : Color.White;
 
@@ -298,7 +310,7 @@ namespace GalactikWars
         ///<summary>
         ///Helper modifies a color to fade its alpha value during screen transitions.
         ///</summary>
-        Color FadeAlphaDuringTransition(Color color)
+        private Color FadeAlphaDuringTransition(Color color)
         {
             return new Color(color.R, color.G, color.B, TransitionAlpha);
         }

@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.ScreenManager
 {
     ///<summary>
     ///Helper for reading input from keyboard and gamepad. This class tracks both
@@ -148,7 +148,7 @@ namespace GalactikWars
             {
                 LastKeyboardStates[i] = CurrentKeyboardStates[i];
                 LastGamePadStates[i] = CurrentGamePadStates[i];
-                
+
                 CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
                 CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
             }
@@ -167,7 +167,9 @@ namespace GalactikWars
             for (int i = 0; i < MaxInputs; i++)
             {
                 if (IsNewKeyPress(key, (PlayerIndex)i))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -204,7 +206,7 @@ namespace GalactikWars
         public bool IsMouseLeftButtonPressed()
         {
             return ((CurrentMouseState.LeftButton == ButtonState.Pressed) &&
-                    (LastMouseState.LeftButton != ButtonState.Pressed) && 
+                    (LastMouseState.LeftButton != ButtonState.Pressed) &&
                     GameVariables.MouseActive);
         }
 
@@ -216,7 +218,7 @@ namespace GalactikWars
         public bool IsMouseMiddleButtonPressed()
         {
             return ((CurrentMouseState.MiddleButton == ButtonState.Pressed) &&
-                    (LastMouseState.MiddleButton != ButtonState.Pressed) && 
+                    (LastMouseState.MiddleButton != ButtonState.Pressed) &&
                     GameVariables.MouseActive);
         }
 
@@ -228,7 +230,7 @@ namespace GalactikWars
         public bool IsMouseRightButtonPressed()
         {
             return ((CurrentMouseState.RightButton == ButtonState.Pressed) &&
-                    (LastMouseState.RightButton != ButtonState.Pressed) && 
+                    (LastMouseState.RightButton != ButtonState.Pressed) &&
                     GameVariables.MouseActive);
         }
 
@@ -273,7 +275,9 @@ namespace GalactikWars
             for (int i = 0; i < MaxInputs; i++)
             {
                 if (IsNewButtonPress(button, (PlayerIndex)i))
+                {
                     return true;
+                }
             }
 
             return false;

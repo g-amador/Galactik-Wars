@@ -8,16 +8,20 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Threading;
-using System.Diagnostics;
+using GalactikWars.Handlers;
+using GalactikWars.Net;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GalactikWars.Net;
+using System;
+using System.Diagnostics;
+using System.Threading;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
+
+    using ScreenManager = GalactikWars.ScreenManager.ScreenManager;
     ///<summary>
     ///The loading screen coordinates transitions between the menu system and the
     ///game itself. Normally one screen will transition off at the same time as
@@ -32,24 +36,24 @@ namespace GalactikWars
     ///  next screen, which may take a long time to load its data. The loading
     ///  screen will be the only thing displayed while this load is taking place.
     ///</summary>
-    class LoadingScreen : GameScreen
+    internal class LoadingScreen : GameScreen
     {
         #region Fields
 
-        bool loadingIsSlow;
-        bool otherScreensAreGone;
+        private readonly bool loadingIsSlow;
+        private bool otherScreensAreGone;
 
-        GameScreen[] screensToLoad;
+        private readonly GameScreen[] screensToLoad;
 
-        Thread backgroundThread;
-        EventWaitHandle backgroundThreadExit;
+        private readonly Thread backgroundThread;
+        private readonly EventWaitHandle backgroundThreadExit;
 
-        GraphicsDevice graphicsDevice;
-        NetworkSession networkSession;
-        IMessageDisplay messageDisplay;
+        private GraphicsDevice graphicsDevice;
+        private NetworkSession networkSession;
+        private readonly IMessageDisplay messageDisplay;
 
-        GameTime loadStartTime;
-        TimeSpan loadAnimationTimer;
+        private GameTime loadStartTime;
+        private TimeSpan loadAnimationTimer;
 
         #endregion
 
@@ -87,6 +91,9 @@ namespace GalactikWars
                 messageDisplay = (IMessageDisplay)services.GetService(
                                                             typeof(IMessageDisplay));
             }
+
+            //Switch to the loading track while the next screens come up.
+            screenManager.SoundHandler.PlayTrack(SoundHandler.LoadingTrack);
         }
 
 
@@ -98,10 +105,12 @@ namespace GalactikWars
         {
             //Tell all the current screens to transition off.
             foreach (GameScreen screen in screenManager.GetScreens())
+            {
                 screen.ExitScreen();
+            }
 
             //Create and activate the loading screen.
-            LoadingScreen loadingScreen = new LoadingScreen(screenManager,
+            LoadingScreen loadingScreen = new(screenManager,
                                                             loadingIsSlow,
                                                             screensToLoad);
 
@@ -191,17 +200,17 @@ namespace GalactikWars
 
                 //Center the text in the viewport.
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-                Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+                Vector2 viewportSize = new(viewport.Width, viewport.Height);
                 Vector2 textSize = font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;
 
-                Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
+                Color color = new((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
                 //Animate the number of dots after our "Loading..." message.
                 loadAnimationTimer += gameTime.ElapsedGameTime;
 
                 int dotCount = (int)(loadAnimationTimer.TotalSeconds * 5) % 10;
-                    
+
                 message += new string('.', dotCount);
 
                 //Draw the text.
@@ -221,7 +230,7 @@ namespace GalactikWars
         ///Worker thread draws the loading animation and updates the network
         ///session while the load is taking place.
         ///</summary>
-        void BackgroundWorkerThread()
+        private void BackgroundWorkerThread()
         {
             long lastTime = Stopwatch.GetTimestamp();
 
@@ -243,7 +252,7 @@ namespace GalactikWars
         ///<summary>
         ///Works out how long it has been since the last background thread update.
         ///</summary>
-        GameTime GetGameTime(ref long lastTime)
+        private GameTime GetGameTime(ref long lastTime)
         {
             long currentTime = Stopwatch.GetTimestamp();
             long elapsedTicks = currentTime - lastTime;
@@ -262,10 +271,12 @@ namespace GalactikWars
         ///Calls directly into our Draw method from the background worker thread,
         ///so as to update the load animation in parallel with the actual loading.
         ///</summary>
-        void DrawLoadAnimation(GameTime gameTime)
+        private void DrawLoadAnimation(GameTime gameTime)
         {
             if ((graphicsDevice == null) || graphicsDevice.IsDisposed)
+            {
                 return;
+            }
 
             try
             {
@@ -299,12 +310,14 @@ namespace GalactikWars
         ///Updates the network session from the background worker thread, to avoid
         ///disconnecting due to network timeouts even if loading takes a long time.
         ///</summary>
-        void UpdateNetworkSession()
+        private void UpdateNetworkSession()
         {
             if ((networkSession == null) ||
                 (networkSession.SessionState == NetworkSessionState.Ended))
+            {
                 return;
-            
+            }
+
             try
             {
                 networkSession.Update();

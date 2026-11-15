@@ -9,12 +9,9 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 #endregion
 
 namespace GalactikWars.Net
@@ -47,12 +44,12 @@ namespace GalactikWars.Net
 
         internal Color Color;
 
-        Texture2D gamerPicture;
+        private Texture2D gamerPicture;
 
         ///<summary>
         ///Creates a small colored square with a darker border as the picture.
         ///</summary>
-        static Texture2D CreateGamerPicture(GraphicsDevice device, Color color)
+        private static Texture2D CreateGamerPicture(GraphicsDevice device, Color color)
         {
             const int size = 32;
 
@@ -69,7 +66,7 @@ namespace GalactikWars.Net
                 }
             }
 
-            Texture2D texture = new Texture2D(device, size, size);
+            Texture2D texture = new(device, size, size);
             texture.SetData(data);
             return texture;
         }
@@ -108,26 +105,23 @@ namespace GalactikWars.Net
             this.id = id;
         }
 
-        readonly byte id;
+        private readonly byte id;
 
         #endregion
 
         #region Profile
 
-        SignedInGamerProfile profile;
+        private SignedInGamerProfile profile;
 
         ///<summary>
         ///Gets the profile for this gamer.
         ///</summary>
         public SignedInGamerProfile GetProfile()
         {
-            if (profile == null)
+            profile ??= new SignedInGamerProfile
             {
-                profile = new SignedInGamerProfile
-                {
-                    Color = NetworkSession.GamerColor(id),
-                };
-            }
+                Color = NetworkSession.GamerColor(id),
+            };
             return profile;
         }
 
@@ -281,7 +275,7 @@ namespace GalactikWars.Net
         }
 
         internal readonly Queue<IncomingPacket> incomingPackets =
-            new Queue<IncomingPacket>();
+            new();
 
         #endregion
 
@@ -342,7 +336,7 @@ namespace GalactikWars.Net
     ///</summary>
     public class NetworkGamerCollection : IReadOnlyList<NetworkGamer>
     {
-        readonly List<NetworkGamer> gamers = new List<NetworkGamer>();
+        private readonly List<NetworkGamer> gamers = [];
 
         public int Count
         {
@@ -410,7 +404,7 @@ namespace GalactikWars.Net
     ///</summary>
     public class LocalNetworkGamerCollection : IReadOnlyList<LocalNetworkGamer>
     {
-        readonly List<LocalNetworkGamer> gamers = new List<LocalNetworkGamer>();
+        private readonly List<LocalNetworkGamer> gamers = [];
 
         public int Count
         {

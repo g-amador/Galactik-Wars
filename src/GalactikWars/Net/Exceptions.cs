@@ -45,7 +45,7 @@ namespace GalactikWars.Net
             get { return joinError; }
         }
 
-        NetworkSessionJoinError joinError;
+        private readonly NetworkSessionJoinError joinError;
 
         #endregion
 
@@ -60,22 +60,15 @@ namespace GalactikWars.Net
             this.joinError = joinError;
         }
 
-        static string GetErrorMessage(NetworkSessionJoinError joinError)
+        private static string GetErrorMessage(NetworkSessionJoinError joinError)
         {
-            switch (joinError)
+            return joinError switch
             {
-                case NetworkSessionJoinError.SessionFull:
-                    return "The session is full.";
-
-                case NetworkSessionJoinError.SessionNotFound:
-                    return "The session could not be found.";
-
-                case NetworkSessionJoinError.SessionNotJoinable:
-                    return "The session is not joinable.";
-
-                default:
-                    return "The session could not be joined.";
-            }
+                NetworkSessionJoinError.SessionFull => "The session is full.",
+                NetworkSessionJoinError.SessionNotFound => "The session could not be found.",
+                NetworkSessionJoinError.SessionNotJoinable => "The session is not joinable.",
+                _ => "The session could not be joined.",
+            };
         }
 
         #endregion

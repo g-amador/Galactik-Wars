@@ -8,16 +8,19 @@
 #endregion
 
 #region Using Statements
-using System;
+using GalactikWars.Handlers;
 using GalactikWars.Net;
+using GalactikWars.Networking;
+using Microsoft.Xna.Framework;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     ///<summary>
     ///The main menu screen is the first thing displayed when the game starts up.
     ///</summary>
-    class MainMenuScreen : MenuScreen
+    internal class MainMenuScreen : MenuScreen
     {
         #region Initialization
 
@@ -29,11 +32,11 @@ namespace GalactikWars
             : base(Resources.MainMenu)
         {
             //Create our menu entries.
-            MenuEntry singlePlayerMenuEntry = new MenuEntry(Resources.SinglePlayer);
-            MenuEntry multiplayerMenuEntry = new MenuEntry(Resources.Multiplayer);
-            MenuEntry optionsMenuEntry = new MenuEntry(Resources.Options);
-            MenuEntry creditsMenuEntry = new MenuEntry(Resources.Credits);
-            MenuEntry exitMenuEntry = new MenuEntry(Resources.Exit);
+            MenuEntry singlePlayerMenuEntry = new(Resources.SinglePlayer);
+            MenuEntry multiplayerMenuEntry = new(Resources.Multiplayer);
+            MenuEntry optionsMenuEntry = new(Resources.Options);
+            MenuEntry creditsMenuEntry = new(Resources.Credits);
+            MenuEntry exitMenuEntry = new(Resources.Exit);
 
             //Hook up menu event handlers.
             singlePlayerMenuEntry.Selected += SinglePlayerMenuEntrySelected;
@@ -51,6 +54,19 @@ namespace GalactikWars
         }
 
 
+        ///<summary>
+        ///Makes sure the menu track is playing whenever the main menu is
+        ///visible (e.g. returning here from the credits screen).
+        ///</summary>
+        public override void Update(GameTime gameTime,
+                                    bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            ScreenManager.SoundHandler.PlayTrack(SoundHandler.MenuTrack);
+
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+
         #endregion
 
         #region Handle Input
@@ -59,7 +75,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the Single Player menu entry is selected.
         ///</summary>
-        void SinglePlayerMenuEntrySelected(object sender, EventArgs e)
+        private void SinglePlayerMenuEntrySelected(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new GameplayScreenSinglePlayer());
         }
@@ -68,7 +84,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the Multiplayer menu entry is selected.
         ///</summary>
-        void MultiplayerMenuEntrySelected(object sender, EventArgs e)
+        private void MultiplayerMenuEntrySelected(object sender, EventArgs e)
         {
             ScreenManager.AddScreen(
                 new CreateOrFindSessionScreen(NetworkSessionType.PlayerMatch));
@@ -77,7 +93,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for options
         ///</summary>
-        void OptionsMenu(object sender, EventArgs e)
+        private void OptionsMenu(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new OptionsMenuScreen(
                 Resources.Options));
@@ -86,7 +102,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for credits
         ///</summary>
-        void CreditsMenu(object sender, EventArgs e)
+        private void CreditsMenu(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new CreditsScreen(null));
         }
@@ -98,7 +114,7 @@ namespace GalactikWars
         protected override void OnCancel()
         {
             MessageBoxScreen confirmExitMessageBox =
-                                    new MessageBoxScreen(Resources.ConfirmExitSample);
+                                    new(Resources.ConfirmExitSample);
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
 
@@ -110,7 +126,7 @@ namespace GalactikWars
         ///Event handler for when the user selects ok on the "are you sure
         ///you want to exit" message box.
         ///</summary>
-        void ConfirmExitMessageBoxAccepted(object sender, EventArgs e)
+        private void ConfirmExitMessageBoxAccepted(object sender, EventArgs e)
         {
             ScreenManager.Game.Exit();
         }

@@ -8,34 +8,37 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
 using GalactikWars.Net;
+using GalactikWars.ScreenManager;
+using GalactikWars.Screens;
+using Microsoft.Xna.Framework;
+using System.Diagnostics;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
+
+    using ScreenManager = GalactikWars.ScreenManager.ScreenManager;
     ///<summary>
     ///Component in charge of owning and updating the current NetworkSession object.
     ///This is responsible for calling NetworkSession.Update at regular intervals,
     ///and also exposes the NetworkSession as a game service which can easily be
     ///looked up by any other code that needs to access it.
     ///</summary>
-    class NetworkSessionComponent : GameComponent
+    internal class NetworkSessionComponent : GameComponent
     {
         #region Fields
 
         public const int MaxGamers = 6;
         public const int MaxLocalGamers = 4;
 
-        ScreenManager screenManager;
-        NetworkSession networkSession;
-        IMessageDisplay messageDisplay;
+        private readonly ScreenManager screenManager;
+        private NetworkSession networkSession;
+        private IMessageDisplay messageDisplay;
 
-        bool notifyWhenPlayersJoinOrLeave;
+        private bool notifyWhenPlayersJoinOrLeave;
 
-        string sessionEndMessage;
+        private string sessionEndMessage;
 
         #endregion
 
@@ -45,7 +48,7 @@ namespace GalactikWars
         ///<summary>
         ///The constructor is private: external callers should use the Create method.
         ///</summary>
-        NetworkSessionComponent(ScreenManager screenManager,
+        private NetworkSessionComponent(ScreenManager screenManager,
                                 NetworkSession networkSession)
             : base(screenManager.Game)
         {
@@ -95,7 +98,9 @@ namespace GalactikWars
                                                               typeof(IMessageDisplay));
 
             if (messageDisplay != null)
+            {
                 notifyWhenPlayersJoinOrLeave = true;
+            }
         }
 
 
@@ -110,7 +115,9 @@ namespace GalactikWars
         public override void Update(GameTime gameTime)
         {
             if (networkSession == null)
+            {
                 return;
+            }
 
             try
             {
@@ -144,7 +151,7 @@ namespace GalactikWars
         ///Event handler called when a gamer joins the session.
         ///Displays a notification message.
         ///</summary>
-        void GamerJoined(object sender, GamerJoinedEventArgs e)
+        private void GamerJoined(object sender, GamerJoinedEventArgs e)
         {
             if (notifyWhenPlayersJoinOrLeave)
             {
@@ -158,7 +165,7 @@ namespace GalactikWars
         ///Event handler called when a gamer leaves the session.
         ///Displays a notification message.
         ///</summary>
-        void GamerLeft(object sender, GamerLeftEventArgs e)
+        private void GamerLeft(object sender, GamerLeftEventArgs e)
         {
             if (notifyWhenPlayersJoinOrLeave)
             {
@@ -172,28 +179,15 @@ namespace GalactikWars
         ///Event handler called when the network session ends.
         ///Stores the end reason, so this can later be displayed to the user.
         ///</summary>
-        void NetworkSessionEnded(object sender, NetworkSessionEndedEventArgs e)
+        private void NetworkSessionEnded(object sender, NetworkSessionEndedEventArgs e)
         {
-            switch (e.EndReason)
+            sessionEndMessage = e.EndReason switch
             {
-                case NetworkSessionEndReason.ClientSignedOut:
-                    sessionEndMessage = null;
-                    break;
-
-                case NetworkSessionEndReason.HostEndedSession:
-                    sessionEndMessage = Resources.ErrorHostEndedSession;
-                    break;
-
-                case NetworkSessionEndReason.RemovedByHost:
-                    sessionEndMessage = Resources.ErrorRemovedByHost;
-                    break;
-
-                case NetworkSessionEndReason.Disconnected:
-                default:
-                    sessionEndMessage = Resources.ErrorDisconnected;
-                    break;
-            }
-
+                NetworkSessionEndReason.ClientSignedOut => null,
+                NetworkSessionEndReason.HostEndedSession => Resources.ErrorHostEndedSession,
+                NetworkSessionEndReason.RemovedByHost => Resources.ErrorRemovedByHost,
+                _ => Resources.ErrorDisconnected,
+            };
             notifyWhenPlayersJoinOrLeave = false;
         }
 
@@ -213,19 +207,21 @@ namespace GalactikWars
             //Search through Game.Components to find the NetworkSessionComponent.
             foreach (IGameComponent component in screenManager.Game.Components)
             {
-                NetworkSessionComponent self = component as NetworkSessionComponent;
-
-                if (self != null)
+                if (component is NetworkSessionComponent self)
                 {
                     //Display a message box to confirm the user really wants to leave.
                     string message;
 
                     if (self.networkSession.IsHost)
+                    {
                         message = Resources.ConfirmEndSession;
+                    }
                     else
+                    {
                         message = Resources.ConfirmLeaveSession;
+                    }
 
-                    MessageBoxScreen confirmMessageBox = new MessageBoxScreen(message);
+                    MessageBoxScreen confirmMessageBox = new(message);
 
                     //Hook the messge box ok event to actually leave the session.
                     confirmMessageBox.Accepted += delegate
@@ -246,7 +242,7 @@ namespace GalactikWars
         ///session, removes the NetworkSessionComponent, and returns the user
         ///to the main menu screen.
         ///</summary>
-        void LeaveSession()
+        private void LeaveSession()
         {
             //Remove the NetworkSessionComponent.
             Game.Components.Remove(this);
@@ -264,9 +260,13 @@ namespace GalactikWars
             MessageBoxScreen messageBox;
 
             if (!string.IsNullOrEmpty(sessionEndMessage))
+            {
                 messageBox = new MessageBoxScreen(sessionEndMessage, false);
+            }
             else
+            {
                 messageBox = null;
+            }
 
             //At this point we normally want to return the user all the way to the
             //main menu screen. But what if they just joined a session? In that case
@@ -300,11 +300,15 @@ namespace GalactikWars
                 {
                     //If we found one, pop everything since then to return back to it.
                     for (int j = i + 1; j < screens.Length; j++)
+                    {
                         screens[j].ExitScreen();
+                    }
 
                     //Display the why-did-the-session-end message box.
                     if (messageBox != null)
+                    {
                         screenManager.AddScreen(messageBox);
+                    }
 
                     return;
                 }

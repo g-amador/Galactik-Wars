@@ -9,15 +9,12 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Entities
 {
-    struct Asteroid
+    internal struct Asteroid
     {
         #region Fields
 
@@ -35,13 +32,24 @@ namespace GalactikWars
             position += direction * speed * GameVariables.AsteroidSpeedAdjustment * delta;
 
             if (position.X > GameVariables.PlayfieldSizeX)
+            {
                 position.X -= 2 * GameVariables.PlayfieldSizeX;
+            }
+
             if (position.X < -GameVariables.PlayfieldSizeX)
+            {
                 position.X += 2 * GameVariables.PlayfieldSizeX;
+            }
+
             if (position.Y > GameVariables.PlayfieldSizeY)
+            {
                 position.Y -= 2 * GameVariables.PlayfieldSizeY;
+            }
+
             if (position.Y < -GameVariables.PlayfieldSizeY)
+            {
                 position.Y += 2 * GameVariables.PlayfieldSizeY;
+            }
         }
 
         #endregion

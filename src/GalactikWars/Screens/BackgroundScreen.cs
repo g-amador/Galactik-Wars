@@ -8,25 +8,26 @@
 #endregion
 
 #region Using Statements
-using System;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     ///<summary>
     ///The background screen sits behind all the other menu screens.
     ///It draws a background image that remains fixed in place regardless
     ///of whatever transitions the screens on top of it may be doing.
     ///</summary>
-    class BackgroundScreen : GameScreen
+    internal class BackgroundScreen : GameScreen
     {
         #region Fields
 
-        ContentManager content;
-        Texture2D backgroundTexture;
+        private ContentManager content;
+        private Texture2D backgroundTexture;
 
         #endregion
 
@@ -52,10 +53,9 @@ namespace GalactikWars
         ///</summary>
         public override void LoadContent()
         {
-            if (content == null)
-                content = new ContentManager(ScreenManager.Game.Services, "Content");
+            content ??= new ContentManager(ScreenManager.Game.Services, "assets");
 
-            backgroundTexture = content.Load<Texture2D>("background");
+            backgroundTexture = content.Load<Texture2D>("ui/background");
         }
 
 
@@ -94,7 +94,7 @@ namespace GalactikWars
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            Rectangle fullscreen = new(0, 0, viewport.Width, viewport.Height);
             byte fade = TransitionAlpha;
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);

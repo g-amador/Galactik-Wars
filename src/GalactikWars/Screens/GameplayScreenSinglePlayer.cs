@@ -9,79 +9,83 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
+using GalactikWars.Entities;
+using GalactikWars.Handlers;
+using GalactikWars.Particles;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     ///<summary>
     ///This screen implements the actual game logic. It is just a
     ///placeholder to get the idea across: you'll probably want to
     ///put some more interesting gameplay in here!
     ///</summary>
-    class GameplayScreenSinglePlayer : GameScreen
+    internal class GameplayScreenSinglePlayer : GameScreen
     {
         #region Fields
 
-        ContentManager content = null;
+        private ContentManager content = null;
 
         //Objects to do sound/keyboard/Camera/Collision handling
-        CollisionsHandler collisionsHandler = new CollisionsHandler();
-        SoundHandler soundHandler = new SoundHandler();
-        CCamera camera = new CCamera();
+        private readonly CollisionsHandler collisionsHandler = new();
+        private SoundHandler soundHandler => ScreenManager.SoundHandler;
+        private readonly CCamera camera = new();
 
         //asteroid variables
-        Asteroid[] asteroid1List = new Asteroid[GameVariables.NumAsteroids1];
-        Asteroid[] asteroid2List = new Asteroid[GameVariables.NumAsteroids2];
-        int activeAsteroids = GameVariables.NumAsteroids1 + GameVariables.NumAsteroids2;
-        int destroyedAsteroids = 0;
-        int asteroidSpeed = 0;
-        
+        private readonly Asteroid[] asteroid1List = new Asteroid[GameVariables.NumAsteroids1];
+        private readonly Asteroid[] asteroid2List = new Asteroid[GameVariables.NumAsteroids2];
+        private int activeAsteroids = GameVariables.NumAsteroids1 + GameVariables.NumAsteroids2;
+        private int destroyedAsteroids = 0;
+        private int asteroidSpeed = 0;
+
         //Visual components
-        ScrollingBackground myBackground;
-        Texture2D space1 = null;
-        Texture2D space2 = null;
-        Texture2D space3 = null;
-        Texture2D space4 = null;
-        Texture2D space5 = null;
-        Texture2D particlesTexture = null;
+        private ScrollingBackground myBackground;
+        private Texture2D space1 = null;
+        private Texture2D space2 = null;
+        private Texture2D space3 = null;
+        private Texture2D space4 = null;
+        private Texture2D space5 = null;
+        private Texture2D particlesTexture = null;
 
-        Model rocketModel = null;
-        Model bulletModel = null;
-        Model shieldModel = null;
-        Model[] asteroidModels = null;
-        Matrix[] shieldTransforms = null;
-        Matrix[] bulletTransforms = null;
-        Matrix[] rocketTransforms = null;
-        Matrix[] asteroid1Transforms = null;
-        Matrix[] asteroid2Transforms = null;
+        private Model rocketModel = null;
+        private Model bulletModel = null;
+        private Model shieldModel = null;
+        private readonly Model[] asteroidModels = null;
+        private Matrix[] shieldTransforms = null;
+        private Matrix[] bulletTransforms = null;
+        private Matrix[] rocketTransforms = null;
+        private Matrix[] asteroid1Transforms = null;
+        private Matrix[] asteroid2Transforms = null;
 
-        SpriteBatch spriteBatch = null;
-        SpriteFont lucidaConsole = null;
-        SpriteFont font = null;
+        private SpriteBatch spriteBatch = null;
+        private SpriteFont lucidaConsole = null;
+        private SpriteFont font = null;
 
         //Player
-        Player p= new Player();
-  
-        Vector2 scorePosition = new Vector2(60, 110);
-        Vector2 shieldPosition = new Vector2(60, 90);
-        Vector2 remainingLivesPosition = new Vector2(60, 70);
-        Vector2 remainingAtomBombsPosition = new Vector2(60, 50);
-        Vector2 remainingAsteroidPosition = new Vector2(60, 30);
-        Vector2 levelPosition = new Vector2(60, 10);
+        private readonly Player p = new();
 
-        Random random = new Random();
+        private Vector2 scorePosition = new(60, 110);
+        private Vector2 shieldPosition = new(60, 90);
+        private Vector2 remainingLivesPosition = new(60, 70);
+        private Vector2 remainingAtomBombsPosition = new(60, 50);
+        private Vector2 remainingAsteroidPosition = new(60, 30);
+        private Vector2 levelPosition = new(60, 10);
+
+        private readonly Random random = new();
 
         //float shipTrailX, shipTrailY;
-        float explosionX, explosionY;
-        Particles particles = new Particles();
+        private float explosionX, explosionY;
+        private readonly ParticleSystem particles = new();
         //List<Particle> shipTrail = new List<Particle>();
-        List<Particle> explosion = new List<Particle>();
+        private readonly List<Particle> explosion = [];
 
         #endregion
 
@@ -127,69 +131,69 @@ namespace GalactikWars
         ///</summary>
         public override void LoadContent()
         {
-            if (content == null)
-                content = new ContentManager(ScreenManager.Game.Services, "Content");
+            content ??= new ContentManager(ScreenManager.Game.Services, "assets");
 
             soundHandler.Load(content);
+            soundHandler.PlayTrack(SoundHandler.BattleTrack);
 
             if (random.NextDouble() <= 0.17)
             {
-                p.ship.Model = content.Load<Model>("Models/p1_pencil");
+                p.ship.Model = content.Load<Model>("models/p1_pencil");
             }
             else if (random.NextDouble() <= 0.34)
             {
-                p.ship.Model = content.Load<Model>("Models/p2_pencil");
+                p.ship.Model = content.Load<Model>("models/p2_pencil");
             }
             else if (random.NextDouble() <= 0.51)
             {
-                p.ship.Model = content.Load<Model>("Models/p1_wedge");
+                p.ship.Model = content.Load<Model>("models/p1_wedge");
             }
             else if (random.NextDouble() <= 0.68)
             {
-                p.ship.Model = content.Load<Model>("Models/p2_wedge");
+                p.ship.Model = content.Load<Model>("models/p2_wedge");
             }
             else if (random.NextDouble() <= 0.85)
             {
-                p.ship.Model = content.Load<Model>("Models/p1_saucer");
+                p.ship.Model = content.Load<Model>("models/p1_saucer");
             }
             else
             {
-                p.ship.Model = content.Load<Model>("Models/p2_saucer");
+                p.ship.Model = content.Load<Model>("models/p2_saucer");
             }
 
             p.ship.Transforms = SetupEffectDefaults(p.ship.Model);
             p.ship.IsActive = true;
 
-            asteroidModels[0] = content.Load<Model>("Models/asteroid1");
+            asteroidModels[0] = content.Load<Model>("models/asteroid1");
             asteroid1Transforms = SetupEffectDefaults(asteroidModels[0]);
-            asteroidModels[1] = content.Load<Model>("Models/asteroid2");
+            asteroidModels[1] = content.Load<Model>("models/asteroid2");
             asteroid2Transforms = SetupEffectDefaults(asteroidModels[1]);
-            bulletModel = content.Load<Model>("Models/pea_proj");
+            bulletModel = content.Load<Model>("models/pea_proj");
             bulletTransforms = SetupEffectDefaults(bulletModel);
-            rocketModel = content.Load<Model>("Models/p1_rocket");
+            rocketModel = content.Load<Model>("models/p1_rocket");
             rocketTransforms = SetupEffectDefaults(rocketModel);
-            shieldModel = content.Load<Model>("Models/sphere");
+            shieldModel = content.Load<Model>("models/sphere");
             shieldTransforms = SetupEffectDefaults(shieldModel);
 
             //activate the static background or the dinamic "myBackground"
             if (GameVariables.ScrollingBackgroundIsActive)
             {
                 myBackground = new ScrollingBackground();
-                space1 = content.Load<Texture2D>("Textures/starfield");
+                space1 = content.Load<Texture2D>("textures/starfield");
                 myBackground.LoadContent(ScreenManager.GraphicsDevice, space1);
             }
             else
             {
-                space1 = content.Load<Texture2D>("Textures/galaxy");                
-                space2 = content.Load<Texture2D>("Textures/aurora");
-                space3 = content.Load<Texture2D>("Textures/nebula");
-                space4 = content.Load<Texture2D>("Textures/nebula2");
-                space5 = content.Load<Texture2D>("Textures/planets");
+                space1 = content.Load<Texture2D>("textures/galaxy");
+                space2 = content.Load<Texture2D>("textures/aurora");
+                space3 = content.Load<Texture2D>("textures/nebula");
+                space4 = content.Load<Texture2D>("textures/nebula2");
+                space5 = content.Load<Texture2D>("textures/planets");
             }
 
-            particlesTexture = content.Load<Texture2D>("Textures/multicolored");
+            particlesTexture = content.Load<Texture2D>("textures/multicolored");
 
-            lucidaConsole = content.Load<SpriteFont>("Fonts/LucidaConsole");
+            lucidaConsole = content.Load<SpriteFont>("fonts/LucidaConsole");
             spriteBatch = ScreenManager.SpriteBatch;
             font = ScreenManager.Font;
         }
@@ -205,20 +209,39 @@ namespace GalactikWars
 
             //Visual components
             if (GameVariables.ScrollingBackgroundIsActive)
+            {
                 myBackground.UnLoadContent();
+            }
 
             if (space1 != null)
+            {
                 space1.Dispose();
+            }
+
             if (space2 != null)
+            {
                 space2.Dispose();
+            }
+
             if (space3 != null)
+            {
                 space3.Dispose();
+            }
+
             if (space4 != null)
+            {
                 space4.Dispose();
+            }
+
             if (space5 != null)
+            {
                 space5.Dispose();
+            }
+
             if (particlesTexture != null)
+            {
                 particlesTexture.Dispose();
+            }
 
             content.Unload();
         }
@@ -233,7 +256,9 @@ namespace GalactikWars
             float yStart;
 
             if (GameVariables.NumAsteroids1 + GameVariables.NumAsteroids2 != 0)
+            {
                 GameVariables.CurrentLevel += 1;
+            }
 
             for (int i = 0; i < GameVariables.NumAsteroids2; i++)
             {
@@ -285,8 +310,10 @@ namespace GalactikWars
                 p.Radius = shieldModel.Meshes[0].BoundingSphere.Radius * factor;
             }
             else
+            {
                 p.Radius = p.ship.Model.Meshes[0].BoundingSphere.Radius
                         * GameVariables.shipBoundingSphereScale;
+            }
         }
 
         private void zoomCamera(float newCameraHeight)
@@ -306,7 +333,7 @@ namespace GalactikWars
 
         #region Input Handling
 
-        new bool IsActive
+        private new bool IsActive
         {
             get
             {
@@ -322,7 +349,9 @@ namespace GalactikWars
         public override void HandleInput(InputState input)
         {
             if (input == null)
+            {
                 throw new ArgumentNullException("input");
+            }
 
             if (input.PauseGame)
             {
@@ -373,7 +402,7 @@ namespace GalactikWars
                     //The y placement of the emitter
                     explosionY = 300;
 
-                    particles.particlesCreate(explosion, explosionX, explosionY, 
+                    particles.particlesCreate(explosion, explosionX, explosionY,
                         random.Next(50, 75), 2); // Make the particles.*/
 
                     // Make a sound when we fire.
@@ -472,7 +501,7 @@ namespace GalactikWars
                     soundHandler.PlayMyEngineSound();
                 }
 
-                if (p.ship.IsActive && ((input.VariationX() != 0) || 
+                if (p.ship.IsActive && ((input.VariationX() != 0) ||
                     (input.VariationY() != 0)))
                 {
                     if (input.MouseMoved)
@@ -486,7 +515,9 @@ namespace GalactikWars
                         soundHandler.PlayMyEngineSound();
                     }
                     else
+                    {
                         input.MouseMoved = true;
+                    }
                 }
 
                 if (!input.IsNewKeyStillPress(Keys.Up, PlayerIndex.One)
@@ -509,10 +540,10 @@ namespace GalactikWars
                     //   (GameVariables.PlayfieldSizeY)) * (60.0f + 
                     //   ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f))))) + 
                     //   145.0f;
-                    
+
                     //particles.particlesCreate(shipTrail, shipTrailX, shipTrailY, 
                     //    random.Next(1, 2), 1);// Make the particles.
-                    
+
                     soundHandler.PauseMyEngineSound();
                 }
 
@@ -572,13 +603,11 @@ namespace GalactikWars
                 {
                     soundHandler.PlayGameOver();
                 }
-                else
-                {
-                    soundHandler.Update(gameTime);
-                }
 
                 if (GameVariables.ScrollingBackgroundIsActive)
+                {
                     myBackground.Update(gameTime);
+                }
 
                 for (int i = 0; i < GameVariables.NumAsteroids2; i++)
                 {
@@ -593,7 +622,7 @@ namespace GalactikWars
                 if ((collisionsHandler.CheckForBulletAsteroidCollision(
                     bulletModel.Meshes[0].BoundingSphere.Radius,
                     asteroidModels[0].Meshes[0].BoundingSphere.Radius,
-                    p, asteroid1List)) || 
+                    p, asteroid1List)) ||
                     (collisionsHandler.CheckForBulletAsteroidCollision(
                     bulletModel.Meshes[0].BoundingSphere.Radius,
                     asteroidModels[1].Meshes[0].BoundingSphere.Radius,
@@ -640,22 +669,22 @@ namespace GalactikWars
                     activeAsteroids -= destroyedAsteroids;
 
                     //The x placement of the emitter.
-                    explosionX = (((collisionsHandler.explosionPosition.X + 
-                        (GameVariables.PlayfieldSizeX / 2.0f)) / 
-                        (GameVariables.PlayfieldSizeX)) * (30.0f + 
-                        ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) + 
+                    explosionX = (((collisionsHandler.explosionPosition.X +
+                        (GameVariables.PlayfieldSizeX / 2.0f)) /
+                        (GameVariables.PlayfieldSizeX)) * (30.0f +
+                        ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) +
                         175.0f;
 
                     //The y placement of the emitter.
-                    explosionY = (((65.0f + 
+                    explosionY = (((65.0f +
                         ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f)) -
-                       (((collisionsHandler.explosionPosition.Y + 
+                       (((collisionsHandler.explosionPosition.Y +
                        (GameVariables.PlayfieldSizeY / 2.0f)) /
                        (GameVariables.PlayfieldSizeY)) *
-                       (65.0f + ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 
+                       (65.0f + ((float)GraphicsDeviceManager.DefaultBackBufferHeight /
                        2.0f))))) + 120.0f;
 
-                    particles.particlesCreate(explosion, explosionX, explosionY, 
+                    particles.particlesCreate(explosion, explosionX, explosionY,
                         random.Next(10, 15), 2);
 
                     soundHandler.PlayCue("explosion2");
@@ -696,7 +725,9 @@ namespace GalactikWars
                         soundHandler.PlayCue("explosion3");
                     }
                     else
+                    {
                         soundHandler.PlayCue("phase_collide_ship1");
+                    }
                 }
 
                 particles.particlesUpdate(explosion, 2);
@@ -723,9 +754,9 @@ namespace GalactikWars
 
         public override void Draw(GameTime gameTime)
         {
-            Vector2 titlePosition = new Vector2(400, 300);
+            Vector2 titlePosition = new(400, 300);
             Vector2 titleOrigin = font.MeasureString(Resources.GameOver) / 2;
-            Color titleColor = new Color((byte)139, (byte)0, (byte)0, TransitionAlpha);
+            Color titleColor = new((byte)139, (byte)0, (byte)0, TransitionAlpha);
 
             float titleScale = 2.0f;
 
@@ -733,10 +764,12 @@ namespace GalactikWars
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
 
             if (GameVariables.ScrollingBackgroundIsActive)
+            {
                 myBackground.Draw(spriteBatch);
+            }
             else
             {
-                Vector2 position = new Vector2(
+                Vector2 position = new(
                     (p.ship.Position.X + GameVariables.PlayfieldSizeX / 2) /
                     GameVariables.PlayfieldSizeX + 1,
                     (p.ship.Position.Y + GameVariables.PlayfieldSizeY / 2) /
@@ -805,9 +838,13 @@ namespace GalactikWars
             spriteBatch.DrawString(lucidaConsole, "AtomBombs: " + p.AtomBombs, remainingAtomBombsPosition, Color.LightGreen);
 
             if (p.Shield < 0)
+            {
                 spriteBatch.DrawString(lucidaConsole, "Shield: 0%", shieldPosition, Color.LightGreen);
+            }
             else
+            {
                 spriteBatch.DrawString(lucidaConsole, "Shield: " + p.Shield + "%", shieldPosition, Color.LightGreen);
+            }
 
             spriteBatch.End();
 
@@ -823,7 +860,7 @@ namespace GalactikWars
                 //Draw the menu title.
                 titlePosition.Y -= transitionOffset * 100;
 
-                spriteBatch.DrawString(font, Resources.GameOver, titlePosition, 
+                spriteBatch.DrawString(font, Resources.GameOver, titlePosition,
                     titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
             }
 
@@ -833,7 +870,7 @@ namespace GalactikWars
             //particles.drawParticles(gameTime, ScreenManager.SpriteBatch, rasto, 1, 
             //particlesTexture);
             /*Explosions*/
-            particles.drawParticles(gameTime, ScreenManager.SpriteBatch, explosion, 2, 
+            particles.drawParticles(gameTime, ScreenManager.SpriteBatch, explosion, 2,
                 particlesTexture);
 
             spriteBatch.End();
@@ -846,7 +883,7 @@ namespace GalactikWars
             Matrix shipTransformMatrix = p.ship.RotationMatrix
                 * Matrix.CreateTranslation(p.ship.Position);
             Matrix shieldTransform = shipTransformMatrix;
-            
+
             if (p.ship.IsActive)
             {
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);

@@ -9,15 +9,12 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Entities
 {
-    struct Bullet
+    internal struct Bullet
     {
         #region Fields
 
@@ -37,7 +34,9 @@ namespace GalactikWars
                 position.X < -GameVariables.PlayfieldSizeX ||
                 position.Y > GameVariables.PlayfieldSizeY ||
                 position.Y < -GameVariables.PlayfieldSizeY)
+            {
                 isActive = false;
+            }
         }
 
         public bool IsActive

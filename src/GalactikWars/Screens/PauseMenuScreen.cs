@@ -8,32 +8,35 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Threading;
-using Microsoft.Xna.Framework;
+using GalactikWars.Handlers;
 using GalactikWars.Net;
-using Microsoft.Xna.Framework.Content;
+using GalactikWars.Networking;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+//The ScreenState enum shares its name with the inherited
+//ScreenManager.ScreenState property; this alias binds the enum type.
+using ScreenStateEnum = GalactikWars.ScreenManager.ScreenState;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     ///<summary>
     ///The pause menu comes up over the top of the game,
     ///giving the player options to resume or quit.
     ///</summary>
     ///
-    class PauseMenuScreen : MenuScreen
+    internal class PauseMenuScreen : MenuScreen
     {
         #region Fields
 
-        NetworkSession networkSession;
+        private readonly NetworkSession networkSession;
 
-        string message = "Music Volume: ";
-        string message2 = "                         Effects Volume: ";
-        float music = SoundHandler.musicVolume * 100, 
+        private readonly string message = "Music Volume: ";
+        private readonly string message2 = "                         Effects Volume: ";
+        private float music = SoundHandler.musicVolume * 100,
             effects = SoundHandler.effectsVolume * 100;
-        
+
         #endregion
 
         #region Initialization
@@ -51,10 +54,10 @@ namespace GalactikWars
             IsPopup = true;
 
             //sound
-            MenuEntry MusicUpMenuEntry = new MenuEntry(Resources.MusicUp);
-            MenuEntry MusicDownMenuEntry = new MenuEntry(Resources.MusicDown);
-            MenuEntry effectsUpMenuEntry = new MenuEntry(Resources.EffectsUp);
-            MenuEntry effectsDownMenuEntry = new MenuEntry(Resources.EffectsDown);
+            MenuEntry MusicUpMenuEntry = new(Resources.MusicUp);
+            MenuEntry MusicDownMenuEntry = new(Resources.MusicDown);
+            MenuEntry effectsUpMenuEntry = new(Resources.EffectsUp);
+            MenuEntry effectsDownMenuEntry = new(Resources.EffectsDown);
 
             MusicUpMenuEntry.Selected += MusicUpMenuEntrySelected;
             MusicDownMenuEntry.Selected += MusicDownMenuEntrySelected;
@@ -67,14 +70,14 @@ namespace GalactikWars
             MenuEntries.Add(effectsDownMenuEntry);
 
             //Add the Resume Game menu entry.
-            MenuEntry resumeGameMenuEntry = new MenuEntry(Resources.ResumeGame);
+            MenuEntry resumeGameMenuEntry = new(Resources.ResumeGame);
             resumeGameMenuEntry.Selected += OnCancel;
             MenuEntries.Add(resumeGameMenuEntry);
 
             if (networkSession == null)
             {
                 //If this is a single player game, add the Quit menu entry.
-                MenuEntry quitGameMenuEntry = new MenuEntry(Resources.QuitGame);
+                MenuEntry quitGameMenuEntry = new(Resources.QuitGame);
                 quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
                 MenuEntries.Add(quitGameMenuEntry);
             }
@@ -83,7 +86,7 @@ namespace GalactikWars
                 //If we are hosting a network game, add the Return to Lobby menu entry.
                 if (networkSession.IsHost)
                 {
-                    MenuEntry lobbyMenuEntry = new MenuEntry(Resources.ReturnToLobby);
+                    MenuEntry lobbyMenuEntry = new(Resources.ReturnToLobby);
                     lobbyMenuEntry.Selected += ReturnToLobbyMenuEntrySelected;
                     MenuEntries.Add(lobbyMenuEntry);
                 }
@@ -92,7 +95,7 @@ namespace GalactikWars
                 string leaveEntryText = networkSession.IsHost ? Resources.EndSession :
                                                                 Resources.LeaveSession;
 
-                MenuEntry leaveSessionMenuEntry = new MenuEntry(leaveEntryText);
+                MenuEntry leaveSessionMenuEntry = new(leaveEntryText);
                 leaveSessionMenuEntry.Selected += LeaveSessionMenuEntrySelected;
                 MenuEntries.Add(leaveSessionMenuEntry);
             }
@@ -122,7 +125,7 @@ namespace GalactikWars
 
         public void MusicUpMenuEntrySelected(object sender, EventArgs e)
         {
-            music = ((music/100) + 0.10f)*100;
+            music = ((music / 100) + 0.10f) * 100;
 
             if (music > 100)
             {
@@ -134,7 +137,7 @@ namespace GalactikWars
 
         public void MusicDownMenuEntrySelected(object sender, EventArgs e)
         {
-            music = ((music/100) - 0.10f)*100;
+            music = ((music / 100) - 0.10f) * 100;
 
             if (music <= 0)
             {
@@ -146,14 +149,14 @@ namespace GalactikWars
 
         public void effectsUpMenuEntrySelected(object sender, EventArgs e)
         {
-            effects = ((effects / 100) + 0.10f)*100;
+            effects = ((effects / 100) + 0.10f) * 100;
 
             if (effects > 100)
             {
                 effects = 100;
             }
 
-            SoundHandler.effectsVolume = effects / 100; 
+            SoundHandler.effectsVolume = effects / 100;
         }
 
         public void effectsDownMenuEntrySelected(object sender, EventArgs e)
@@ -171,10 +174,10 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the Quit Game menu entry is selected.
         ///</summary>
-        void QuitGameMenuEntrySelected(object sender, EventArgs e)
+        private void QuitGameMenuEntrySelected(object sender, EventArgs e)
         {
             MessageBoxScreen confirmQuitMessageBox =
-                                    new MessageBoxScreen(Resources.ConfirmQuitGame);
+                                    new(Resources.ConfirmQuitGame);
 
             confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
 
@@ -186,7 +189,7 @@ namespace GalactikWars
         ///you want to quit" message box. This uses the loading screen to
         ///transition from the game back to the main menu screen.
         ///</summary>
-        void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e)
+        private void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new BackgroundScreen(),
                                                      new MainMenuScreen());
@@ -195,7 +198,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the Return to Lobby menu entry is selected.
         ///</summary>
-        void ReturnToLobbyMenuEntrySelected(object sender, EventArgs e)
+        private void ReturnToLobbyMenuEntrySelected(object sender, EventArgs e)
         {
             if (networkSession.SessionState == NetworkSessionState.Playing)
             {
@@ -206,7 +209,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the End/Leave Session menu entry is selected.
         ///</summary>
-        void LeaveSessionMenuEntrySelected(object sender, EventArgs e)
+        private void LeaveSessionMenuEntrySelected(object sender, EventArgs e)
         {
             NetworkSessionComponent.LeaveSession(ScreenManager);
         }
@@ -223,22 +226,26 @@ namespace GalactikWars
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
-            Vector2 textPosition = new Vector2(100, 90);
-            Vector2 textPosition2 = new Vector2(100, 90);
-            Vector2 position = new Vector2(100, 150);
+            Vector2 textPosition = new(100, 90);
+            Vector2 textPosition2 = new(100, 90);
+            Vector2 position = new(100, 150);
 
             //Make the menu slide into place during transitions, using a
             //power curve to make things look more interesting (this makes
             //the movement slow down as it nears the end).
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            if (ScreenState == ScreenState.TransitionOn)
+            if (ScreenState == ScreenStateEnum.TransitionOn)
+            {
                 position.X -= transitionOffset * 256;
+            }
             else
+            {
                 position.X += transitionOffset * 512;
+            }
 
             //Fade the popup alpha during transitions.
-            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
+            Color color = new((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             spriteBatch.Begin();
 
@@ -247,7 +254,7 @@ namespace GalactikWars
 
             //Draw the message box text.
             spriteBatch.DrawString(font, message2 + effects + " %", textPosition2, color);
-           
+
             spriteBatch.End();
 
             base.Draw(gameTime);

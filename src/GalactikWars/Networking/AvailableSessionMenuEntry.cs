@@ -8,23 +8,24 @@
 #endregion
 
 #region Using Statements
-using System;
-using Microsoft.Xna.Framework;
 using GalactikWars.Net;
+using GalactikWars.Screens;
+using Microsoft.Xna.Framework;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
     ///<summary>
     ///Helper class customizes the standard MenuEntry class
     ///for displaying AvailableNetworkSession objects.
     ///</summary>
-    class AvailableSessionMenuEntry : MenuEntry
+    internal class AvailableSessionMenuEntry : MenuEntry
     {
         #region Fields
 
-        AvailableNetworkSession availableSession;
-        bool gotQualityOfService;
+        private readonly AvailableNetworkSession availableSession;
+        private bool gotQualityOfService;
 
         #endregion
 
@@ -58,7 +59,7 @@ namespace GalactikWars
         ///<summary>
         ///Formats session information to create the menu text string.
         ///</summary>
-        static string GetMenuItemText(AvailableNetworkSession session)
+        private static string GetMenuItemText(AvailableNetworkSession session)
         {
             int totalSlots = session.CurrentGamerCount +
                              session.OpenPublicGamerSlots;

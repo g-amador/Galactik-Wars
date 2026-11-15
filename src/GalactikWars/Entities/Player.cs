@@ -9,20 +9,16 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Entities
 {
-    class Player
+    internal class Player
     {
         #region Fields
 
-        internal Ship ship = new Ship();
+        internal Ship ship = new();
         internal Bullet[] bulletList = new Bullet[GameVariables.NumBullets];
         internal Rocket[] rocketList = new Rocket[GameVariables.NumRockets];
 
@@ -100,9 +96,13 @@ namespace GalactikWars
             ship.Velocity = Vector3.Zero;
             ship.Rotation = 0.0f;
             if (score - GameVariables.WarpPenalty < 0)
+            {
                 score = 0;
+            }
             else
+            {
                 score -= GameVariables.WarpPenalty;
+            }
         }
 
         internal bool ShootBullet()
@@ -118,9 +118,14 @@ namespace GalactikWars
                     bulletList[i].position = ship.Position + (200 * bulletList[i].direction);
                     bulletList[i].IsActive = true;
                     if (score - GameVariables.ShotPenalty < 0)
+                    {
                         score = 0;
+                    }
                     else
+                    {
                         score -= GameVariables.ShotPenalty;
+                    }
+
                     return true; //exit the loop     
                 }
             }
@@ -142,9 +147,14 @@ namespace GalactikWars
                     rocketList[i].position = ship.Position + (200 * rocketList[i].direction);
                     rocketList[i].IsActive = true;
                     if (score - GameVariables.ShotPenalty < 0)
+                    {
                         score = 0;
+                    }
                     else
+                    {
                         score -= GameVariables.ShotPenalty;
+                    }
+
                     return true; //exit the loop     
                 }
             }

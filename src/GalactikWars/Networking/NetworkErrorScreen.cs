@@ -8,17 +8,18 @@
 #endregion
 
 #region Using Statements
+using GalactikWars.Net;
+using GalactikWars.Screens;
 using System;
 using System.Diagnostics;
-using GalactikWars.Net;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
     ///<summary>
     ///Specialized message box subclass, used to display network error messages.
     ///</summary>
-    class NetworkErrorScreen : MessageBoxScreen
+    internal class NetworkErrorScreen : MessageBoxScreen
     {
         #region Initialization
 
@@ -34,16 +35,14 @@ namespace GalactikWars
         ///<summary>
         ///Converts a network exception into a user friendly error message.
         ///</summary>
-        static string GetErrorMessage(Exception exception)
+        private static string GetErrorMessage(Exception exception)
         {
             Trace.WriteLine(string.Format("Network operation threw {0}: {1}",
                                           exception, exception.Message));
 
             //Is it a NetworkSessionJoinException?
-            NetworkSessionJoinException joinException = exception as
-                                                            NetworkSessionJoinException;
 
-            if (joinException != null)
+            if (exception is NetworkSessionJoinException joinException)
             {
                 switch (joinException.JoinError)
                 {

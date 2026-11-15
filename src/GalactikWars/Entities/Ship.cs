@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-namespace GalactikWars
+namespace GalactikWars.Entities
 {
-    class Ship
+    internal class Ship
     {
         public Model Model;
         public Matrix[] Transforms;
@@ -64,17 +59,28 @@ namespace GalactikWars
         }
 
         public void Update(Vector3 modelVelocityAdd)
-        {   
+        {
             Velocity += modelVelocityAdd;
 
             if (Position.X > GameVariables.PlayfieldSizeX)
+            {
                 Position.X -= 2 * GameVariables.PlayfieldSizeX;
+            }
+
             if (Position.X < -GameVariables.PlayfieldSizeX)
+            {
                 Position.X += 2 * GameVariables.PlayfieldSizeX;
+            }
+
             if (Position.Y > GameVariables.PlayfieldSizeY)
+            {
                 Position.Y -= 2 * GameVariables.PlayfieldSizeY;
+            }
+
             if (Position.Y < -GameVariables.PlayfieldSizeY)
+            {
                 Position.Y += 2 * GameVariables.PlayfieldSizeY;
+            }
         }
     }
 }

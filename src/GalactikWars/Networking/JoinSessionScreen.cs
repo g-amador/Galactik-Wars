@@ -8,24 +8,24 @@
 #endregion
 
 #region Using Statements
-using System;
-using Microsoft.Xna.Framework;
 using GalactikWars.Net;
+using GalactikWars.Screens;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
     ///<summary>
     ///This menu screen displays a list of available network sessions,
     ///and lets the user choose which one to join.
     ///</summary>
-    class JoinSessionScreen : MenuScreen
+    internal class JoinSessionScreen : MenuScreen
     {
         #region Fields
 
-        const int MaxSearchResults = 8;
+        private const int MaxSearchResults = 8;
 
-        AvailableNetworkSessionCollection availableSessions;
+        private readonly AvailableNetworkSessionCollection availableSessions;
 
         #endregion
 
@@ -52,25 +52,27 @@ namespace GalactikWars
                 //world we should make the menu scroll if there are too many, but it
                 //is easier to just not bother displaying more than we have room for.
                 if (MenuEntries.Count >= MaxSearchResults)
+                {
                     break;
+                }
             }
 
             //Add the Back menu entry.
-            MenuEntry backMenuEntry = new MenuEntry(Resources.Back);
+            MenuEntry backMenuEntry = new(Resources.Back);
             backMenuEntry.Selected += BackMenuEntrySelected;
             MenuEntries.Add(backMenuEntry);
         }
 
 
         #endregion
-           
+
         #region Event Handlers
 
 
         ///<summary>
         ///Event handler for when an available session menu entry is selected.
         ///</summary>
-        void AvailableSessionMenuEntrySelected(object sender, EventArgs e)
+        private void AvailableSessionMenuEntrySelected(object sender, EventArgs e)
         {
             //Which menu entry was selected?
             AvailableSessionMenuEntry menuEntry = (AvailableSessionMenuEntry)sender;
@@ -84,7 +86,7 @@ namespace GalactikWars
 
                 //Activate the network busy screen, which will display
                 //an animation until this operation has completed.
-                NetworkBusyScreen busyScreen = new NetworkBusyScreen(asyncResult);
+                NetworkBusyScreen busyScreen = new(asyncResult);
 
                 busyScreen.OperationCompleted += JoinSessionOperationCompleted;
 
@@ -101,7 +103,7 @@ namespace GalactikWars
         ///Event handler for when the asynchronous join network session
         ///operation has completed.
         ///</summary>
-        void JoinSessionOperationCompleted(object sender, OperationCompletedEventArgs e)
+        private void JoinSessionOperationCompleted(object sender, OperationCompletedEventArgs e)
         {
             try
             {
@@ -126,7 +128,7 @@ namespace GalactikWars
         ///<summary>
         ///Event handler for when the Back menu entry is selected.
         ///</summary>
-        void BackMenuEntrySelected(object sender, EventArgs e)
+        private void BackMenuEntrySelected(object sender, EventArgs e)
         {
             availableSessions.Dispose();
 

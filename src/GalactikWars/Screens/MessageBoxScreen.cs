@@ -8,24 +8,25 @@
 #endregion
 
 #region Using Statements
-using System;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     ///<summary>
     ///A popup message box screen, used to display "are you sure?"
     ///confirmation messages.
     ///</summary>
-    class MessageBoxScreen : GameScreen
+    internal class MessageBoxScreen : GameScreen
     {
         #region Fields
 
-        string message;
-        Texture2D gradientTexture;
+        private readonly string message;
+        private Texture2D gradientTexture;
 
         #endregion
 
@@ -47,7 +48,7 @@ namespace GalactikWars
             : this(message, true)
         { }
 
-        
+
         ///<summary>
         ///Constructor lets the caller specify whether to include the standard
         ///"A=ok, B=cancel" usage text prompt.
@@ -55,9 +56,13 @@ namespace GalactikWars
         public MessageBoxScreen(string message, bool includeUsageText)
         {
             if (includeUsageText)
+            {
                 this.message = message + Resources.MessageBoxUsage;
+            }
             else
+            {
                 this.message = message;
+            }
 
             IsPopup = true;
 
@@ -76,7 +81,7 @@ namespace GalactikWars
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("gradient");
+            gradientTexture = content.Load<Texture2D>("ui/gradient");
         }
 
 
@@ -93,16 +98,14 @@ namespace GalactikWars
             if (input.MenuSelect)
             {
                 //Raise the accepted event, then exit the message box.
-                if (Accepted != null)
-                    Accepted(this, EventArgs.Empty);
-            
+                Accepted?.Invoke(this, EventArgs.Empty);
+
                 ExitScreen();
             }
             else if (input.MenuCancel)
             {
                 //Raise the cancelled event, then exit the message box.
-                if (Cancelled != null)
-                    Cancelled(this, EventArgs.Empty);
+                Cancelled?.Invoke(this, EventArgs.Empty);
 
                 ExitScreen();
             }
@@ -127,7 +130,7 @@ namespace GalactikWars
 
             //Center the message text in the viewport.
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+            Vector2 viewportSize = new(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(message);
             Vector2 textPosition = (viewportSize - textSize) / 2;
 
@@ -135,13 +138,13 @@ namespace GalactikWars
             const int hPad = 32;
             const int vPad = 16;
 
-            Rectangle backgroundRectangle = new Rectangle((int)textPosition.X - hPad,
+            Rectangle backgroundRectangle = new((int)textPosition.X - hPad,
                                                           (int)textPosition.Y - vPad,
                                                           (int)textSize.X + hPad * 2,
                                                           (int)textSize.Y + vPad * 2);
 
             //Fade the popup alpha during transitions.
-            Color color = new Color((byte)255, (byte)255, (byte)255, TransitionAlpha);
+            Color color = new((byte)255, (byte)255, (byte)255, TransitionAlpha);
 
             spriteBatch.Begin();
 

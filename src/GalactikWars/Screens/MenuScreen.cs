@@ -8,25 +8,26 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     ///<summary>
     ///Base class for screens that contain a menu of options. The user can
     ///move up and down to select an entry, or cancel to back out of the screen.
     ///</summary>
-    abstract class MenuScreen : GameScreen
+    internal abstract class MenuScreen : GameScreen
     {
         #region Fields
 
-        List<MenuEntry> menuEntries = new List<MenuEntry>();
-        int selectedEntry = 0;
-        string menuTitle;
+        private readonly List<MenuEntry> menuEntries = [];
+        private int selectedEntry = 0;
+        private readonly string menuTitle;
 
         #endregion
 
@@ -77,7 +78,9 @@ namespace GalactikWars
                 selectedEntry--;
 
                 if (selectedEntry < 0)
+                {
                     selectedEntry = menuEntries.Count - 1;
+                }
             }
 
             //Move to the next menu entry?
@@ -86,7 +89,9 @@ namespace GalactikWars
                 selectedEntry++;
 
                 if (selectedEntry >= menuEntries.Count)
+                {
                     selectedEntry = 0;
+                }
             }
 
             //Accept or cancel the menu?
@@ -159,7 +164,7 @@ namespace GalactikWars
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
 
-            Vector2 position = new Vector2(100, 150);
+            Vector2 position = new(100, 150);
 
             //Make the menu slide into place during transitions, using a
             //power curve to make things look more interesting (this makes
@@ -167,9 +172,13 @@ namespace GalactikWars
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             if (ScreenState == ScreenState.TransitionOn)
+            {
                 position.X -= transitionOffset * 256;
+            }
             else
+            {
                 position.X += transitionOffset * 512;
+            }
 
             spriteBatch.Begin();
 
@@ -186,9 +195,9 @@ namespace GalactikWars
             }
 
             //Draw the menu title.
-            Vector2 titlePosition = new Vector2(400, 60);
+            Vector2 titlePosition = new(400, 60);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
-            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
+            Color titleColor = new((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.50f;
 
             titlePosition.Y -= transitionOffset * 100;

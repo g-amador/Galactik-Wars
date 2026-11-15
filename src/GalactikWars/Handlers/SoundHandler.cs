@@ -5,20 +5,20 @@
 //Author: GNPA & STX
 //Ported from the XNA XACT audio engine to MonoGame SoundEffect playback.
 //The original XACT project (GalactikWars.xap) defined cues for effects and
-//music; this class keeps the same cue based API while loading the .wav
-//files through the MonoGame content pipeline instead.
+//music; this class keeps the same cue based API for effects while music is
+//organized as named tracks (one per game state), loaded through the MonoGame
+//content pipeline instead.
 //-----------------------------------------------------------------------------
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using System.Collections.Generic;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Handlers
 {
     public class SoundHandler
     {
@@ -29,30 +29,39 @@ namespace GalactikWars
         public static float effectsVolume = GameVariables.defaultEffectsVolume;
 
         //Cue names
-        const string EffectsDirectory = "Audio/Waves/Effects/";
-        const string MusicDirectory = "Audio/Waves/Music/";
+        private const string EffectsDirectory = "audio/Effects/";
+        private const string MusicDirectory = "audio/Music/";
 
-        //Music cues, matching the cue names from the original XACT project.
-        static readonly string[] musicCues =
+        //Music tracks, one per game state. The names match the .wav files
+        //in assets/audio/Music (loaded via the content pipeline).
+        public const string MenuTrack = "menu";
+        public const string LoadingTrack = "loading";
+        public const string BattleTrack = "battle";
+        public const string LobbyTrack = "slow-travel";
+        public const string GameOverTrack = "in-the-wreckage";
+        public const string CreditsTrack = "meet-the-princess";
+
+        private static readonly string[] musicTrackNames =
         {
-            "music", "music1", "music2", "music3", "music4", "music5",
-            "gameOver",
+            MenuTrack, LoadingTrack, BattleTrack, LobbyTrack,
+            GameOverTrack, CreditsTrack,
         };
 
         //Loaded sound banks
-        Dictionary<string, SoundEffect> effectSounds;
-        Dictionary<string, SoundEffect> musicSounds;
+        private Dictionary<string, SoundEffect> effectSounds;
+        private Dictionary<string, SoundEffect> musicSounds;
 
         //Cues
-        Cue myEngineSound = null;
-        Cue othersEngineSound = null;
-        Cue music = null;
+        private Cue myEngineSound = null;
+        private Cue othersEngineSound = null;
+        private Cue music = null;
 
-        float timeDelta = 0.0f;
+        /// <summary>The track currently selected (see the *Track constants).</summary>
+        private string currentTrack = null;
 
-        bool loaded = false;
+        private float timeDelta = 0.0f;
 
-        Random random = new Random();
+        private bool loaded = false;
 
         #endregion Fields
 
@@ -62,32 +71,46 @@ namespace GalactikWars
         ///Minimal replacement for the XACT Cue class: wraps a
         ///SoundEffectInstance and exposes the play state API the game uses.
         ///</summary>
-        class Cue
+        private class Cue
         {
-            readonly SoundEffect sound;
-            SoundEffectInstance instance;
+            private readonly SoundEffect sound;
+            private SoundEffectInstance instance;
+
+            /// <summary>
+            /// Volume category this cue belongs to (music or effects),
+            /// applied at play time and kept in sync by UpdateVolume.
+            /// </summary>
+            private readonly float baseVolume;
 
             public string Name { get; private set; }
 
-            public Cue(SoundEffect sound, string name, bool looped)
+            public Cue(SoundEffect sound, string name, bool looped,
+                       float initialVolume)
             {
                 this.sound = sound;
                 Name = name;
                 Looped = looped;
+                baseVolume = initialVolume;
             }
 
             public bool Looped { get; private set; }
 
             public bool IsPlaying
             {
-                get { return instance != null && !instance.IsDisposed &&
-                              instance.State == SoundState.Playing; }
+                get
+                {
+                    return instance != null && !instance.IsDisposed &&
+                              instance.State == SoundState.Playing;
+                }
             }
 
             public bool IsPaused
             {
-                get { return instance != null && !instance.IsDisposed &&
-                              instance.State == SoundState.Paused; }
+                get
+                {
+                    return instance != null && !instance.IsDisposed &&
+                              instance.State == SoundState.Paused;
+                }
             }
 
             public void Play()
@@ -96,7 +119,7 @@ namespace GalactikWars
 
                 instance = sound.CreateInstance();
                 instance.IsLooped = Looped;
-                instance.Volume = Looped ? musicVolume : effectsVolume;
+                instance.Volume = baseVolume;
                 instance.Play();
             }
 
@@ -157,8 +180,8 @@ namespace GalactikWars
                 return;
             }
 
-            effectSounds = new Dictionary<string, SoundEffect>();
-            musicSounds = new Dictionary<string, SoundEffect>();
+            effectSounds = [];
+            musicSounds = [];
 
             try
             {
@@ -170,13 +193,14 @@ namespace GalactikWars
                 }
 
                 //Initialize the music bank.
-                foreach (string name in musicCues)
+                foreach (string name in musicTrackNames)
                 {
                     musicSounds[name] = content.Load<SoundEffect>(
                         MusicDirectory + name);
                 }
 
-                music = new Cue(musicSounds["music"], "music", false);
+                //The menu track plays until a screen selects another one.
+                PlayTrack(MenuTrack);
             }
             catch (NoAudioHardwareException)
             {
@@ -189,7 +213,7 @@ namespace GalactikWars
         }
 
         ///<summary>Cue names available in the effects bank.</summary>
-        static readonly string[] effectCueNames =
+        private static readonly string[] effectCueNames =
         {
             "engine_1",
             "engine_2",
@@ -218,11 +242,8 @@ namespace GalactikWars
                 othersEngineSound = null;
             }
 
-            if (music != null)
-            {
-                music.Stop();
-                music = null;
-            }
+            //Note: the shared music cue is intentionally not stopped here —
+            //it keeps playing across screen transitions (menus, gameplay).
         }
 
         public void Update(GameTime gameTime)
@@ -245,49 +266,37 @@ namespace GalactikWars
                     {
                         othersEngineSound.UpdateVolume(effectsVolume);
                     }
-
-                    if (!music.IsPlaying)
-                    {
-                        if (random.NextDouble() <= 0.16)
-                        {
-                            PlayMusic("music");
-                        }
-                        else if (random.NextDouble() <= 0.32)
-                        {
-                            PlayMusic("music1");
-                        }
-                        else if (random.NextDouble() <= 0.48)
-                        {
-                            PlayMusic("music2");
-                        }
-                        else if (random.NextDouble() <= 0.64)
-                        {
-                            PlayMusic("music3");
-                        }
-                        else if (random.NextDouble() <= 0.8)
-                        {
-                            PlayMusic("music4");
-                        }
-                        else
-                        {
-                            PlayMusic("music5");
-                        }
-                    }
                 }
             }
         }
 
         ///<summary>
-        ///Switches to the specified music cue, applying the music volume.
+        ///Switches the background music to the named track (see the *Track
+        ///constants). Idempotent: selecting the track that is already
+        ///playing keeps it playing untouched. Tracks loop until another
+        ///track is selected.
         ///</summary>
-        void PlayMusic(string cue)
+        public void PlayTrack(string trackName)
         {
+            if (musicSounds == null || trackName == currentTrack)
+            {
+                return;
+            }
+
+            if (!musicSounds.ContainsKey(trackName))
+            {
+                return;
+            }
+
+            currentTrack = trackName;
+
             if (music != null)
             {
                 music.Stop();
             }
 
-            music = new Cue(musicSounds[cue], cue, false);
+            music = new Cue(musicSounds[trackName], trackName, true,
+                            musicVolume);
             music.Play();
         }
 
@@ -302,7 +311,9 @@ namespace GalactikWars
             if (music != null)
             {
                 if (music.IsPaused)
+                {
                     music.Resume();
+                }
             }
         }
 
@@ -311,7 +322,9 @@ namespace GalactikWars
             if (music != null)
             {
                 if (music.IsPlaying)
+                {
                     music.Pause();
+                }
             }
         }
 
@@ -350,7 +363,7 @@ namespace GalactikWars
                 if (myEngineSound == null)
                 {
                     myEngineSound = new Cue(effectSounds["engine_1"],
-                                            "engine_1", true);
+                                            "engine_1", true, effectsVolume);
                     myEngineSound.Play();
                 }
                 else if (myEngineSound.IsPaused)
@@ -367,7 +380,8 @@ namespace GalactikWars
                 if (othersEngineSound == null)
                 {
                     othersEngineSound = new Cue(effectSounds["engine_2"],
-                                                "engine_2", true);
+                                                "engine_2", true,
+                                                effectsVolume);
                     othersEngineSound.Play();
                 }
                 else if (othersEngineSound.IsPaused)
@@ -384,25 +398,15 @@ namespace GalactikWars
             if (effectSounds != null && effectSounds.ContainsKey(cue))
             {
                 //One-shot cues use the effects volume.
-                Cue oneShot = new Cue(effectSounds[cue], cue, false);
+                Cue oneShot = new(effectSounds[cue], cue, false,
+                                      effectsVolume);
                 oneShot.Play();
             }
         }
 
         public void PlayGameOver()
         {
-            if (musicSounds != null && musicSounds.ContainsKey("gameOver"))
-            {
-                if (music == null || !music.Name.Equals("gameOver"))
-                {
-                    if (music != null && music.IsPlaying)
-                    {
-                        music.Stop();
-                    }
-                    music = new Cue(musicSounds["gameOver"], "gameOver", false);
-                    music.Play();
-                }
-            }
+            PlayTrack(GameOverTrack);
         }
 
         #endregion Play

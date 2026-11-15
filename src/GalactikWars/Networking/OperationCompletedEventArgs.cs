@@ -11,12 +11,12 @@
 using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Networking
 {
     ///<summary>
     ///Custom EventArgs class used by the NetworkBusyScreen.OperationCompleted event.
     ///</summary>
-    class OperationCompletedEventArgs : EventArgs
+    internal class OperationCompletedEventArgs : EventArgs
     {
         #region Properties
 
@@ -31,7 +31,7 @@ namespace GalactikWars
             set { asyncResult = value; }
         }
 
-        IAsyncResult asyncResult;
+        private IAsyncResult asyncResult;
 
 
         #endregion

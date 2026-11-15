@@ -9,15 +9,13 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Text;
+using GalactikWars.Entities;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Handlers
 {
-    class CollisionsHandler
+    internal class CollisionsHandler
     {
         #region Collisions Check
 
@@ -34,13 +32,13 @@ namespace GalactikWars
             if (p1.ship.IsActive)
             {
                 BoundingSphere shipSphere =
-                  new BoundingSphere(p1.ship.Position, p1.Radius *
+                  new(p1.ship.Position, p1.Radius *
                                  GameVariables.shipBoundingSphereScale);
                 for (int i = 0; i < p2.bulletList.Length; i++)
                 {
                     if (p2.bulletList[i].IsActive)
                     {
-                        BoundingSphere bulletSphere = new BoundingSphere(
+                        BoundingSphere bulletSphere = new(
                             p2.bulletList[i].position, bulletRadius);
 
                         if (bulletSphere.Intersects(shipSphere))
@@ -56,16 +54,24 @@ namespace GalactikWars
                                 explosionPosition.Y = p1.ship.Position.Y;
 
                                 if (p1.Score - GameVariables.DeathPenalty < 0)
+                                {
                                     p1.Score = 0;
+                                }
                                 else
+                                {
                                     p1.Score -= GameVariables.DeathPenalty;
+                                }
                             }
                             else
                             {
                                 if (p1.Score - GameVariables.ShotPenalty < 0)
+                                {
                                     p1.Score = 0;
+                                }
                                 else
+                                {
                                     p1.Score -= GameVariables.ShotPenalty;
+                                }
                             }
                             return true;
                         }
@@ -80,13 +86,13 @@ namespace GalactikWars
             if (p1.ship.IsActive)
             {
                 BoundingSphere shipSphere =
-                  new BoundingSphere(p1.ship.Position, p1.Radius *
+                  new(p1.ship.Position, p1.Radius *
                                  GameVariables.shipBoundingSphereScale);
                 for (int i = 0; i < p2.rocketList.Length; i++)
                 {
                     if (p2.rocketList[i].IsActive)
                     {
-                        BoundingSphere rocketSphere = new BoundingSphere(
+                        BoundingSphere rocketSphere = new(
                             p2.rocketList[i].position, rocketRadius);
 
                         if (rocketSphere.Intersects(shipSphere))
@@ -102,16 +108,24 @@ namespace GalactikWars
                                 explosionPosition.Y = p1.ship.Position.Y;
 
                                 if (p1.Score - GameVariables.DeathPenalty < 0)
+                                {
                                     p1.Score = 0;
+                                }
                                 else
+                                {
                                     p1.Score -= GameVariables.DeathPenalty;
+                                }
                             }
                             else
                             {
                                 if (p1.Score - GameVariables.ShotPenalty < 0)
+                                {
                                     p1.Score = 0;
+                                }
                                 else
+                                {
                                     p1.Score -= GameVariables.ShotPenalty;
+                                }
                             }
                             return true;
                         }
@@ -132,13 +146,13 @@ namespace GalactikWars
             {
                 if (p1.bulletList[i].IsActive)
                 {
-                    BoundingSphere bulletSphere = new BoundingSphere(
+                    BoundingSphere bulletSphere = new(
                         p1.bulletList[i].position, bulletRadius);
                     for (int j = 0; j < p2.rocketList.Length; j++)
                     {
                         if (p2.rocketList[j].IsActive)
                         {
-                            BoundingSphere rocketSphere = new BoundingSphere(
+                            BoundingSphere rocketSphere = new(
                                 p2.rocketList[j].position, rocketRadius);
 
                             if (rocketSphere.Intersects(bulletSphere))
@@ -164,13 +178,13 @@ namespace GalactikWars
             {
                 if (p1.rocketList[i].IsActive)
                 {
-                    BoundingSphere rocketSphere1 = new BoundingSphere(
+                    BoundingSphere rocketSphere1 = new(
                         p1.rocketList[i].position, rocketRadius);
                     for (int j = 0; j < p2.rocketList.Length; j++)
                     {
                         if (p2.rocketList[j].IsActive)
                         {
-                            BoundingSphere rocketSphere2 = new BoundingSphere(
+                            BoundingSphere rocketSphere2 = new(
                                 p2.rocketList[j].position, rocketRadius);
 
                             if (rocketSphere2.Intersects(rocketSphere1))
@@ -198,11 +212,11 @@ namespace GalactikWars
         {
             if (p1.ship.IsActive)
             {
-                BoundingSphere shipSphere1 = new BoundingSphere(
+                BoundingSphere shipSphere1 = new(
                     p1.ship.Position, p1.Radius / 2);
                 if (p2.ship.IsActive)
                 {
-                    BoundingSphere shipSphere2 = new BoundingSphere(
+                    BoundingSphere shipSphere2 = new(
                         p2.ship.Position, p2.Radius / 2);
                     if (shipSphere2.Intersects(shipSphere1))
                     {
@@ -220,7 +234,7 @@ namespace GalactikWars
             //ship-asteroid collision check
             if (p.ship.IsActive)
             {
-                BoundingSphere shipSphere = new BoundingSphere(
+                BoundingSphere shipSphere = new(
                     p.ship.Position, p.Radius);
                 for (int i = 0; i < asteroid2List.Length; i++)
                 {
@@ -243,9 +257,13 @@ namespace GalactikWars
                                     p.lives--;
 
                                     if (p.Score - GameVariables.DeathPenalty < 0)
+                                    {
                                         p.Score = 0;
+                                    }
                                     else
+                                    {
                                         p.Score -= GameVariables.DeathPenalty;
+                                    }
                                 }
 
                                 asteroid1List[i].isActive = false;
@@ -268,9 +286,13 @@ namespace GalactikWars
                                 p.ship.IsActive = false;
                                 p.lives--;
                                 if (p.Score - GameVariables.DeathPenalty < 0)
+                                {
                                     p.Score = 0;
+                                }
                                 else
+                                {
                                     p.Score -= GameVariables.DeathPenalty;
+                                }
                             }
                             asteroid2List[i].isActive = false;
                             return true;
@@ -292,7 +314,7 @@ namespace GalactikWars
             {
                 if (asteroid1List[i].isActive)
                 {
-                    BoundingSphere b1 = new BoundingSphere(
+                    BoundingSphere b1 = new(
                         asteroid1List[i].position, asteroid1Radius *
                         GameVariables.AsteroidBoundingSphereScale);
 
@@ -300,7 +322,7 @@ namespace GalactikWars
                     {
                         if (i != j && asteroid1List[j].isActive)
                         {
-                            BoundingSphere b2 = new BoundingSphere(
+                            BoundingSphere b2 = new(
                                 asteroid1List[j].position, asteroid1Radius *
                                 GameVariables.AsteroidBoundingSphereScale);
 
@@ -313,7 +335,7 @@ namespace GalactikWars
 
                     for (int j = 0; j < asteroid2List.Length; j++)
                     {
-                        BoundingSphere b2 = new BoundingSphere(
+                        BoundingSphere b2 = new(
                             asteroid2List[j].position, asteroid2Radius *
                             GameVariables.AsteroidBoundingSphereScale);
 
@@ -329,13 +351,13 @@ namespace GalactikWars
             {
                 if (asteroid2List[i].isActive)
                 {
-                    BoundingSphere b1 = new BoundingSphere(
+                    BoundingSphere b1 = new(
                         asteroid2List[i].position, asteroid2Radius *
                         GameVariables.AsteroidBoundingSphereScale);
 
                     for (int j = 0; j < asteroid2List.Length; j++)
                     {
-                        BoundingSphere b2 = new BoundingSphere(
+                        BoundingSphere b2 = new(
                             asteroid2List[j].position, asteroid2Radius *
                             GameVariables.AsteroidBoundingSphereScale);
 
@@ -361,13 +383,13 @@ namespace GalactikWars
                 if (asteroidList[i].isActive)
                 {
                     BoundingSphere asteroidSphere =
-                      new BoundingSphere(asteroidList[i].position, asteroidRadius *
+                      new(asteroidList[i].position, asteroidRadius *
                                      GameVariables.AsteroidBoundingSphereScale);
                     for (int j = 0; j < p.bulletList.Length; j++)
                     {
                         if (p.bulletList[j].IsActive)
                         {
-                            BoundingSphere bulletSphere = new BoundingSphere(p.bulletList[j].position,
+                            BoundingSphere bulletSphere = new(p.bulletList[j].position,
                                 bulletRadius);
                             if (asteroidSphere.Intersects(bulletSphere))
                             {
@@ -398,16 +420,16 @@ namespace GalactikWars
                 if (asteroid1List[i].isActive)
                 {
                     BoundingSphere asteroidSphere1 =
-                      new BoundingSphere(asteroid1List[i].position, asteroid1Radius *
+                      new(asteroid1List[i].position, asteroid1Radius *
                                      GameVariables.AsteroidBoundingSphereScale);
                     for (int j = 0; j < p.rocketList.Length; j++)
                     {
                         if (p.rocketList[j].IsActive)
                         {
-                            BoundingSphere rocketSphere = new BoundingSphere(
+                            BoundingSphere rocketSphere = new(
                                 p.rocketList[j].position,
                                 rocketRadius);
-                            BoundingSphere rocketDestructionSphere = new BoundingSphere(
+                            BoundingSphere rocketDestructionSphere = new(
                                 p.rocketList[j].position,
                                 rocketRadius * 5);
                             if (asteroidSphere1.Intersects(rocketSphere))

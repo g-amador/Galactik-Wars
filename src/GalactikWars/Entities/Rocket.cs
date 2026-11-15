@@ -8,18 +8,15 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Entities
 {
-    struct Rocket
+    internal struct Rocket
     {
         #region Fields
-        
+
         public Vector3 position;
         public Vector3 direction;
         public float speed;
@@ -37,7 +34,9 @@ namespace GalactikWars
                 position.X < -GameVariables.PlayfieldSizeX ||
                 position.Y > GameVariables.PlayfieldSizeY ||
                 position.Y < -GameVariables.PlayfieldSizeY)
+            {
                 isActive = false;
+            }
         }
 
         public bool IsActive

@@ -11,7 +11,7 @@
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.ScreenManager
 {
     ///<summary>
     ///Interface used to display notification messages when interesting events occur,
@@ -21,7 +21,7 @@ namespace GalactikWars
     ///message display is implemented. In this sample, the MessageDisplayComponent
     ///class implement this IMessageDisplay service.
     ///</summary>
-    interface IMessageDisplay : IDrawable, IUpdateable
+    internal interface IMessageDisplay : IDrawable, IUpdateable
     {
         void ShowMessage(string message, params object[] parameters);
     }

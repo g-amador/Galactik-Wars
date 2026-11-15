@@ -9,76 +9,80 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
+using GalactikWars.Entities;
+using GalactikWars.Handlers;
+using GalactikWars.Net;
+using GalactikWars.Networking;
+using GalactikWars.ScreenManager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using GalactikWars.Net;
+using System;
+using System.Collections.Generic;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.Screens
 {
     ///<summary>
     ///This screen implements the actual game logic. It is just a
     ///placeholder to get the idea across: you'll probably want to
     ///put some more interesting gameplay in here!
     ///</summary>
-    class GameplayScreenMultiplayer : GameScreen
+    internal class GameplayScreenMultiplayer : GameScreen
     {
         #region Fields
 
-        NetworkSession networkSession;
+        private readonly NetworkSession networkSession;
 
-        PacketWriter packetWriter = new PacketWriter();
-        PacketReader packetReader = new PacketReader();
+        private readonly PacketWriter packetWriter = new();
+        private readonly PacketReader packetReader = new();
 
-        ContentManager content = null;
+        private ContentManager content = null;
 
         //Objects to do sound/keyboard/Camera/Collision handling
-        CollisionsHandler collisionsHandler = new CollisionsHandler(); 
-        SoundHandler soundHandler = new SoundHandler();
-        CCamera camera = new CCamera();
+        private readonly CollisionsHandler collisionsHandler = new();
+        private SoundHandler soundHandler => ScreenManager.SoundHandler;
+        private readonly CCamera camera = new();
 
         //Visual components
-        Texture2D stars = null;
-        Texture2D particlesTexture = null;
+        private Texture2D stars = null;
+        private Texture2D particlesTexture = null;
 
-        Model rocketModel = null;
-        Model bulletModel = null;
-        Model shieldModel = null;
-        Matrix[] shieldTransforms = null;
-        Matrix[] bulletTransforms = null;
-        Matrix[] rocketTransforms = null;
+        private Model rocketModel = null;
+        private Model bulletModel = null;
+        private Model shieldModel = null;
+        private Matrix[] shieldTransforms = null;
+        private Matrix[] bulletTransforms = null;
+        private Matrix[] rocketTransforms = null;
 
-        SpriteBatch spriteBatch = null;
-        SpriteFont lucidaConsole = null;
-        SpriteFont font = null;
+        private SpriteBatch spriteBatch = null;
+        private SpriteFont lucidaConsole = null;
+        private SpriteFont font = null;
 
         //Players
-        Player[] players = new Player[NetworkSessionComponent.MaxGamers];
-        int playerID = 0; //this players ID
-        int activePlayers = 1; //number of active players
-        int sessionPlayers = 1; //number of players in this section
-        bool isPaused = false;
-        bool idChanged = false;
-        bool isMovingUp = false;
-        bool isMovingDown = false;
-        bool isRotatingLeft = false;
-        bool isRotatingRight = false;
-        bool isFiringBullets = false;
-        bool isFiringRockets = false;
+        private readonly Player[] players = new Player[NetworkSessionComponent.MaxGamers];
+        private int playerID = 0; //this players ID
+        private int activePlayers = 1; //number of active players
+        private int sessionPlayers = 1; //number of players in this section
+        private bool isPaused = false;
+        private bool idChanged = false;
+        private bool isMovingUp = false;
+        private bool isMovingDown = false;
+        private bool isRotatingLeft = false;
+        private bool isRotatingRight = false;
+        private bool isFiringBullets = false;
+        private bool isFiringRockets = false;
 
-        Vector2 scorePosition = new Vector2(60, 30);
-        Vector2 shieldPosition = new Vector2(60, 10);
-        Vector2 scoresPosition = new Vector2(300, 0);
+        private Vector2 scorePosition = new(60, 30);
+        private Vector2 shieldPosition = new(60, 10);
+        private Vector2 scoresPosition = new(300, 0);
 
-        float scoresScale = 1.0f;
+        private readonly float scoresScale = 1.0f;
 
-        float timeElapsed = 0; //time since a scores last shown
-         
-        Random random = new Random();
+        private float timeElapsed = 0; //time since a scores last shown
+
+        private readonly Random random = new();
 
         #endregion
 
@@ -97,7 +101,7 @@ namespace GalactikWars
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-            camera.Initialize(new Vector3(0.0f, 0.0f, GameVariables.CameraHeight), 
+            camera.Initialize(new Vector3(0.0f, 0.0f, GameVariables.CameraHeight),
                 Vector3.Zero);
         }
 
@@ -133,34 +137,34 @@ namespace GalactikWars
         ///</summary>
         public override void LoadContent()
         {
-            if (content == null)
-                content = new ContentManager(ScreenManager.Game.Services, "Content");
+            content ??= new ContentManager(ScreenManager.Game.Services, "assets");
 
             soundHandler.Load(content);
+            soundHandler.PlayTrack(SoundHandler.BattleTrack);
 
             if (random.NextDouble() <= 0.17)
             {
-                LoadPlayerModel("Models/p1_pencil");
+                LoadPlayerModel("models/p1_pencil");
             }
             else if (random.NextDouble() <= 0.34)
             {
-                LoadPlayerModel("Models/p2_pencil");
+                LoadPlayerModel("models/p2_pencil");
             }
             else if (random.NextDouble() <= 0.51)
             {
-                LoadPlayerModel("Models/p1_wedge");
+                LoadPlayerModel("models/p1_wedge");
             }
             else if (random.NextDouble() <= 0.68)
             {
-                LoadPlayerModel("Models/p2_wedge");
+                LoadPlayerModel("models/p2_wedge");
             }
             else if (random.NextDouble() <= 0.85)
             {
-                LoadPlayerModel("Models/p1_saucer");
+                LoadPlayerModel("models/p1_saucer");
             }
             else
             {
-                LoadPlayerModel("Models/p2_saucer");
+                LoadPlayerModel("models/p2_saucer");
             }
 
             foreach (LocalNetworkGamer gamer in networkSession.LocalGamers)
@@ -171,27 +175,37 @@ namespace GalactikWars
                 }
             }
 
-            bulletModel = content.Load<Model>("Models/pea_proj");
+            bulletModel = content.Load<Model>("models/pea_proj");
             bulletTransforms = SetupEffectDefaults(bulletModel);
-            rocketModel = content.Load<Model>("Models/p1_rocket");
+            rocketModel = content.Load<Model>("models/p1_rocket");
             rocketTransforms = SetupEffectDefaults(rocketModel);
-            shieldModel = content.Load<Model>("Models/sphere");
+            shieldModel = content.Load<Model>("models/sphere");
             shieldTransforms = SetupEffectDefaults(shieldModel);
 
             if (random.NextDouble() <= 0.2)
-                stars = content.Load<Texture2D>("Textures/galaxy");
+            {
+                stars = content.Load<Texture2D>("textures/galaxy");
+            }
             else if (random.NextDouble() <= 0.4)
-                stars = content.Load<Texture2D>("Textures/aurora");
+            {
+                stars = content.Load<Texture2D>("textures/aurora");
+            }
             else if (random.NextDouble() <= 0.6)
-                stars = content.Load<Texture2D>("Textures/nebula");
+            {
+                stars = content.Load<Texture2D>("textures/nebula");
+            }
             else if (random.NextDouble() <= 0.8)
-                stars = content.Load<Texture2D>("Textures/nebula2");
+            {
+                stars = content.Load<Texture2D>("textures/nebula2");
+            }
             else
-                stars = content.Load<Texture2D>("Textures/planets");
+            {
+                stars = content.Load<Texture2D>("textures/planets");
+            }
 
-            particlesTexture = content.Load<Texture2D>("Textures/multicolored");
+            particlesTexture = content.Load<Texture2D>("textures/multicolored");
 
-            lucidaConsole = content.Load<SpriteFont>("Fonts/LucidaConsole");
+            lucidaConsole = content.Load<SpriteFont>("fonts/LucidaConsole");
             spriteBatch = ScreenManager.SpriteBatch;
             font = ScreenManager.Font;
 
@@ -226,13 +240,12 @@ namespace GalactikWars
 
         #region Networking and Auxiliar Functions
 
-        void ReceiveNetworkData(LocalNetworkGamer gamer, GameTime gameTime)
+        private void ReceiveNetworkData(LocalNetworkGamer gamer, GameTime gameTime)
         {
             while (gamer.IsDataAvailable)
             {
-                NetworkGamer sender;
 
-                gamer.ReceiveData(packetReader, out sender);
+                gamer.ReceiveData(packetReader, out NetworkGamer sender);
 
                 if (GameVariables.FlawToleranceOn)
                 {
@@ -333,13 +346,24 @@ namespace GalactikWars
                 if (rotatedLeft || rotatedRight || movedUp || movedDown)
                 {
                     if (players[networkSession.AllGamers.IndexOf(sender)].ship.Position.X > GameVariables.PlayfieldSizeX)
+                    {
                         players[networkSession.AllGamers.IndexOf(sender)].ship.Position.X -= 2 * GameVariables.PlayfieldSizeX;
+                    }
+
                     if (players[networkSession.AllGamers.IndexOf(sender)].ship.Position.X < -GameVariables.PlayfieldSizeX)
+                    {
                         players[networkSession.AllGamers.IndexOf(sender)].ship.Position.X += 2 * GameVariables.PlayfieldSizeX;
+                    }
+
                     if (players[networkSession.AllGamers.IndexOf(sender)].ship.Position.Y > GameVariables.PlayfieldSizeY)
+                    {
                         players[networkSession.AllGamers.IndexOf(sender)].ship.Position.Y -= 2 * GameVariables.PlayfieldSizeY;
+                    }
+
                     if (players[networkSession.AllGamers.IndexOf(sender)].ship.Position.Y < -GameVariables.PlayfieldSizeY)
+                    {
                         players[networkSession.AllGamers.IndexOf(sender)].ship.Position.Y += 2 * GameVariables.PlayfieldSizeY;
+                    }
 
                     //    if (!sender.IsLocal)
                     //        soundHandler.PlayOthersEngineSound();
@@ -375,7 +399,9 @@ namespace GalactikWars
                     soundHandler.PlayCue("explosion3");
                 }
                 else
+                {
                     soundHandler.PlayCue("phase_collide_ship1");
+                }
             }
 
             if (collisionsHandler.CheckForBulletShip(
@@ -386,7 +412,9 @@ namespace GalactikWars
                     soundHandler.PlayCue("explosion3");
                 }
                 else
+                {
                     soundHandler.PlayCue("phase_collide_ship1");
+                }
             }
 
             if (collisionsHandler.CheckForRocketShip(
@@ -399,7 +427,9 @@ namespace GalactikWars
                     soundHandler.PlayCue("explosion3");
                 }
                 else
+                {
                     soundHandler.PlayCue("phase_collide_ship1");
+                }
             }
 
             if (collisionsHandler.CheckForRocketShip(
@@ -412,7 +442,9 @@ namespace GalactikWars
                     soundHandler.PlayCue("explosion3");
                 }
                 else
+                {
                     soundHandler.PlayCue("phase_collide_ship1");
+                }
             }
 
             // check for weapon weapon collisions
@@ -460,7 +492,7 @@ namespace GalactikWars
         private void switchTwoPlayersData(Player p1, Player p2, GameTime gameTime)
         {
             //change is data with old host data
-            Player p = new Player();
+            Player p = new();
 
             p.ship.Position = p1.ship.Position;
             p.ship.Velocity = p1.ship.Velocity;
@@ -520,7 +552,7 @@ namespace GalactikWars
 
         #region Input Handling
 
-        new bool IsActive
+        private new bool IsActive
         {
             get
             {
@@ -536,13 +568,15 @@ namespace GalactikWars
         public override void HandleInput(InputState input)
         {
             if (input == null)
+            {
                 throw new ArgumentNullException("input");
+            }
 
             if (input.PauseGame || timeElapsed > 300)
             {
                 isPaused = true;
                 soundHandler.PauseMusic();
-                ScreenManager.AddScreen(new PauseMenuScreen(networkSession));  
+                ScreenManager.AddScreen(new PauseMenuScreen(networkSession));
             }
             else
             {
@@ -571,7 +605,7 @@ namespace GalactikWars
                 }
 
                 //Rotate to the viwer left while the Left key down
-                if (players[playerID].ship.IsActive && 
+                if (players[playerID].ship.IsActive &&
                     input.IsNewKeyStillPress(Keys.Left, PlayerIndex.One))
                 {
                     soundHandler.PlayMyEngineSound();
@@ -579,7 +613,7 @@ namespace GalactikWars
                 }
 
                 //Rotate to the viewer right while the Right key down
-                if (players[playerID].ship.IsActive && 
+                if (players[playerID].ship.IsActive &&
                     input.IsNewKeyStillPress(Keys.Right, PlayerIndex.One))
                 {
                     soundHandler.PlayMyEngineSound();
@@ -753,9 +787,9 @@ namespace GalactikWars
 
         public override void Draw(GameTime gameTime)
         {
-            Vector2 titlePosition = new Vector2(400, 60);
+            Vector2 titlePosition = new(400, 60);
             Vector2 titleOrigin = font.MeasureString(Resources.Scores) / 2;
-            Color titleColor = new Color((byte)192, (byte)192, (byte)192, TransitionAlpha);
+            Color titleColor = new((byte)192, (byte)192, (byte)192, TransitionAlpha);
             float titleScale = 1.5f;
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -783,7 +817,7 @@ namespace GalactikWars
             }
 
             //list to sort all gamers in session scores if necessary 
-            List<NetworkGamer> gamers = new List<NetworkGamer>();
+            List<NetworkGamer> gamers = [];
 
             foreach (NetworkGamer gamer in networkSession.AllGamers)
             {
@@ -823,7 +857,7 @@ namespace GalactikWars
             {
                 timeElapsed++;
 
-                gamers.Sort(delegate(NetworkGamer g2, NetworkGamer g1)
+                gamers.Sort(delegate (NetworkGamer g2, NetworkGamer g1)
                 {
                     return (players[networkSession.AllGamers.IndexOf(g1)].Score.CompareTo(
                         players[networkSession.AllGamers.IndexOf(g2)].Score));
@@ -854,11 +888,15 @@ namespace GalactikWars
                 players[playerID].Score, scorePosition, Color.LightGreen);
 
             if (players[playerID].Shield < 0)
+            {
                 spriteBatch.DrawString(lucidaConsole, "Shield: 0%",
                     shieldPosition, Color.LightGreen);
+            }
             else
+            {
                 spriteBatch.DrawString(lucidaConsole, "Shield: " +
                     players[playerID].Shield + "%", shieldPosition, Color.LightGreen);
+            }
 
             spriteBatch.End();
 
@@ -922,7 +960,7 @@ namespace GalactikWars
                     effect.EnableDefaultLighting();
                     effect.World = absoluteBoneTransforms[mesh.ParentBone.Index] * modelTransform;
                     effect.View = camera.View;
-                    camera.SetProjection( GameVariables.CameraHeight * 100.0f );
+                    camera.SetProjection(GameVariables.CameraHeight * 100.0f);
                     effect.Projection = camera.Projection;
                 }
                 //Draw the mesh, will use the effects set above.

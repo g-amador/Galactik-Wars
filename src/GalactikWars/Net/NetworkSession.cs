@@ -17,6 +17,8 @@
 #endregion
 
 #region Using Statements
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,9 +26,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Microsoft.Xna.Framework;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace GalactikWars.Net
@@ -66,37 +66,37 @@ namespace GalactikWars.Net
         ///<summary>
         ///UDP port the session host listens on.
         ///</summary>
-        const int DefaultPort = 26900;
+        private const int DefaultPort = 26900;
 
         ///<summary>
         ///Interval between session discovery beacons, in milliseconds.
         ///</summary>
-        const int BeaconInterval = 1000;
+        private const int BeaconInterval = 1000;
 
         ///<summary>
         ///Interval between roster synchronization packets, in milliseconds.
         ///</summary>
-        const int RosterInterval = 500;
+        private const int RosterInterval = 500;
 
         ///<summary>
         ///How long a gamer may go silent before being dropped.
         ///</summary>
-        const int GamerTimeout = 5000;
+        private const int GamerTimeout = 5000;
 
         ///<summary>
         ///How long a client may go without hearing from the host.
         ///</summary>
-        const int HostTimeout = 5000;
+        private const int HostTimeout = 5000;
 
         ///<summary>
         ///How long the session discovery search listens for replies.
         ///</summary>
-        const int FindWindow = 2000;
+        private const int FindWindow = 2000;
 
         ///<summary>
         ///Timeout for each join attempt, in milliseconds.
         ///</summary>
-        const int JoinReplyTimeout = 1500;
+        private const int JoinReplyTimeout = 1500;
 
         ///<summary>Maximum number of gamers in a session.</summary>
         internal const int MaxGamersLimit = 6;
@@ -105,7 +105,7 @@ namespace GalactikWars.Net
 
         #region Packet Types
 
-        enum PacketType : byte
+        private enum PacketType : byte
         {
             DiscoveryRequest = 1,
             DiscoveryReply = 2,
@@ -127,39 +127,39 @@ namespace GalactikWars.Net
 
         #region Fields
 
-        Socket socket;
+        private Socket socket;
 
-        readonly bool isHost;
-        readonly List<IPEndPoint> clientEndpoints = new List<IPEndPoint>();
+        private readonly bool isHost;
+        private readonly List<IPEndPoint> clientEndpoints = [];
 
-        readonly NetworkGamerCollection allGamers = new NetworkGamerCollection();
-        readonly LocalNetworkGamerCollection localGamers = new LocalNetworkGamerCollection();
+        private readonly NetworkGamerCollection allGamers = [];
+        private readonly LocalNetworkGamerCollection localGamers = [];
 
-        NetworkSessionState state = NetworkSessionState.Lobby;
+        private NetworkSessionState state = NetworkSessionState.Lobby;
 
-        DateTime lastBeacon = DateTime.MinValue;
-        DateTime lastRoster = DateTime.MinValue;
+        private DateTime lastBeacon = DateTime.MinValue;
+        private DateTime lastRoster = DateTime.MinValue;
 
         ///<summary>Last time each remote client was heard from (host only).</summary>
-        readonly Dictionary<IPEndPoint, DateTime> clientSeen =
-            new Dictionary<IPEndPoint, DateTime>();
+        private readonly Dictionary<IPEndPoint, DateTime> clientSeen =
+            [];
 
         ///<summary>Last time the host was heard from (client only).</summary>
-        DateTime hostSeen = DateTime.UtcNow;
+        private DateTime hostSeen = DateTime.UtcNow;
 
         ///<summary>Receiving buffer.</summary>
-        readonly byte[] receiveBuffer = new byte[8192];
+        private readonly byte[] receiveBuffer = new byte[8192];
 
         ///<summary>
         ///The id the host assigned to the local gamer of a joining client.
         ///</summary>
-        byte pendingLocalId;
+        private byte pendingLocalId;
 
         ///<summary>Whether a join reply is still pending processing.</summary>
-        bool pendingJoin;
+        private bool pendingJoin;
 
         ///<summary>Endpoint of the host (clients only).</summary>
-        IPEndPoint hostEndPoint;
+        private IPEndPoint hostEndPoint;
 
         ///<summary>Graphics device, used to create gamer pictures.</summary>
         internal GraphicsDevice GraphicsDevice { get; set; }
@@ -265,7 +265,7 @@ namespace GalactikWars.Net
 
         #region Static Identity
 
-        static string localGamertag;
+        private static string localGamertag;
 
         ///<summary>
         ///Gets or sets the gamertag used by the local player. Defaults to
@@ -296,13 +296,15 @@ namespace GalactikWars.Net
         ///<summary>
         ///Constructs a session. Use the static Create, Find and Join methods.
         ///</summary>
-        NetworkSession(bool isHost)
+        private NetworkSession(bool isHost)
         {
             this.isHost = isHost;
 
             socket = new Socket(AddressFamily.InterNetwork,
-                                SocketType.Dgram, ProtocolType.Udp);
-            socket.Blocking = false;
+                                SocketType.Dgram, ProtocolType.Udp)
+            {
+                Blocking = false
+            };
         }
 
         ///<summary>
@@ -311,7 +313,7 @@ namespace GalactikWars.Net
         public static NetworkSession Create(NetworkSessionType sessionType,
                                             int maxLocalGamers, int maxGamers)
         {
-            NetworkSession session = new NetworkSession(true);
+            NetworkSession session = new(true);
 
             try
             {
@@ -338,10 +340,10 @@ namespace GalactikWars.Net
         ///<summary>
         ///Creates the local gamer for a new session, wiring up its profile.
         ///</summary>
-        static void AddLocalGamer(NetworkSession session, byte id,
+        private static void AddLocalGamer(NetworkSession session, byte id,
                                   string gamertag, bool isHost)
         {
-            LocalNetworkGamer gamer = new LocalNetworkGamer(id, gamertag, isHost);
+            LocalNetworkGamer gamer = new(id, gamertag, isHost);
 
             session.allGamers.Add(gamer);
             session.localGamers.Add(gamer);
@@ -359,9 +361,9 @@ namespace GalactikWars.Net
                                                              object searchProperties)
         {
             AvailableNetworkSessionCollection results =
-                new AvailableNetworkSessionCollection();
+                [];
 
-            Socket searchSocket = new Socket(AddressFamily.InterNetwork,
+            Socket searchSocket = new(AddressFamily.InterNetwork,
                                              SocketType.Dgram, ProtocolType.Udp);
             try
             {
@@ -378,7 +380,7 @@ namespace GalactikWars.Net
                 byte[] buffer = new byte[8192];
 
                 Dictionary<IPEndPoint, int> pingSentAt =
-                    new Dictionary<IPEndPoint, int>();
+                    [];
 
                 while (DateTime.UtcNow < deadline)
                 {
@@ -463,7 +465,7 @@ namespace GalactikWars.Net
             return results;
         }
 
-        static AvailableNetworkSession FindSession(
+        private static AvailableNetworkSession FindSession(
             AvailableNetworkSessionCollection sessions, IPEndPoint endPoint)
         {
             foreach (AvailableNetworkSession session in sessions)
@@ -485,7 +487,7 @@ namespace GalactikWars.Net
         ///</summary>
         public static NetworkSession Join(AvailableNetworkSession availableSession)
         {
-            NetworkSession session = new NetworkSession(false);
+            NetworkSession session = new(false);
 
             try
             {
@@ -544,7 +546,7 @@ namespace GalactikWars.Net
         ///<summary>
         ///Waits for any packet to arrive on the socket, up to timeout ms.
         ///</summary>
-        static bool WaitForReply(Socket socket, ref EndPoint remote,
+        private static bool WaitForReply(Socket socket, ref EndPoint remote,
                                  byte[] buffer, int timeout)
         {
             DateTime deadline = DateTime.UtcNow.AddMilliseconds(timeout);
@@ -623,11 +625,9 @@ namespace GalactikWars.Net
         ///Waits for the result of an asynchronous operation, unwrapping any
         ///exception thrown by the operation itself.
         ///</summary>
-        static T UnwrapResult<T>(IAsyncResult asyncResult)
+        private static T UnwrapResult<T>(IAsyncResult asyncResult)
         {
-            Task<T> task = asyncResult as Task<T>;
-
-            if (task == null)
+            if (asyncResult is not Task<T> task)
             {
                 throw new ArgumentException("Invalid asynchronous result.");
             }
@@ -721,7 +721,7 @@ namespace GalactikWars.Net
         ///<summary>
         ///Ends the session locally, raising the SessionEnded event.
         ///</summary>
-        void EndSession(NetworkSessionEndReason reason)
+        private void EndSession(NetworkSessionEndReason reason)
         {
             if (state == NetworkSessionState.Ended)
             {
@@ -730,13 +730,10 @@ namespace GalactikWars.Net
 
             state = NetworkSessionState.Ended;
 
-            if (SessionEnded != null)
+            SessionEnded?.Invoke(this, new NetworkSessionEndedEventArgs
             {
-                SessionEnded(this, new NetworkSessionEndedEventArgs
-                {
-                    EndReason = reason,
-                });
-            }
+                EndReason = reason,
+            });
         }
 
         #endregion
@@ -808,7 +805,7 @@ namespace GalactikWars.Net
 
         #region Host Logic
 
-        void UpdateAsHost()
+        private void UpdateAsHost()
         {
             DateTime now = DateTime.UtcNow;
 
@@ -842,19 +839,17 @@ namespace GalactikWars.Net
             {
                 lastBeacon = now;
 
-                Broadcast(EncodePacket(PacketType.DiscoveryReply, writer =>
-                    WriteSessionInfo(writer)));
+                Broadcast(EncodePacket(PacketType.DiscoveryReply, WriteSessionInfo));
             }
         }
 
-        void ProcessPacketAsHost(PacketType type, byte[] buffer, int length,
+        private void ProcessPacketAsHost(PacketType type, byte[] buffer, int length,
                                  IPEndPoint remote)
         {
             switch (type)
             {
                 case PacketType.DiscoveryRequest:
-                    SendTo(remote, EncodePacket(PacketType.DiscoveryReply, writer =>
-                        WriteSessionInfo(writer)));
+                    SendTo(remote, EncodePacket(PacketType.DiscoveryReply, WriteSessionInfo));
                     break;
 
                 case PacketType.Ping:
@@ -866,66 +861,66 @@ namespace GalactikWars.Net
                     break;
 
                 case PacketType.Ready:
-                {
-                    byte id = buffer[1];
-                    bool isReady = buffer[2] != 0;
-
-                    NetworkGamer gamer = allGamers.FindById(id);
-
-                    if (gamer != null && !gamer.IsLocal)
                     {
-                        gamer.IsReady = isReady;
-                        MarkClientSeen(remote);
+                        byte id = buffer[1];
+                        bool isReady = buffer[2] != 0;
+
+                        NetworkGamer gamer = allGamers.FindById(id);
+
+                        if (gamer != null && !gamer.IsLocal)
+                        {
+                            gamer.IsReady = isReady;
+                            MarkClientSeen(remote);
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 case PacketType.Data:
-                {
-                    NetworkGamer sender = allGamers.FindById(buffer[1]);
-
-                    if (sender != null && !sender.IsLocal)
                     {
-                        //Queue the packet for local reading.
-                        QueueIncoming(sender, buffer, 2, length);
+                        NetworkGamer sender = allGamers.FindById(buffer[1]);
 
-                        //Relay to all other clients.
-                        byte[] payload = new byte[length - 2];
-                        Array.Copy(buffer, 2, payload, 0, payload.Length);
-
-                        byte[] relay = EncodePacket(PacketType.Data, writer =>
-                            writer.Write(sender.Id));
-
-                        byte[] relayed = Combine(relay, payload);
-
-                        foreach (IPEndPoint endpoint in clientEndpoints)
+                        if (sender != null && !sender.IsLocal)
                         {
-                            if (!endpoint.Equals(remote))
-                            {
-                                SendTo(endpoint, relayed);
-                            }
-                        }
+                            //Queue the packet for local reading.
+                            QueueIncoming(sender, buffer, 2, length);
 
-                        MarkClientSeen(remote);
+                            //Relay to all other clients.
+                            byte[] payload = new byte[length - 2];
+                            Array.Copy(buffer, 2, payload, 0, payload.Length);
+
+                            byte[] relay = EncodePacket(PacketType.Data, writer =>
+                                writer.Write(sender.Id));
+
+                            byte[] relayed = Combine(relay, payload);
+
+                            foreach (IPEndPoint endpoint in clientEndpoints)
+                            {
+                                if (!endpoint.Equals(remote))
+                                {
+                                    SendTo(endpoint, relayed);
+                                }
+                            }
+
+                            MarkClientSeen(remote);
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 case PacketType.Leave:
-                {
-                    byte id = buffer[1];
-                    NetworkGamer gamer = allGamers.FindById(id);
-
-                    if (gamer != null)
                     {
-                        RemoveGamer(gamer);
+                        byte id = buffer[1];
+                        NetworkGamer gamer = allGamers.FindById(id);
+
+                        if (gamer != null)
+                        {
+                            RemoveGamer(gamer);
+                        }
+                        break;
                     }
-                    break;
-                }
             }
         }
 
-        void HandleJoinRequest(IPEndPoint remote, byte[] buffer)
+        private void HandleJoinRequest(IPEndPoint remote, byte[] buffer)
         {
             string gamertag = DecodeString(buffer, 1, out _);
 
@@ -948,7 +943,7 @@ namespace GalactikWars.Net
             //Assign a free gamer id and remember the client endpoint.
             byte newId = FindFreeGamerId();
 
-            NetworkGamer gamer = new NetworkGamer(newId, gamertag, false);
+            NetworkGamer gamer = new(newId, gamertag, false);
 
             clientEndpoints.Add(remote);
             clientSeen[remote] = DateTime.UtcNow;
@@ -967,7 +962,7 @@ namespace GalactikWars.Net
             BroadcastRoster();
         }
 
-        byte FindFreeGamerId()
+        private byte FindFreeGamerId()
         {
             for (byte id = 0; id < MaxGamersLimit; id++)
             {
@@ -983,7 +978,7 @@ namespace GalactikWars.Net
 
         #region Client Logic
 
-        void UpdateAsClient()
+        private void UpdateAsClient()
         {
             DateTime now = DateTime.UtcNow;
 
@@ -1011,7 +1006,7 @@ namespace GalactikWars.Net
             }
         }
 
-        void ProcessPacketAsClient(PacketType type, byte[] buffer, int length,
+        private void ProcessPacketAsClient(PacketType type, byte[] buffer, int length,
                                    IPEndPoint remote)
         {
             //Only trust packets from the host we joined.
@@ -1028,16 +1023,16 @@ namespace GalactikWars.Net
                     break;
 
                 case PacketType.Data:
-                {
-                    NetworkGamer sender = allGamers.FindById(buffer[1]);
-
-                    if (sender != null)
                     {
-                        QueueIncoming(sender, buffer, 2, length);
+                        NetworkGamer sender = allGamers.FindById(buffer[1]);
+
+                        if (sender != null)
+                        {
+                            QueueIncoming(sender, buffer, 2, length);
+                        }
+                        hostSeen = DateTime.UtcNow;
+                        break;
                     }
-                    hostSeen = DateTime.UtcNow;
-                    break;
-                }
 
                 case PacketType.StartGame:
                     state = NetworkSessionState.Playing;
@@ -1063,7 +1058,7 @@ namespace GalactikWars.Net
 
         #region Roster
 
-        void BroadcastRoster()
+        private void BroadcastRoster()
         {
             Broadcast(EncodePacket(PacketType.Roster, writer =>
             {
@@ -1072,7 +1067,7 @@ namespace GalactikWars.Net
             }));
         }
 
-        void WriteRoster(BinaryPayload writer)
+        private void WriteRoster(BinaryPayload writer)
         {
             writer.Write((byte)allGamers.Count);
 
@@ -1089,7 +1084,7 @@ namespace GalactikWars.Net
         ///Reads a roster packet. Layout: [0] type, [1] state,
         ///[2] gamer count, then per gamer: id, gamertag, isHost, isReady.
         ///</summary>
-        void ReadRoster(byte[] buffer)
+        private void ReadRoster(byte[] buffer)
         {
             int offset = 1;
 
@@ -1097,8 +1092,8 @@ namespace GalactikWars.Net
 
             byte count = buffer[offset++];
 
-            HashSet<byte> seen = new HashSet<byte>();
-            List<NetworkGamer> joined = new List<NetworkGamer>();
+            HashSet<byte> seen = [];
+            List<NetworkGamer> joined = [];
 
             for (int i = 0; i < count; i++)
             {
@@ -1132,9 +1127,8 @@ namespace GalactikWars.Net
                         gamer = new NetworkGamer(id, gamertag, isHost)
                         {
                             IsReady = isReady,
+                            signedInGamer = new SignedInGamer(gamertag, id)
                         };
-
-                        gamer.signedInGamer = new SignedInGamer(gamertag, id);
                     }
 
                     allGamers.Add(gamer);
@@ -1148,7 +1142,7 @@ namespace GalactikWars.Net
             }
 
             //Anyone not in the roster has left.
-            List<NetworkGamer> left = new List<NetworkGamer>();
+            List<NetworkGamer> left = [];
 
             foreach (NetworkGamer gamer in allGamers)
             {
@@ -1168,19 +1162,16 @@ namespace GalactikWars.Net
                     //We have been removed from the session.
                     EndSession(NetworkSessionEndReason.RemovedByHost);
                 }
-                else if (GamerLeft != null)
+                else
                 {
-                    GamerLeft(this, new GamerLeftEventArgs { Gamer = gamer });
+                    GamerLeft?.Invoke(this, new GamerLeftEventArgs { Gamer = gamer });
                 }
             }
 
             //Fire join events after the removals.
             foreach (NetworkGamer gamer in joined)
             {
-                if (GamerJoined != null)
-                {
-                    GamerJoined(this, new GamerJoinedEventArgs { Gamer = gamer });
-                }
+                GamerJoined?.Invoke(this, new GamerJoinedEventArgs { Gamer = gamer });
             }
 
             //Follow the host session state.
@@ -1194,7 +1185,7 @@ namespace GalactikWars.Net
         ///Reads a join reply packet. Layout: [0] type, [1] assigned id,
         ///[2] state, [3] gamer count, then the roster entries.
         ///</summary>
-        void ReadJoinReplyOk(byte[] buffer)
+        private void ReadJoinReplyOk(byte[] buffer)
         {
             pendingLocalId = buffer[1];
 
@@ -1202,7 +1193,7 @@ namespace GalactikWars.Net
 
             //Create the local gamer with a placeholder id; the roster read
             //below corrects it to the id assigned by the host.
-            LocalNetworkGamer local = new LocalNetworkGamer(0, LocalGamertag, false);
+            LocalNetworkGamer local = new(0, LocalGamertag, false);
             localGamers.Add(local);
 
             pendingJoin = true;
@@ -1253,7 +1244,7 @@ namespace GalactikWars.Net
             }
         }
 
-        void QueueIncoming(NetworkGamer sender, byte[] buffer, int offset, int length)
+        private void QueueIncoming(NetworkGamer sender, byte[] buffer, int offset, int length)
         {
             byte[] payload = new byte[length - offset];
             Array.Copy(buffer, offset, payload, 0, payload.Length);
@@ -1272,7 +1263,7 @@ namespace GalactikWars.Net
 
         #region Gamer Management
 
-        void RemoveGamer(NetworkGamer gamer)
+        private void RemoveGamer(NetworkGamer gamer)
         {
             allGamers.Remove(gamer);
             gamer.IsDisposed = true;
@@ -1285,13 +1276,10 @@ namespace GalactikWars.Net
                 clientSeen.Remove(endpoint);
             }
 
-            if (GamerLeft != null)
-            {
-                GamerLeft(this, new GamerLeftEventArgs { Gamer = gamer });
-            }
+            GamerLeft?.Invoke(this, new GamerLeftEventArgs { Gamer = gamer });
         }
 
-        NetworkGamer FindGamerByEndpoint(IPEndPoint endpoint)
+        private NetworkGamer FindGamerByEndpoint(IPEndPoint endpoint)
         {
             int index = clientEndpoints.IndexOf(endpoint);
 
@@ -1316,7 +1304,7 @@ namespace GalactikWars.Net
             return null;
         }
 
-        IPEndPoint FindEndpointByGamer(NetworkGamer target)
+        private IPEndPoint FindEndpointByGamer(NetworkGamer target)
         {
             int index = 0;
 
@@ -1339,22 +1327,22 @@ namespace GalactikWars.Net
         ///<summary>Pastel palette used for gamer profile pictures.</summary>
         internal static Color GamerColor(byte id)
         {
-            switch (id % 6)
+            return (id % 6) switch
             {
-                case 0: return new Color((byte)80, (byte)160, (byte)255);
-                case 1: return new Color((byte)255, (byte)120, (byte)80);
-                case 2: return new Color((byte)120, (byte)220, (byte)100);
-                case 3: return new Color((byte)255, (byte)200, (byte)70);
-                case 4: return new Color((byte)200, (byte)120, (byte)255);
-                default: return new Color((byte)100, (byte)220, (byte)220);
-            }
+                0 => new Color((byte)80, (byte)160, (byte)255),
+                1 => new Color((byte)255, (byte)120, (byte)80),
+                2 => new Color((byte)120, (byte)220, (byte)100),
+                3 => new Color((byte)255, (byte)200, (byte)70),
+                4 => new Color((byte)200, (byte)120, (byte)255),
+                _ => new Color((byte)100, (byte)220, (byte)220),
+            };
         }
 
         #endregion
 
         #region Socket Helpers
 
-        void SendToHost(byte[] datagram)
+        private void SendToHost(byte[] datagram)
         {
             if (hostEndPoint != null)
             {
@@ -1362,7 +1350,7 @@ namespace GalactikWars.Net
             }
         }
 
-        void SendTo(EndPoint remote, byte[] datagram)
+        private void SendTo(EndPoint remote, byte[] datagram)
         {
             if (socket != null)
             {
@@ -1370,7 +1358,7 @@ namespace GalactikWars.Net
             }
         }
 
-        void Broadcast(byte[] datagram)
+        private void Broadcast(byte[] datagram)
         {
             if (!isHost)
             {
@@ -1383,7 +1371,7 @@ namespace GalactikWars.Net
             }
         }
 
-        void MarkClientSeen(IPEndPoint endpoint)
+        private void MarkClientSeen(IPEndPoint endpoint)
         {
             clientSeen[endpoint] = DateTime.UtcNow;
         }
@@ -1392,13 +1380,13 @@ namespace GalactikWars.Net
 
         #region Packet Encoding
 
-        delegate void PayloadWriter(BinaryPayload writer);
+        private delegate void PayloadWriter(BinaryPayload writer);
 
         ///<summary>Minimal binary writer used to encode packets.</summary>
-        class BinaryPayload : IDisposable
+        private class BinaryPayload : IDisposable
         {
-            readonly MemoryStream stream = new MemoryStream();
-            readonly BinaryWriter writer;
+            private readonly MemoryStream stream = new();
+            private readonly BinaryWriter writer;
 
             public BinaryPayload()
             {
@@ -1418,22 +1406,19 @@ namespace GalactikWars.Net
             public void Dispose() { writer.Dispose(); }
         }
 
-        static byte[] EncodePacket(PacketType type, PayloadWriter payload)
+        private static byte[] EncodePacket(PacketType type, PayloadWriter payload)
         {
-            using (BinaryPayload writer = new BinaryPayload())
+            using (BinaryPayload writer = new())
             {
                 writer.Write((byte)type);
 
-                if (payload != null)
-                {
-                    payload(writer);
-                }
+                payload?.Invoke(writer);
 
                 return writer.ToArray();
             }
         }
 
-        static byte[] Combine(byte[] first, byte[] second)
+        private static byte[] Combine(byte[] first, byte[] second)
         {
             byte[] result = new byte[first.Length + second.Length];
             Array.Copy(first, 0, result, 0, first.Length);
@@ -1441,7 +1426,7 @@ namespace GalactikWars.Net
             return result;
         }
 
-        void WriteSessionInfo(BinaryPayload writer)
+        private void WriteSessionInfo(BinaryPayload writer)
         {
             writer.Write(LocalGamertag);
             writer.Write((byte)allGamers.Count);
@@ -1449,14 +1434,14 @@ namespace GalactikWars.Net
             writer.Write((byte)state);
         }
 
-        static AvailableNetworkSession ParseDiscoveryReply(byte[] buffer, int length)
+        private static AvailableNetworkSession ParseDiscoveryReply(byte[] buffer, int length)
         {
             try
             {
                 string hostGamertag = DecodeString(buffer, 1, out int stringLength);
                 int offset = 1 + stringLength;
 
-                AvailableNetworkSession session = new AvailableNetworkSession
+                AvailableNetworkSession session = new()
                 {
                     HostGamertag = hostGamertag,
                     CurrentGamerCount = buffer[offset],
@@ -1476,7 +1461,7 @@ namespace GalactikWars.Net
         ///Decodes a string written by BinaryWriter: a 7-bit encoded length
         ///prefix followed by UTF-8 bytes. Outputs the total bytes consumed.
         ///</summary>
-        static string DecodeString(byte[] buffer, int offset, out int length)
+        private static string DecodeString(byte[] buffer, int offset, out int length)
         {
             int position = offset;
             int stringLength = 0;

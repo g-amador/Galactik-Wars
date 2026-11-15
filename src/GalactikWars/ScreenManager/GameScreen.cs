@@ -8,11 +8,11 @@
 #endregion
 
 #region Using Statements
-using System;
 using Microsoft.Xna.Framework;
+using System;
 #endregion
 
-namespace GalactikWars
+namespace GalactikWars.ScreenManager
 {
     ///<summary>
     ///Enum describes the screen transition state.
@@ -51,7 +51,7 @@ namespace GalactikWars
             protected set { isPopup = value; }
         }
 
-        bool isPopup = false;
+        private bool isPopup = false;
 
 
         ///<summary>
@@ -64,7 +64,7 @@ namespace GalactikWars
             protected set { transitionOnTime = value; }
         }
 
-        TimeSpan transitionOnTime = TimeSpan.Zero;
+        private TimeSpan transitionOnTime = TimeSpan.Zero;
 
 
         ///<summary>
@@ -77,7 +77,7 @@ namespace GalactikWars
             protected set { transitionOffTime = value; }
         }
 
-        TimeSpan transitionOffTime = TimeSpan.Zero;
+        private TimeSpan transitionOffTime = TimeSpan.Zero;
 
 
         ///<summary>
@@ -91,7 +91,7 @@ namespace GalactikWars
             protected set { transitionPosition = value; }
         }
 
-        float transitionPosition = 1;
+        private float transitionPosition = 1;
 
 
         ///<summary>
@@ -114,7 +114,7 @@ namespace GalactikWars
             protected set { screenState = value; }
         }
 
-        ScreenState screenState = ScreenState.TransitionOn;
+        private ScreenState screenState = ScreenState.TransitionOn;
 
 
         ///<summary>
@@ -131,7 +131,7 @@ namespace GalactikWars
             protected internal set { isExiting = value; }
         }
 
-        bool isExiting = false;
+        private bool isExiting = false;
 
 
         ///<summary>
@@ -147,7 +147,7 @@ namespace GalactikWars
             }
         }
 
-        bool otherScreenHasFocus;
+        private bool otherScreenHasFocus;
 
 
         ///<summary>
@@ -159,7 +159,7 @@ namespace GalactikWars
             internal set { screenManager = value; }
         }
 
-        ScreenManager screenManager;
+        private ScreenManager screenManager;
 
 
         #endregion
@@ -239,27 +239,31 @@ namespace GalactikWars
         ///<summary>
         ///Helper for updating the screen transition position.
         ///</summary>
-        bool UpdateTransition(GameTime gameTime, TimeSpan time, int direction)
+        private bool UpdateTransition(GameTime gameTime, TimeSpan time, int direction)
         {
             //How much should we move by?
             float transitionDelta;
 
             if (time == TimeSpan.Zero)
+            {
                 transitionDelta = 1;
+            }
             else
+            {
                 transitionDelta = (float)(gameTime.ElapsedGameTime.TotalSeconds /
                                           time.TotalSeconds);
+            }
 
             //Update the transition position.
             transitionPosition += transitionDelta * direction;
 
             //Did we reach the end of the transition?
-            if ((transitionPosition <= 0) || (transitionPosition >= 1))
+            if (transitionPosition is <= 0 or >= 1)
             {
                 transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
                 return false;
             }
-            
+
             //Otherwise we are still busy transitioning.
             return true;
         }

@@ -38,7 +38,7 @@ namespace GalactikWars.Net
         #region Initialization
 
         public static readonly QualityOfService Empty =
-            new QualityOfService();
+            new();
 
         #endregion
     }
@@ -83,8 +83,8 @@ namespace GalactikWars.Net
     ///</summary>
     public class AvailableNetworkSessionCollection : IReadOnlyList<AvailableNetworkSession>, IDisposable
     {
-        readonly List<AvailableNetworkSession> sessions =
-            new List<AvailableNetworkSession>();
+        private readonly List<AvailableNetworkSession> sessions =
+            [];
 
         public int Count
         {
