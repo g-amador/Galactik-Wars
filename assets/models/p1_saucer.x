@@ -15651,7 +15651,7 @@ Mesh ConvertedMesh {
 			0.000000;0.000000;0.000000;;
 			0.000000;0.000000;0.000000;;
 			TextureFilename {
-				"..\Textures\saucer_p1_diff_v1.tga";
+				"..\textures\saucer_p1_diff_v1.tga";
 			}
 		}
 	}

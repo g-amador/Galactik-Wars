@@ -32941,7 +32941,7 @@ Mesh ConvertedMesh {
 			0.000000;0.000000;0.000000;;
 			0.000000;0.000000;0.000000;;
 			TextureFilename {
-				"..\Textures\pencil_p1_diff_v1.tga";
+				"..\textures\pencil_p1_diff_v1.tga";
 			}
 		}
 	}

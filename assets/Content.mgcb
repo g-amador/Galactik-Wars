@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin background.png
+#begin ui/background.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,9 +23,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:background.png
+/build:ui/background.png
 
-#begin blank.png
+#begin ui/blank.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,9 +35,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:blank.png
+/build:ui/blank.png
 
-#begin chat_able.png
+#begin ui/chat_able.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -47,9 +47,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:chat_able.png
+/build:ui/chat_able.png
 
-#begin chat_mute.png
+#begin ui/chat_mute.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,9 +59,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:chat_mute.png
+/build:ui/chat_mute.png
 
-#begin chat_ready.png
+#begin ui/chat_ready.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -71,9 +71,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:chat_ready.png
+/build:ui/chat_ready.png
 
-#begin chat_talking.png
+#begin ui/chat_talking.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -83,9 +83,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:chat_talking.png
+/build:ui/chat_talking.png
 
-#begin gradient.png
+#begin ui/gradient.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -95,30 +95,30 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:gradient.png
+/build:ui/gradient.png
 
-#begin Fonts/gamefont.spritefont
+#begin fonts/gamefont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TtcFont=0
-/build:Fonts/gamefont.spritefont
+/build:fonts/gamefont.spritefont
 
-#begin Fonts/LucidaConsole.spritefont
+#begin fonts/LucidaConsole.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TtcFont=0
-/build:Fonts/LucidaConsole.spritefont
+/build:fonts/LucidaConsole.spritefont
 
-#begin Fonts/menufont.spritefont
+#begin fonts/menufont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TtcFont=0
-/build:Fonts/menufont.spritefont
+/build:fonts/menufont.spritefont
 
-#begin Models/asteroid1.x
+#begin models/asteroid1.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -133,9 +133,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/asteroid1.x
+/build:models/asteroid1.x
 
-#begin Models/asteroid2.x
+#begin models/asteroid2.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -150,9 +150,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/asteroid2.x
+/build:models/asteroid2.x
 
-#begin Models/pea_proj.x
+#begin models/pea_proj.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -167,9 +167,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/pea_proj.x
+/build:models/pea_proj.x
 
-#begin Models/p1_rocket.x
+#begin models/p1_rocket.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -184,9 +184,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/p1_rocket.x
+/build:models/p1_rocket.x
 
-#begin Models/p1_pencil.x
+#begin models/p1_pencil.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -201,9 +201,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/p1_pencil.x
+/build:models/p1_pencil.x
 
-#begin Models/p1_saucer.x
+#begin models/p1_saucer.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -218,9 +218,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/p1_saucer.x
+/build:models/p1_saucer.x
 
-#begin Models/p1_wedge.x
+#begin models/p1_wedge.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -235,9 +235,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/p1_wedge.x
+/build:models/p1_wedge.x
 
-#begin Models/p2_pencil.x
+#begin models/p2_pencil.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -252,9 +252,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/p2_pencil.x
+/build:models/p2_pencil.x
 
-#begin Models/p2_saucer.x
+#begin models/p2_saucer.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -269,9 +269,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/p2_saucer.x
+/build:models/p2_saucer.x
 
-#begin Models/p2_wedge.x
+#begin models/p2_wedge.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -286,9 +286,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/p2_wedge.x
+/build:models/p2_wedge.x
 
-#begin Models/sphere.x
+#begin models/sphere.x
 /importer:XImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=255,128,0,255
@@ -303,9 +303,9 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TangentAndBinormal_Enabled=False
-/build:Models/sphere.x
+/build:models/sphere.x
 
-#begin Textures/asteroid1.tga
+#begin textures/asteroid1.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -315,9 +315,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/asteroid1.tga
+/build:textures/asteroid1.tga
 
-#begin Textures/asteroid2.tga
+#begin textures/asteroid2.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -327,9 +327,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/asteroid2.tga
+/build:textures/asteroid2.tga
 
-#begin Textures/aurora.tga
+#begin textures/aurora.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -339,9 +339,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/aurora.tga
+/build:textures/aurora.tga
 
-#begin Textures/circle.tga
+#begin textures/circle.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -351,9 +351,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/circle.tga
+/build:textures/circle.tga
 
-#begin Textures/galaxy.tga
+#begin textures/galaxy.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -363,9 +363,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/galaxy.tga
+/build:textures/galaxy.tga
 
-#begin Textures/multicolored.png
+#begin textures/multicolored.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -375,9 +375,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/multicolored.png
+/build:textures/multicolored.png
 
-#begin Textures/nebula.tga
+#begin textures/nebula.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -387,9 +387,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/nebula.tga
+/build:textures/nebula.tga
 
-#begin Textures/nebula2.tga
+#begin textures/nebula2.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -399,9 +399,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/nebula2.tga
+/build:textures/nebula2.tga
 
-#begin Textures/network.tga
+#begin textures/network.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -411,9 +411,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/network.tga
+/build:textures/network.tga
 
-#begin Textures/p1_back.tga
+#begin textures/p1_back.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -423,9 +423,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/p1_back.tga
+/build:textures/p1_back.tga
 
-#begin Textures/p1_rocket.tga
+#begin textures/p1_rocket.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -435,9 +435,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/p1_rocket.tga
+/build:textures/p1_rocket.tga
 
-#begin Textures/pea_proj.tga
+#begin textures/pea_proj.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -447,9 +447,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/pea_proj.tga
+/build:textures/pea_proj.tga
 
-#begin Textures/pencil_p1_diff_v1.tga
+#begin textures/pencil_p1_diff_v1.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -459,9 +459,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/pencil_p1_diff_v1.tga
+/build:textures/pencil_p1_diff_v1.tga
 
-#begin Textures/pencil_p2_diff_v1.tga
+#begin textures/pencil_p2_diff_v1.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -471,9 +471,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/pencil_p2_diff_v1.tga
+/build:textures/pencil_p2_diff_v1.tga
 
-#begin Textures/planets.tga
+#begin textures/planets.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -483,9 +483,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/planets.tga
+/build:textures/planets.tga
 
-#begin Textures/saucer_p1_diff_v1.tga
+#begin textures/saucer_p1_diff_v1.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -495,9 +495,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/saucer_p1_diff_v1.tga
+/build:textures/saucer_p1_diff_v1.tga
 
-#begin Textures/saucer_p2_diff_v1.tga
+#begin textures/saucer_p2_diff_v1.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -507,9 +507,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/saucer_p2_diff_v1.tga
+/build:textures/saucer_p2_diff_v1.tga
 
-#begin Textures/starfield.dds
+#begin textures/starfield.dds
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -519,9 +519,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/starfield.dds
+/build:textures/starfield.dds
 
-#begin Textures/wedge_p1_diff_v1.tga
+#begin textures/wedge_p1_diff_v1.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -531,9 +531,9 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/wedge_p1_diff_v1.tga
+/build:textures/wedge_p1_diff_v1.tga
 
-#begin Textures/wedge_p2_diff_v1.tga
+#begin textures/wedge_p2_diff_v1.tga
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -543,112 +543,106 @@
 /processorParam:MakeSquare=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/wedge_p2_diff_v1.tga
+/build:textures/wedge_p2_diff_v1.tga
 
-#begin Audio/Waves/Effects/engine_1.wav
+#begin audio/Effects/engine_1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/engine_1.wav
+/build:audio/Effects/engine_1.wav
 
-#begin Audio/Waves/Effects/engine_2.wav
+#begin audio/Effects/engine_2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/engine_2.wav
+/build:audio/Effects/engine_2.wav
 
-#begin Audio/Waves/Effects/explosion1.wav
+#begin audio/Effects/explosion1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/explosion1.wav
+/build:audio/Effects/explosion1.wav
 
-#begin Audio/Waves/Effects/explosion2.wav
+#begin audio/Effects/explosion2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/explosion2.wav
+/build:audio/Effects/explosion2.wav
 
-#begin Audio/Waves/Effects/explosion3.wav
+#begin audio/Effects/explosion3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/explosion3.wav
+/build:audio/Effects/explosion3.wav
 
-#begin Audio/Waves/Effects/explosion4.wav
+#begin audio/Effects/explosion4.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/explosion4.wav
+/build:audio/Effects/explosion4.wav
 
-#begin Audio/Waves/Effects/hax2_fire.wav
+#begin audio/Effects/hax2_fire.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/hax2_fire.wav
+/build:audio/Effects/hax2_fire.wav
 
-#begin Audio/Waves/Effects/hyperspace_activate.wav
+#begin audio/Effects/hyperspace_activate.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/hyperspace_activate.wav
+/build:audio/Effects/hyperspace_activate.wav
 
-#begin Audio/Waves/Effects/phase_collide_ship1.wav
+#begin audio/Effects/phase_collide_ship1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/phase_collide_ship1.wav
+/build:audio/Effects/phase_collide_ship1.wav
 
-#begin Audio/Waves/Effects/shield_collide_ship1.wav
+#begin audio/Effects/shield_collide_ship1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/shield_collide_ship1.wav
+/build:audio/Effects/shield_collide_ship1.wav
 
-#begin Audio/Waves/Effects/tx0_fire1.wav
+#begin audio/Effects/tx0_fire1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Effects/tx0_fire1.wav
+/build:audio/Effects/tx0_fire1.wav
 
-#begin Audio/Waves/Music/gameOver.wav
+#begin audio/Music/battle.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Music/gameOver.wav
+/build:audio/Music/battle.wav
 
-#begin Audio/Waves/Music/music.WAV
+#begin audio/Music/in-the-wreckage.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Music/music.WAV
+/build:audio/Music/in-the-wreckage.wav
 
-#begin Audio/Waves/Music/music1.WAV
+#begin audio/Music/loading.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Music/music1.WAV
+/build:audio/Music/loading.wav
 
-#begin Audio/Waves/Music/music2.WAV
+#begin audio/Music/meet-the-princess.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Music/music2.WAV
+/build:audio/Music/meet-the-princess.wav
 
-#begin Audio/Waves/Music/music3.WAV
+#begin audio/Music/menu.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Music/music3.WAV
+/build:audio/Music/menu.wav
 
-#begin Audio/Waves/Music/music4.WAV
+#begin audio/Music/slow-travel.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Compression=None
-/build:Audio/Waves/Music/music4.WAV
-
-#begin Audio/Waves/Music/music5.WAV
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Compression=None
-/build:Audio/Waves/Music/music5.WAV
+/build:audio/Music/slow-travel.wav

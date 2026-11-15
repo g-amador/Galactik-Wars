@@ -48671,7 +48671,7 @@ Mesh ConvertedMesh {
 			0.000000;0.000000;0.000000;;
 			0.000000;0.000000;0.000000;;
 			TextureFilename {
-				"..\Textures\wedge_p1_diff_v1.tga";
+				"..\textures\wedge_p1_diff_v1.tga";
 			}
 		}
 	}
