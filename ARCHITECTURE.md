@@ -20,11 +20,10 @@ in porting it from XNA Game Studio 2.0 (2008) to MonoGame 3.8.6.1 on .NET 10.
 │      │              │                                                          │
 │      │              ├── InputState (keyboard/mouse/gamepad)                      │
 │      │              └── MessageDisplayComponent (on-screen messages)             │
-│      │                                                                          │
-│      ├── Handlers/  CollisionsHandler, SoundHandler                             │
-│      ├── ParticleSystem/                                                        │
-│      ├── Entity classes: Ship, Asteroid, Bullet, Rocket, Player, CCamera, ...   │
-│      │                                                                          │
+│      ├── Handlers/    SoundHandler, CollisionsHandler                            │
+│      ├── Entities/   Ship, Asteroid, Bullet, Rocket, Player, CCamera,            │
+│      │               ScrollingBackground                                        │
+│      ├── Particles/   Particle, ParticleSystem                                   │
 │      └── Net/  GalactikWars.Net (LAN networking library, UDP)                   │
 │                                                                 │
 │  Content pipeline: Content.mgcb → textures, .x models, fonts, wav │
@@ -38,6 +37,13 @@ original authors. That heritage is still visible in the screen management,
 loading screen and network session screens.
 
 ## 2. Runtime structure
+
+Every source file's namespace matches its folder location
+(`GalactikWars.Screens`, `GalactikWars.Entities`, `GalactikWars.Handlers`,
+`GalactikWars.Particles`, `GalactikWars.ScreenManager`, `GalactikWars.Net`,
+`GalactikWars.Networking`); root-level files are `GalactikWars`. The two
+namespace/type name collisions (`ScreenManager`, `ScreenState`) and their
+using-alias workarounds are documented in `AI.md`.
 
 ### 2.1 Game loop — `Game.cs`
 
@@ -87,11 +93,10 @@ the lobby is left.
 
 ### 2.5 Gameplay entities
 
-Root-level classes: `Ship`, `Asteroid`, `Bullet`, `Rocket`, `Player`,
-`CCamera` (camera control with 2D/3D modes and zoom), `ScrollingBackground`,
+Root-level classes: `Game` (entry point + F11 fullscreen toggle) and
 `GameVariables` (global tunables). `Handlers/CollisionsHandler` performs the
-collision pass between ships, asteroids and projectiles; `ParticleSystem`
-(`Particle`, `Particles`) renders explosions and trails.
+collision pass between ships, asteroids and projectiles; `Particles/`
+(`Particle`, `ParticleSystem`) renders explosions and trails.
 
 ### 2.6 Audio — `Handlers/SoundHandler.cs`
 
@@ -102,12 +107,28 @@ rewritten on top of plain **`SoundEffect`**:
 
 - All `.wav` files are imported directly by the MGCB `WavImporter` and loaded
   as `SoundEffect`.
+- A single **shared** `SoundHandler` lives on `ScreenManager`
+  (`ScreenManager.SoundHandler`): it is loaded once in
+  `ScreenManager.LoadContent` and driven every frame from
+  `ScreenManager.Update`, so music plays across every screen (menus,
+  lobby, gameplay) without each screen owning its own copy.
+- **Music is organized as named tracks** — one per game state, selected with
+  `PlayTrack(...)` (idempotent; tracks loop until another is selected):
+
+  | Track constant   | File                    | Plays in                    |
+  |------------------|-------------------------|-----------------------------|
+  | `MenuTrack`      | `menu.wav`              | main menu                   |
+  | `LoadingTrack`   | `loading.wav`           | loading screens             |
+  | `BattleTrack`    | `battle.wav`            | gameplay (both modes)       |
+  | `LobbyTrack`     | `slow-travel.wav`       | multiplayer session screens |
+  | `GameOverTrack`  | `in-the-wreckage.wav`   | when all lives are lost     |
+  | `CreditsTrack`   | `meet-the-princess.wav` | credits screen              |
+
 - A small `Cue` wrapper class reproduces the XACT cue API used by the game
-  (`Play`, `Pause`, `Resume`, `Stop`, `IsPlaying`, `IsPaused`, volume
-  categories), including looping engine sounds implemented as a
-  played-then-restarted effect.
-- Cue names are preserved, so all call sites kept their original XACT string
-  identifiers. The `.xap` file remains in the repository as reference only.
+  (`Play`, `Pause`, `Resume`, `Stop`, `IsPlaying`, `IsPaused`), including
+  looping engine sounds implemented as a played-then-restarted effect.
+- Effect cue names are preserved, so all gameplay call sites kept their
+  original XACT string identifiers. The `.xap` file was deleted.
 
 ## 3. Networking — `GalactikWars.Net`
 
@@ -165,18 +186,27 @@ surfaced through `NetworkSessionComponent`.
 
 ## 4. Content pipeline
 
-`src/GalactikWars/Content/Content.mgcb` is the single content project
-(replacing the old `Content.contentproj` + XNA content build). It imports:
+`assets/Content.mgcb` is the single content project
+(replacing the old `Content.contentproj` + XNA content build). It sits in the
+`assets/` folder at the repository root — all raw assets live outside the
+source tree — and its paths are relative to that folder. It imports:
 
-- **Models** — 11 DirectX `.x` meshes: the 4 original asteroids plus the 7
-  ships/sphere converted from FBX (see §5). Built with the `XImporter`.
-- **Textures** — `.png`, `.tga` and `.dds` files, built with their
-  respective importers.
-- **Fonts** — 3 spritefonts (`gamefont`, `menufont`, `LucidaConsole`).
-  The original `Lucida Console.spritefont` was renamed to
+- **Models** — 11 DirectX `.x` meshes under `assets/models/`: the 4 original
+  asteroids plus the 7 ships/sphere converted from FBX (see §5). Built with
+  the `XImporter`.
+- **Textures** — `.png`, `.tga` and `.dds` files under `assets/textures/`
+  (plus UI textures under `assets/ui/`), built with their respective
+  importers.
+- **Fonts** — 3 spritefonts under `assets/fonts/` (`gamefont`, `menufont`,
+  `LucidaConsole`). The original `Lucida Console.spritefont` was renamed to
   `LucidaConsole.spritefont` (the MGCB parser does not strip quotes from
   `/build:` arguments, and the space broke the path).
-- **Audio** — 18 `.wav` files imported as `SoundEffect` (music + effects).
+- **Audio** — 18 `.wav` files under `assets/audio/Effects/` and
+  `assets/audio/Music/`, imported as `SoundEffect` (music + effects).
+
+Asset names at runtime mirror the folder layout (`models/p1_pencil`,
+`textures/starfield`, `fonts/LucidaConsole`, `audio/Effects/explosion1`,
+`audio/Music/battle`).
 
 The MGCB tool runs as a **local dotnet tool** (`.config/dotnet-tools.json`,
 pinned to 3.8.6.1) and is invoked automatically by
@@ -203,7 +233,7 @@ small converter tool lives in `tools/FbxToXConverter/`:
 Usage:
 
 ```sh
-dotnet run --project tools/FbxToXConverter -- src/GalactikWars/Content/Models/p1_pencil.fbx
+dotnet run --project tools/FbxToXConverter -- assets/models/p1_pencil.fbx
 ```
 
 The `.fbx` sources are kept in the repository for completeness but are not

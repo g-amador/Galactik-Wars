@@ -40,6 +40,30 @@ dotnet run --project src/GalactikWars  # launches the game (opens a window)
 - **Local tools**: MGCB is a local tool pinned in `.config/dotnet-tools.json`
   (version `3.8.6.1`, no floating versions). After changing it, run
   `dotnet tool restore`.
+- **Namespaces match folders**: every file's namespace is its folder path
+  under the project root (`GalactikWars.Screens` for `src/GalactikWars/Screens/`,
+  etc.). Root-level files (`Game.cs`, `GameVariables.cs`, `Resources.resx`)
+  are `GalactikWars`. When creating a folder, its files must use the matching
+  namespace.
+- **Namespace/type name collisions**: two names appear both as a namespace
+  and as a type — this forces special handling when referencing them from
+  *other* namespaces (C# binds the enclosing namespace's member first):
+  - `ScreenManager` (namespace `GalactikWars.ScreenManager`, class
+    `ScreenManager`): files *inside* that namespace need nothing; files in
+    sibling namespaces use a **using-alias placed inside the namespace
+    declaration**: `using ScreenManager = GalactikWars.ScreenManager.ScreenManager;`
+    (a top-of-file alias does NOT work there; an alias named `ScreenManager`
+    inside namespace `GalactikWars` itself is illegal too, so `Game.cs`
+    fully qualifies instead). Instance code on `GameScreen` subclasses
+    usually doesn't need the alias because the inherited
+    `GameScreen.ScreenManager` property wins.
+  - `ScreenState` (namespace-level enum in `GalactikWars.ScreenManager` vs
+    the inherited `GameScreen.ScreenState` property): comparisons in
+    subclasses use the alias
+    `using ScreenStateEnum = GalactikWars.ScreenManager.ScreenState;`.
+  - The particle engine class is `ParticleSystem` (file
+    `Particles/ParticleSystem.cs`) — deliberately not named `Particles` to
+    avoid the same collision with namespace `GalactikWars.Particles`.
 
 ## Language / framework gotchas
 
@@ -65,26 +89,37 @@ bite you if you copy code from git history:
    the ported game component (ours, not XNA's) — it is fine to reference.
 5. **Audio**: XACT is gone. All sound goes through
    `src/GalactikWars/Handlers/SoundHandler.cs` (`SoundEffect` + a `Cue`
-   wrapper). Cue names (`music`, `music1`–`music5`, `gameOver`, `engine_1`,
-   `engine_2`, effect names) are stable identifiers — keep them when adding
-   sounds. Gameplay screens must call `soundHandler.Load(content)` in
-   `LoadContent` before playing any cue.
+   wrapper). There is **one shared instance** on `ScreenManager`
+   (`ScreenManager.SoundHandler`), loaded and updated by the `ScreenManager`
+   itself — screens access it via `soundHandler => ScreenManager.SoundHandler`.
+   Music is organized as **named tracks** (`SoundHandler.MenuTrack`,
+   `LoadingTrack`, `BattleTrack`, `LobbyTrack`, `GameOverTrack`,
+   `CreditsTrack`), switched with `PlayTrack(...)`; screens select their
+   track in `LoadContent` (or `Update` for the main menu). Effect cue names
+   (`engine_1`, `engine_2`, effect names like `explosion1`) are stable
+   identifiers — keep them when adding sounds.
 
-## Content project rules (`Content.mgcb`)
+## Content project rules (`assets/Content.mgcb`)
 
+- The content project lives at the repository root in **`assets/`**, together
+  with all raw assets (`audio/`, `fonts/`, `models/`, `textures/`, and UI
+  textures under `ui/` — nothing sits loose at the `assets/` root except the
+  mgcb itself). Source code stays under `src/` — do not
+  move assets back into it.
 - **Never quote `/build:` paths.** The MGCB parser in 3.8.6.1 does not strip
-  quotes; `"Audio/Waves/Music/music.WAV"` fails because the quotes become
+  quotes; `"audio/Music/battle.WAV"` fails because the quotes become
   part of the path. This is why the font file
   `Lucida Console.spritefont` was renamed to `LucidaConsole.spritefont` and
-  code loads `Fonts/LucidaConsole`.
-- Asset paths in `/build:` are relative to the `Content` folder and become
-  the runtime load name (`Models/p1_pencil`, `Fonts/LucidaConsole`,
-  `Audio/Waves/Effects/explosion1`).
+  code loads `fonts/LucidaConsole`.
+- Asset paths in `/build:` are relative to the `assets` folder and become
+  the runtime load name (`models/p1_pencil`, `fonts/LucidaConsole`,
+  `audio/Effects/explosion1`).
 - Models use `XImporter` (DirectX `.x` files). `.fbx` files exist on disk but
   are **not** referenced by the mgcb — do not add them back; MonoGame cannot
   import FBX 6.0 (see the converter below).
 - Textures referenced by models are looked up relative to the model file
-  (`..\Textures\foo.tga`), matching case-insensitively on Windows.
+  (`..\textures\foo.tga` from `assets/models/`), matching case-insensitively
+  on Windows.
 
 ## Model conversion tool
 
@@ -92,7 +127,7 @@ bite you if you copy code from git history:
 DirectX `.x` text meshes the pipeline can import. If a model ever changes:
 
 ```sh
-dotnet run --project tools/FbxToXConverter -- src/GalactikWars/Content/Models/<name>.fbx
+dotnet run --project tools/FbxToXConverter -- assets/models/<name>.fbx
 ```
 
 It writes `<name>.x` next to the source, bakes the node transform into a
