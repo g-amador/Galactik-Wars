@@ -16,7 +16,7 @@ namespace GalactikWars.Screens
         /// </summary>
         #region Fields
 
-        private readonly string message = "                CONTROLS KEYBOARD\n MOVE UP: Up                  MOVE DOWN: Down\n ROTATE LEFT: Left          ROTATE RIGHT: Right\n SHOOT BULLETS: z          RESPAWN: q\n SHOOT ROCKETS: x         ATOM BOMB: c\n 2D VIEW: F1                  3D VIEW: F2 \n ZOOM-IN: e                  ZOOM-OUT: w\n TOGGLE FULLSCREEN: F11\n\n                 CONTROLS MOUSE\n MOVE UP: Up                 MOVE DOWN: Down\n MOVE RIGHT: Right         MOVE LEFT: Left\n SHOOT BULLETS: Left Button\n SHOOT ROCKETS: Right Button\n ATOM BOMB: Middle Button"; //change here to put text on menu
+        private readonly string message = "                CONTROLS KEYBOARD\n MOVE UP: Up                  MOVE DOWN: Down\n ROTATE LEFT: Left          ROTATE RIGHT: Right\n SHOOT BULLETS: Space       SHOOT ROCKETS: r\n ATOM BOMB: b\n 2D VIEW: F1                  3D VIEW: F2 \n ZOOM-IN: e                  ZOOM-OUT: w\n TOGGLE FULLSCREEN: F11\n\n                 CONTROLS MOUSE\n SHOOT BULLETS: Left Button\n SHOOT ROCKETS: Right Button\n ATOM BOMB: Middle Button"; //change here to put text on menu
         private Texture2D gradientTexture;
 
         #endregion

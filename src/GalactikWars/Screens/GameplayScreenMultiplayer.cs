@@ -115,6 +115,8 @@ namespace GalactikWars.Screens
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
+                    //brighter ambient light so the models are not so dark
+                    effect.AmbientLightColor = new Vector3(0.55f, 0.55f, 0.55f);
                     effect.Projection = camera.Projection;
                     effect.View = camera.View;
                 }
@@ -591,14 +593,14 @@ namespace GalactikWars.Screens
                 soundHandler.ResumeMusic();
 
                 //are we shooting bullets?
-                if (players[playerID].ship.IsActive && (input.IsNewKeyPress(Keys.Z)
+                if (players[playerID].ship.IsActive && (input.IsNewKeyPress(Keys.Space)
                     || input.IsMouseLeftButtonPressed()))
                 {
                     isFiringBullets = true;
                 }
 
                 //are we shooting rockets?
-                if (players[playerID].ship.IsActive && (input.IsNewKeyPress(Keys.X)
+                if (players[playerID].ship.IsActive && (input.IsNewKeyPress(Keys.R)
                     || input.IsMouseRightButtonPressed()))
                 {
                     isFiringRockets = true;
@@ -794,7 +796,9 @@ namespace GalactikWars.Screens
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
-            spriteBatch.Draw(stars, new Rectangle(0, 0, 800, 600), Color.White);
+            spriteBatch.Draw(stars, new Rectangle(0, 0,
+                ScreenManager.GraphicsDevice.Viewport.Width,
+                ScreenManager.GraphicsDevice.Viewport.Height), Color.White);
 
             spriteBatch.End();
 
@@ -958,6 +962,8 @@ namespace GalactikWars.Screens
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
+                    //brighter ambient light so the models are not so dark
+                    effect.AmbientLightColor = new Vector3(0.55f, 0.55f, 0.55f);
                     effect.World = absoluteBoneTransforms[mesh.ParentBone.Index] * modelTransform;
                     effect.View = camera.View;
                     camera.SetProjection(GameVariables.CameraHeight * 100.0f);

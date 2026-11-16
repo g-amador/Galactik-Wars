@@ -41,10 +41,15 @@ namespace GalactikWars.Screens
 
         //asteroid variables
         private readonly Asteroid[] asteroid1List = new Asteroid[GameVariables.NumAsteroids1];
-        private readonly Asteroid[] asteroid2List = new Asteroid[GameVariables.NumAsteroids2];
+        private readonly Asteroid[] asteroid2List = new Asteroid[GameVariables.NumAsteroid2Slots];
         private int activeAsteroids = GameVariables.NumAsteroids1 + GameVariables.NumAsteroids2;
         private int destroyedAsteroids = 0;
         private int asteroidSpeed = 0;
+
+        //death/respawn timers
+        private float respawnTimer = 0.0f;
+        private float gameOverTimer = 0.0f;
+        private bool returnedToMenu = false;
 
         //Visual components
         private ScrollingBackground myBackground;
@@ -78,6 +83,7 @@ namespace GalactikWars.Screens
         private Vector2 remainingAtomBombsPosition = new(60, 50);
         private Vector2 remainingAsteroidPosition = new(60, 30);
         private Vector2 levelPosition = new(60, 10);
+        private Vector2 remainingRocketsPosition = new(60, 130);
 
         private readonly Random random = new();
 
@@ -119,6 +125,8 @@ namespace GalactikWars.Screens
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
+                    //brighter ambient light so the models are not so dark
+                    effect.AmbientLightColor = new Vector3(0.55f, 0.55f, 0.55f);
                     effect.Projection = camera.Projection;
                     effect.View = camera.View;
                 }
@@ -329,6 +337,96 @@ namespace GalactikWars.Screens
             }
         }
 
+        ///<summary>
+        ///Spawns small asteroids at the given world position (used when a
+        ///large asteroid is destroyed and splits in two).
+        ///</summary>
+        private void SpawnSplitAsteroids(Vector3 position, int count)
+        {
+            for (int n = 0; n < count; n++)
+            {
+                //the split-only slots live after the base small asteroids
+                for (int i = GameVariables.NumAsteroids2; i < asteroid2List.Length; i++)
+                {
+                    if (!asteroid2List[i].isActive)
+                    {
+                        double angle = random.NextDouble() * 2 * Math.PI;
+
+                        asteroid2List[i].position = position;
+                        asteroid2List[i].direction.X = -(float)Math.Sin(angle);
+                        asteroid2List[i].direction.Y = (float)Math.Cos(angle);
+                        asteroid2List[i].speed = GameVariables.AsteroidMinSpeed +
+                           (float)random.NextDouble() * GameVariables.AsteroidMaxSpeed +
+                           asteroidSpeed;
+                        asteroid2List[i].isActive = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        ///<summary>
+        ///Steers every active rocket towards the nearest active asteroid,
+        ///so rockets home in on their target.
+        ///</summary>
+        private void HomeRockets(GameTime gameTime)
+        {
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            for (int j = 0; j < p.rocketList.Length; j++)
+            {
+                if (!p.rocketList[j].IsActive)
+                {
+                    continue;
+                }
+
+                float bestDistanceSq = float.MaxValue;
+                Vector3 bestTarget = Vector3.Zero;
+                bool targetFound = false;
+
+                for (int i = 0; i < asteroid1List.Length; i++)
+                {
+                    if (!asteroid1List[i].isActive)
+                    {
+                        continue;
+                    }
+
+                    float distanceSq = Vector3.DistanceSquared(
+                        p.rocketList[j].position, asteroid1List[i].position);
+
+                    if (distanceSq < bestDistanceSq)
+                    {
+                        bestDistanceSq = distanceSq;
+                        bestTarget = asteroid1List[i].position;
+                        targetFound = true;
+                    }
+                }
+
+                for (int i = 0; i < asteroid2List.Length; i++)
+                {
+                    if (!asteroid2List[i].isActive)
+                    {
+                        continue;
+                    }
+
+                    float distanceSq = Vector3.DistanceSquared(
+                        p.rocketList[j].position, asteroid2List[i].position);
+
+                    if (distanceSq < bestDistanceSq)
+                    {
+                        bestDistanceSq = distanceSq;
+                        bestTarget = asteroid2List[i].position;
+                        targetFound = true;
+                    }
+                }
+
+                if (targetFound)
+                {
+                    p.rocketList[j].SteerToward(bestTarget, 3.0f, delta);
+                }
+            }
+        }
+
         #endregion
 
         #region Input Handling
@@ -373,7 +471,7 @@ namespace GalactikWars.Screens
                 soundHandler.ResumeMusic();
 
                 //did we activated the atom bomb?
-                if (p.ship.IsActive && (input.IsNewKeyPress(Keys.C)
+                if (p.ship.IsActive && (input.IsNewKeyPress(Keys.B)
                     || input.IsMouseMiddleButtonPressed())
                     && (p.AtomBombs > 0))
                 {
@@ -411,20 +509,8 @@ namespace GalactikWars.Screens
 
                 particles.particlesUpdate(explosion, 2);
 
-                //Move to object back to original state if Q key pressed
-                if (!p.ship.IsActive && input.IsNewKeyPress(Keys.Q))
-                {
-                    if (p.lives != 0)
-                    {
-                        p.WarpToCenter();
-
-                        //Make a sound when we warp.
-                        soundHandler.PlayCue("hyperspace_activate");
-                    }
-                }
-
                 //are we shooting bullets?
-                if (p.ship.IsActive && (input.IsNewKeyPress(Keys.Z)
+                if (p.ship.IsActive && (input.IsNewKeyPress(Keys.Space)
                     || input.IsMouseLeftButtonPressed()))
                 {
                     if (p.ShootBullet())
@@ -435,7 +521,7 @@ namespace GalactikWars.Screens
                 }
 
                 //are we shooting rockets?
-                if (p.ship.IsActive && (input.IsNewKeyPress(Keys.X)
+                if (p.ship.IsActive && (input.IsNewKeyPress(Keys.R)
                     || input.IsMouseRightButtonPressed()))
                 {
                     if (p.ShootRocket())
@@ -501,31 +587,10 @@ namespace GalactikWars.Screens
                     soundHandler.PlayMyEngineSound();
                 }
 
-                if (p.ship.IsActive && ((input.VariationX() != 0) ||
-                    (input.VariationY() != 0)))
-                {
-                    if (input.MouseMoved)
-                    {
-                        Vector3 modelVelocityAdd = Vector3.Zero;
-
-                        modelVelocityAdd.X = -input.VariationX() * 3.1f;
-                        modelVelocityAdd.Y = input.VariationY() * 3.1f;
-
-                        p.ship.Update(modelVelocityAdd);
-                        soundHandler.PlayMyEngineSound();
-                    }
-                    else
-                    {
-                        input.MouseMoved = true;
-                    }
-                }
-
-                if (!input.IsNewKeyStillPress(Keys.Up, PlayerIndex.One)
+                if (p.ship.IsActive && !input.IsNewKeyStillPress(Keys.Up, PlayerIndex.One)
                     && !input.IsNewKeyStillPress(Keys.Down, PlayerIndex.One)
                     && !input.IsNewKeyStillPress(Keys.Left, PlayerIndex.One)
-                    && !input.IsNewKeyStillPress(Keys.Right, PlayerIndex.One)
-                    && input.VariationX() == 0
-                    && input.VariationY() == 0)
+                    && !input.IsNewKeyStillPress(Keys.Right, PlayerIndex.One))
                 {
                     ////The x placement of the emitter.
                     //shipTrailX = (((p.ship.Position.X + (GameVariables.PlayfieldSizeX / 
@@ -596,12 +661,40 @@ namespace GalactikWars.Screens
         {
             if (IsActive)
             {
+                HomeRockets(gameTime);
+
                 p.Update(gameTime);
+
+                //auto respawn: when the ship is destroyed but lives remain,
+                //warp back into the fight after a short pause
+                if (!p.ship.IsActive && p.lives > 0)
+                {
+                    respawnTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (respawnTimer >= 1.0f)
+                    {
+                        respawnTimer = 0.0f;
+                        p.WarpToCenter();
+
+                        //Make a sound when we warp.
+                        soundHandler.PlayCue("hyperspace_activate");
+                    }
+                }
 
                 //Play gameOver if we are 100% dead
                 if (p.lives == 0)
                 {
                     soundHandler.PlayGameOver();
+
+                    //return to the main menu automatically after a short pause
+                    gameOverTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (gameOverTimer >= 4.0f && !returnedToMenu)
+                    {
+                        returnedToMenu = true;
+                        LoadingScreen.Load(ScreenManager, true, new BackgroundScreen(),
+                            new MainMenuScreen());
+                    }
                 }
 
                 if (GameVariables.ScrollingBackgroundIsActive)
@@ -609,7 +702,7 @@ namespace GalactikWars.Screens
                     myBackground.Update(gameTime);
                 }
 
-                for (int i = 0; i < GameVariables.NumAsteroids2; i++)
+                for (int i = 0; i < asteroid2List.Length; i++)
                 {
                     if (i < GameVariables.NumAsteroids1)
                     {
@@ -622,11 +715,40 @@ namespace GalactikWars.Screens
                 if ((collisionsHandler.CheckForBulletAsteroidCollision(
                     bulletModel.Meshes[0].BoundingSphere.Radius,
                     asteroidModels[0].Meshes[0].BoundingSphere.Radius,
-                    p, asteroid1List)) ||
-                    (collisionsHandler.CheckForBulletAsteroidCollision(
+                    p, asteroid1List)))
+                {
+                    //large asteroids are too tough for a bullet: they split in two
+                    SpawnSplitAsteroids(new Vector3(
+                        collisionsHandler.explosionPosition.X,
+                        collisionsHandler.explosionPosition.Y, 0.0f),
+                        GameVariables.AsteroidSplitCount);
+                    activeAsteroids += 1;
+
+                    //The x placement of the emitter.
+                    explosionX = (((collisionsHandler.explosionPosition.X +
+                        (GameVariables.PlayfieldSizeX / 2.0f)) /
+                        (GameVariables.PlayfieldSizeX)) * (10.0f +
+                        ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) +
+                        175.0f;
+
+                    //The y placement of the emitter.
+                    explosionY = (((60.0f +
+                        ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f)) -
+                        (((collisionsHandler.explosionPosition.Y
+                        + (GameVariables.PlayfieldSizeY / 2.0f)) /
+                        (GameVariables.PlayfieldSizeY)) *
+                        (60.0f + ((float)GraphicsDeviceManager.DefaultBackBufferHeight /
+                        2.0f))))) + 120.0f;
+
+                    particles.particlesCreate(explosion, explosionX, explosionY,
+                        random.Next(5, 8), 2);
+
+                    soundHandler.PlayCue("explosion2");
+                }
+                else if (collisionsHandler.CheckForBulletAsteroidCollision(
                     bulletModel.Meshes[0].BoundingSphere.Radius,
                     asteroidModels[1].Meshes[0].BoundingSphere.Radius,
-                    p, asteroid2List)))
+                    p, asteroid2List))
                 {
                     activeAsteroids -= 1;
 
@@ -652,21 +774,27 @@ namespace GalactikWars.Screens
                     soundHandler.PlayCue("explosion2");
                 }
 
-                destroyedAsteroids += collisionsHandler.CheckForRocketAsteroidCollision(
+                int rocketHit = collisionsHandler.CheckForRocketAsteroidCollision(
                     rocketModel.Meshes[0].BoundingSphere.Radius,
                     asteroidModels[0].Meshes[0].BoundingSphere.Radius,
                     asteroidModels[1].Meshes[0].BoundingSphere.Radius,
                     p, asteroid1List, asteroid2List);
 
-                destroyedAsteroids += collisionsHandler.CheckForRocketAsteroidCollision(
-                    rocketModel.Meshes[0].BoundingSphere.Radius,
-                    asteroidModels[1].Meshes[0].BoundingSphere.Radius,
-                    asteroidModels[0].Meshes[0].BoundingSphere.Radius,
-                    p, asteroid2List, asteroid1List);
-
-                if (destroyedAsteroids != 0)
+                if (rocketHit != 0)
                 {
-                    activeAsteroids -= destroyedAsteroids;
+                    if (rocketHit == 2)
+                    {
+                        //large asteroids are too tough for a rocket: they split in two
+                        SpawnSplitAsteroids(new Vector3(
+                            collisionsHandler.explosionPosition.X,
+                            collisionsHandler.explosionPosition.Y, 0.0f),
+                            GameVariables.AsteroidSplitCount);
+                        activeAsteroids += 1;
+                    }
+                    else
+                    {
+                        activeAsteroids -= 1;
+                    }
 
                     //The x placement of the emitter.
                     explosionX = (((collisionsHandler.explosionPosition.X +
@@ -769,44 +897,48 @@ namespace GalactikWars.Screens
             }
             else
             {
-                Vector2 position = new(
-                    (p.ship.Position.X + GameVariables.PlayfieldSizeX / 2) /
-                    GameVariables.PlayfieldSizeX + 1,
-                    (p.ship.Position.Y + GameVariables.PlayfieldSizeY / 2) /
-                    GameVariables.PlayfieldSizeY - 2);
+                Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
 
-                position.X *= -100;
-                position.Y *= 75;
+                //stretch the background over the whole screen, with a gentle
+                //parallax shift that follows the ship
+                float fx = (p.ship.Position.X + GameVariables.PlayfieldSizeX) /
+                    (2 * GameVariables.PlayfieldSizeX);
+                float fy = (p.ship.Position.Y + GameVariables.PlayfieldSizeY) /
+                    (2 * GameVariables.PlayfieldSizeY);
+                float marginX = viewport.Width * 0.05f;
+                float marginY = viewport.Height * 0.05f;
 
-                if (GameVariables.CurrentLevel == 1)
-                {
-                    spriteBatch.Draw(space1, position, Color.White);
-                }
+                Rectangle destination = new(
+                    (int)(marginX * (fx - 0.5f)) - (int)marginX,
+                    (int)(marginY * (fy - 0.5f)) - (int)marginY,
+                    (int)(viewport.Width + 2 * marginX),
+                    (int)(viewport.Height + 2 * marginY));
+
+                Texture2D background = space1;
 
                 if (GameVariables.CurrentLevel == 2)
                 {
-                    spriteBatch.Draw(space2, position, Color.White);
+                    background = space2;
+                }
+                else if (GameVariables.CurrentLevel == 3)
+                {
+                    background = space3;
+                }
+                else if (GameVariables.CurrentLevel == 4)
+                {
+                    background = space4;
+                }
+                else if (GameVariables.CurrentLevel > 4)
+                {
+                    background = space5;
                 }
 
-                if (GameVariables.CurrentLevel == 3)
-                {
-                    spriteBatch.Draw(space3, position, Color.White);
-                }
-
-                if (GameVariables.CurrentLevel == 4)
-                {
-                    spriteBatch.Draw(space4, position, Color.White);
-                }
-
-                if (GameVariables.CurrentLevel > 4)
-                {
-                    spriteBatch.Draw(space5, position, Color.White);
-                }
+                spriteBatch.Draw(background, destination, Color.White);
             }
 
             spriteBatch.End();
 
-            for (int i = 0; i < GameVariables.NumAsteroids2; i++)
+            for (int i = 0; i < asteroid2List.Length; i++)
             {
                 Matrix asteroidTransform;
 
@@ -836,6 +968,7 @@ namespace GalactikWars.Screens
             spriteBatch.DrawString(lucidaConsole, "Lives: " + p.lives, remainingLivesPosition, Color.LightGreen);
             spriteBatch.DrawString(lucidaConsole, "Asteroids: " + activeAsteroids, remainingAsteroidPosition, Color.LightGreen);
             spriteBatch.DrawString(lucidaConsole, "AtomBombs: " + p.AtomBombs, remainingAtomBombsPosition, Color.LightGreen);
+            spriteBatch.DrawString(lucidaConsole, "Rockets: " + p.Rockets, remainingRocketsPosition, Color.LightGreen);
 
             if (p.Shield < 0)
             {
@@ -933,6 +1066,8 @@ namespace GalactikWars.Screens
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
+                    //brighter ambient light so the models are not so dark
+                    effect.AmbientLightColor = new Vector3(0.55f, 0.55f, 0.55f);
                     effect.World = absoluteBoneTransforms[mesh.ParentBone.Index] * modelTransform;
                     effect.View = camera.View;
                     camera.SetProjection(GameVariables.CameraHeight * 100.0f);

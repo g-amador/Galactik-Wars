@@ -27,6 +27,7 @@ namespace GalactikWars.Entities
         internal int lives = GameVariables.NumLives;
         internal int shield = GameVariables.Shield;
         internal int atomBombs = GameVariables.NumAtomBombs;
+        internal int rockets = GameVariables.RocketAmmo;
 
         #endregion
 
@@ -36,6 +37,12 @@ namespace GalactikWars.Entities
         {
             get { return atomBombs; }
             set { atomBombs = value; }
+        }
+
+        public int Rockets
+        {
+            get { return rockets; }
+            set { rockets = value; }
         }
 
         public int Shield
@@ -91,6 +98,7 @@ namespace GalactikWars.Entities
         {
             shield = GameVariables.Shield;
             atomBombs = GameVariables.NumAtomBombs;
+            rockets = GameVariables.RocketAmmo;
             ship.IsActive = true;
             ship.Position = Vector3.Zero;
             ship.Velocity = Vector3.Zero;
@@ -135,6 +143,12 @@ namespace GalactikWars.Entities
 
         internal bool ShootRocket()
         {
+            //rockets are a limited resource: no ammo, no rocket
+            if (rockets <= 0)
+            {
+                return false;
+            }
+
             //add another rocket.  Find an inactive rocket slot and use it
             //if all rocket slots are used, ignore the user input
             for (int i = 0; i < GameVariables.NumRockets; i++)
@@ -146,6 +160,7 @@ namespace GalactikWars.Entities
                     rocketList[i].speed = GameVariables.RocketSpeedAdjustment;
                     rocketList[i].position = ship.Position + (200 * rocketList[i].direction);
                     rocketList[i].IsActive = true;
+                    rockets -= 1;
                     if (score - GameVariables.ShotPenalty < 0)
                     {
                         score = 0;

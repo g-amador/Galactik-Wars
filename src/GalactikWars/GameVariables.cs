@@ -31,10 +31,14 @@ namespace GalactikWars
         public const int Asteroid1Damage = 25;
         public const int Asteroid2Damage = 10;
 
+        //large asteroids split into this many small ones when destroyed
+        public const int AsteroidSplitCount = 2;
+
         //players constants
         public const int Shield = 100;
         public const int NumLives = 3;
         public const int NumRockets = 5;
+        public const int RocketAmmo = 10;
         public const int NumBullets = 10;
         public const int NumAtomBombs = 2;
         public const int BulletDamage = 10;
@@ -55,6 +59,10 @@ namespace GalactikWars
         public static float PlayfieldSizeX = 35000f;
         public static float PlayfieldSizeY = 25000f;
 
+        //the small-asteroid array also holds the pieces a destroyed large
+        //asteroid splits into, so it needs extra slots beyond NumAsteroids2
+        public const int NumAsteroid2Slots = NumAsteroids2 + 2 * NumAsteroids1;
+
         //Volume Variables
         public const float defaultMusicVolume = 0.5f;
         public const float defaultEffectsVolume = 1.0f;
@@ -62,8 +70,8 @@ namespace GalactikWars
         //General Aspect Options
         public static bool ScrollingBackgroundIsActive = false;
         public const bool FlawToleranceOn = true;
-        public const bool MouseVisible = false;
-        public const bool MouseActive = false;
+        public const bool MouseVisible = true;
+        public const bool MouseActive = true;
         public const bool FullScreen = false;
         public static bool _3D = false;
 

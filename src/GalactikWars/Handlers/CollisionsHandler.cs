@@ -413,73 +413,62 @@ namespace GalactikWars.Handlers
             float asteroid1Radius, float asteroid2Radius, Player p,
             Asteroid[] asteroid1List, Asteroid[] asteroid2List)
         {
-            int destroyedAsteroids = 0;
-
-            for (int i = 0; i < asteroid1List.Length; i++)
+            //Rockets are single-target: they destroy a small asteroid, but a
+            //large one is too tough and only splits in two. Returns 0 when
+            //nothing was hit, 1 when a small asteroid was destroyed and 2
+            //when a large asteroid was destroyed (caller spawns the split).
+            for (int j = 0; j < p.rocketList.Length; j++)
             {
-                if (asteroid1List[i].isActive)
+                if (p.rocketList[j].IsActive)
                 {
-                    BoundingSphere asteroidSphere1 =
-                      new(asteroid1List[i].position, asteroid1Radius *
-                                     GameVariables.AsteroidBoundingSphereScale);
-                    for (int j = 0; j < p.rocketList.Length; j++)
+                    BoundingSphere rocketSphere = new(
+                        p.rocketList[j].position,
+                        rocketRadius);
+
+                    for (int i = 0; i < asteroid1List.Length; i++)
                     {
-                        if (p.rocketList[j].IsActive)
+                        if (asteroid1List[i].isActive)
                         {
-                            BoundingSphere rocketSphere = new(
-                                p.rocketList[j].position,
-                                rocketRadius);
-                            BoundingSphere rocketDestructionSphere = new(
-                                p.rocketList[j].position,
-                                rocketRadius * 5);
+                            BoundingSphere asteroidSphere1 =
+                              new(asteroid1List[i].position, asteroid1Radius *
+                                             GameVariables.AsteroidBoundingSphereScale);
                             if (asteroidSphere1.Intersects(rocketSphere))
                             {
-                                BoundingSphere asteroidSphere2;
-
-                                for (int k = 0; k < asteroid1List.Length; k++)
-                                {
-                                    asteroidSphere2 = new BoundingSphere(
-                                        asteroid1List[k].position, asteroid1Radius *
-                                        GameVariables.AsteroidBoundingSphereScale);
-
-                                    if (asteroid1List[k].isActive &&
-                                        asteroidSphere2.Intersects(
-                                        rocketDestructionSphere))
-                                    {
-                                        asteroid1List[k].isActive = false;
-                                        destroyedAsteroids++;
-                                        p.Score += GameVariables.KillAsteroidBonus;
-                                    }
-                                }
-
-                                for (int k = 0; k < asteroid2List.Length; k++)
-                                {
-                                    asteroidSphere2 = new BoundingSphere(
-                                        asteroid2List[k].position, asteroid2Radius *
-                                        GameVariables.AsteroidBoundingSphereScale);
-
-                                    if (asteroid2List[k].isActive &&
-                                        asteroidSphere2.Intersects(
-                                        rocketDestructionSphere))
-                                    {
-                                        asteroid2List[k].isActive = false;
-                                        destroyedAsteroids++;
-                                        p.Score += GameVariables.KillAsteroidBonus;
-                                    }
-                                }
-
+                                asteroid1List[i].isActive = false;
                                 p.rocketList[j].IsActive = false;
+                                p.Score += GameVariables.KillAsteroidBonus;
 
                                 explosionPosition.X = p.rocketList[j].position.X;
                                 explosionPosition.Y = p.rocketList[j].position.Y;
 
-                                return destroyedAsteroids;
+                                return 2; //large asteroid down - split it
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < asteroid2List.Length; i++)
+                    {
+                        if (asteroid2List[i].isActive)
+                        {
+                            BoundingSphere asteroidSphere2 =
+                              new(asteroid2List[i].position, asteroid2Radius *
+                                             GameVariables.AsteroidBoundingSphereScale);
+                            if (asteroidSphere2.Intersects(rocketSphere))
+                            {
+                                asteroid2List[i].isActive = false;
+                                p.rocketList[j].IsActive = false;
+                                p.Score += GameVariables.KillAsteroidBonus;
+
+                                explosionPosition.X = p.rocketList[j].position.X;
+                                explosionPosition.Y = p.rocketList[j].position.Y;
+
+                                return 1; //small asteroid destroyed
                             }
                         }
                     }
                 }
             }
-            return destroyedAsteroids;
+            return 0;
         }
 
         #endregion

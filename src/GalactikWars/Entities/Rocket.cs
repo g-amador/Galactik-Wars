@@ -39,6 +39,30 @@ namespace GalactikWars.Entities
             }
         }
 
+        ///<summary>
+        ///Steers the rocket a little towards the target position, so it
+        ///homes in on the nearest asteroid over a few frames.
+        ///</summary>
+        public void SteerToward(Vector3 targetPosition, float turnRate, float delta)
+        {
+            Vector3 desired = targetPosition - position;
+
+            if (desired.LengthSquared() < 0.0001f)
+            {
+                return;
+            }
+
+            desired.Normalize();
+
+            float blend = MathHelper.Clamp(turnRate * delta, 0.0f, 1.0f);
+            direction = Vector3.Lerp(direction, desired, blend);
+
+            if (direction.LengthSquared() > 0.0001f)
+            {
+                direction.Normalize();
+            }
+        }
+
         public bool IsActive
         {
             get { return isActive; }
