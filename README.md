@@ -43,7 +43,7 @@ multiplayer you battle other pilots over a local network — every machine on
 the LAN runs its own game and they find each other automatically, no central
 server required.
 
-![Galactik Wars gameplay](docs/relatorio1/images/game.jpg)
+![Galactik Wars gameplay](docs/images/overview.jpg)
 
 [Back to Table of Contents](#toc)
 
@@ -55,7 +55,7 @@ server required.
 * 🌐 **LAN multiplayer for up to 6 players** — host a session, discover sessions automatically, join, ready up in the lobby and fly
 * 🖊️ **Three ship hulls** — pencil, saucer and wedge, each with a player-1 and player-2 paint scheme
 * 🔫 **Bullets** — fast, unlimited pea-shooter fire
-* 🚀 **Homing rockets** — heavier ordnance that seeks its target
+* 🚀 **Homing rockets** — heavier ordnance that seeks its target, with limited ammo
 * 💥 **Atom bomb** — the big red button of space combat
 * 🛡️ **Shields** — absorb collisions so you live to ram another day
 * 🌀 **Hyperspace respawn** — re-enter the fight with a flash
@@ -110,7 +110,7 @@ picked at random at the start of each match.
 | System | Effect |
 | ------ | ------ |
 | 🔫 Bullets | Rapid pea-shooter fire, unlimited ammo |
-| 🚀 Rockets | Slower, heavier, homing |
+| 🚀 Rockets | Slower, heavier, homing, limited ammo (10 per life) |
 | 💥 Atom bomb | One press, one very bad day for everything nearby |
 | 🛡️ Shields | Soak up collisions; regenerated over time |
 | 🌀 Hyperspace | Destroyed pilots re-enter the battle with a hyperspace jump |
@@ -123,7 +123,7 @@ picked at random at the start of each match.
 
 | Hazard | Description |
 | ------ | ----------- |
-| ☄️ Large asteroids | Drift through the arena; split when destroyed |
+| ☄️ Large asteroids | Drift through the arena; split into two smaller asteroids when destroyed |
 | 🪨 Small asteroids | The debris that keeps on giving |
 | 🚀 Other pilots | In multiplayer, everyone else is the main threat |
 | 💣 Atom bombs | Yours are great. Everyone else's are not |
@@ -143,10 +143,9 @@ the shields are gone, so are you — until you respawn.
 | --- | ------ |
 | `↑` / `↓` | Move ship |
 | `←` / `→` | Rotate ship |
-| `Z` | Fire bullets |
-| `X` | Fire rockets |
-| `C` | Atom bomb |
-| `Q` | Respawn after being destroyed |
+| `Space` | Fire bullets |
+| `R` | Fire rockets (limited ammo) |
+| `B` | Atom bomb |
 | `F1` / `F2` | Switch camera (2D top-down / 3D) |
 | `E` / `W` | Zoom in / zoom out |
 | `F11` | Toggle fullscreen |
@@ -156,10 +155,12 @@ the shields are gone, so are you — until you respawn.
 
 | Input | Action |
 | ----- | ------ |
-| Move mouse | Steer the ship |
 | Left button | Fire bullets |
 | Right button | Fire rockets |
 | Middle button | Atom bomb |
+
+Movement is keyboard-only. Destroyed pilots respawn automatically while
+lives remain; when the last life is gone the game is over.
 
 The pause menu, options (sound), controls help and credits are all reachable
 from the main menu.
@@ -266,7 +267,10 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the full networking design.
 
 ## 🧭 <a name="development-roadmap">Development Roadmap
 
-### ✅ Completed
+The work is organized in phases: finished phases are kept as a record,
+upcoming phases are planned top-down.
+
+### 📦 Phase 1 — The Port ✅
 
 * [x] Full port from XNA Game Studio 2.0 to MonoGame 3.8.6.1 on .NET 10
 * [x] Xbox LIVE multiplayer replaced with a UDP LAN implementation
@@ -277,16 +281,45 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the full networking design.
 * [x] Source tree reorganization (namespaces match folders)
 * [x] Documentation: `ARCHITECTURE.md` and `AI.md`
 
-### 🔮 Planned
+### 🎯 Phase 2 — Gameplay Polish ✅
+
+* [x] Modernized controls — `Space` for bullets, `R` for rockets, `B` for the
+  atom bomb; movement is keyboard-only (arrow keys to move, rotate)
+* [x] Full mouse support — left button fires bullets, right button fires
+  rockets, middle button triggers the atom bomb
+* [x] Homing rockets that seek the nearest asteroid, with limited ammo
+  (10 per life, shown on the HUD)
+* [x] Large asteroids split into two smaller ones when destroyed by bullets
+  or rockets; rockets destroy small asteroids outright
+* [x] Auto-respawn — destroyed pilots re-enter the fight automatically while
+  lives remain; with no lives left the game ends and returns to the main menu
+* [x] Brighter model lighting and a background that stretches to fill the
+  whole screen (with a subtle ship-following parallax)
+
+### 🌌 Phase 3 — Level 2: Enemy Waves & Bosses 🔜
+
+The classic-shooter level structure the 2008 reports already envisioned:
+
+* [ ] Red enemy ships and blue ally ships in single-player
+* [ ] Pick one ally escort, each with a different advantage: more shield,
+  faster, more missiles, more atom bombs or faster normal shooting
+* [ ] A looping starfield background scrolling continuously top → down
+* [ ] Waves of enemy ships and asteroids attacking together
+* [ ] One random bigger **Level Boss** per level with a movement/attack
+  pattern to learn and avoid
+* [ ] The level is complete when the boss is destroyed
+
+### 🔮 Phase 4 — Backlog
 
 * [ ] Better explosions with layered particle effects, and the atom bomb as an expanding EMP-style shockwave ring fired from the ship
+* [ ] Event prediction (predicting collisions/movements ahead of time — the one failed objective from the original reports)
 * [ ] More multiplayer modes: up to 3 game instances on one PC with distinct controls per player, and AI-controlled opponents in multiplayer
 * [ ] Show all controls on the pause screen
 * [ ] Rebindable controls with a "reset to default" option in the menus
 * [ ] Gamepad support
-* [ ] A 2.5D view — tilted top-down perspective on the 3D camera
+* [ ] Full 3D camera controls (a deeper take on the current 2.5D view)
 * [ ] A NeonShooter-style top-down 2D mode for single-player: neon vector ships with bloom, intense additive particles and a warping grid background
-* [ ] Ship selection with per-ship advantages and a feature comparison screen
+* [ ] Ship selection with per-ship advantages and a feature comparison screen, including custom-built ship models by the original authors
 
 [Back to Table of Contents](#toc)
 

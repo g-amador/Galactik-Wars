@@ -99,6 +99,42 @@ bite you if you copy code from git history:
    (`engine_1`, `engine_2`, effect names like `explosion1`) are stable
    identifiers — keep them when adding sounds.
 
+## Gameplay behavior (current)
+
+How the game plays today — keep these in sync when touching gameplay code:
+
+- **Controls**: `Space` fires bullets, `R` fires rockets, `B` triggers the
+  atom bomb (single-player only). Mouse buttons map to the same weapons
+  (left = bullets, right = rockets, middle = bomb). Movement is
+  **keyboard-only** — the old mouse-steering (`VariationX/Y`, `MouseMoved`)
+  was removed from `HandleInput`; `GameVariables.MouseVisible/MouseActive`
+  are `true` for the weapon buttons.
+- **Rockets**: limited ammo (`GameVariables.RocketAmmo`, 10 per life),
+  tracked by `Player.rockets` and shown on the single-player HUD. Before the
+  player updates, `GameplayScreenSinglePlayer.HomeRockets` steers every
+  active rocket toward the nearest active asteroid (`Rocket.SteerToward`).
+- **Asteroid splitting**: destroying a large asteroid spawns
+  `GameVariables.AsteroidSplitCount` (2) small ones via
+  `SpawnSplitAsteroids`, using the extra slots at the end of `asteroid2List`
+  (`GameVariables.NumAsteroid2Slots` = `NumAsteroids2 + 2 * NumAsteroids1`).
+  Loops over `asteroid2List` use its full `Length`; only the first
+  `NumAsteroids2` slots are populated by `ResetAsteroids`.
+  `CollisionsHandler.CheckForRocketAsteroidCollision` is single-target and
+  returns 0 (no hit), 1 (small destroyed) or 2 (large destroyed — caller
+  splits). All of this is single-player only: multiplayer is ship-vs-ship
+  with no asteroids.
+- **Death flow (single-player)**: no manual respawn key. When the ship dies
+  with lives left, a 1 s `respawnTimer` calls `WarpToCenter()` with the
+  `hyperspace_activate` cue. With zero lives, a 4 s `gameOverTimer` returns
+  to the main menu via `LoadingScreen.Load` (once, guarded by
+  `returnedToMenu`).
+- **Background (single-player)**: the level texture is drawn stretched over
+  the whole viewport with a ±5% parallax margin following the ship;
+  multiplayer stretches its background to the viewport as well.
+- **Lighting**: `SetupEffectDefaults` and `DrawModel` in both gameplay
+  screens set `effect.AmbientLightColor` to `(0.55, 0.55, 0.55)` right after
+  `EnableDefaultLighting()` — it is a `Vector3`, not a `Color`.
+
 ## Content project rules (`assets/Content.mgcb`)
 
 - The content project lives at the repository root in **`assets/`**, together
