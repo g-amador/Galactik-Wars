@@ -121,7 +121,11 @@ namespace GalactikWars.Entities
             {
                 if (!bulletList[i].IsActive)
                 {
-                    bulletList[i].direction = ship.RotationMatrix.Forward;
+                    //the ship model faces its matrix-backward direction (the
+                    //RotationMatrix is pre-multiplied with CreateRotationX
+                    //(PiOver2)), so the nose is Backward — using Forward would
+                    //spawn the bullet at the tail and fly it backwards
+                    bulletList[i].direction = ship.RotationMatrix.Backward;
                     bulletList[i].speed = GameVariables.BulletSpeedAdjustment;
                     bulletList[i].position = ship.Position + (200 * bulletList[i].direction);
                     bulletList[i].IsActive = true;
@@ -156,7 +160,9 @@ namespace GalactikWars.Entities
                 if (!rocketList[i].IsActive)
                 {
                     rocketList[i].rotation = ship.RotationMatrix;
-                    rocketList[i].direction = rocketList[i].rotation.Forward;
+                    //see ShootBullet: the nose of the ship model is the
+                    //matrix-backward direction, so rockets exit from the front
+                    rocketList[i].direction = rocketList[i].rotation.Backward;
                     rocketList[i].speed = GameVariables.RocketSpeedAdjustment;
                     rocketList[i].position = ship.Position + (200 * rocketList[i].direction);
                     rocketList[i].IsActive = true;

@@ -43,7 +43,6 @@ namespace GalactikWars.Screens
         private readonly Asteroid[] asteroid1List = new Asteroid[GameVariables.NumAsteroids1];
         private readonly Asteroid[] asteroid2List = new Asteroid[GameVariables.NumAsteroid2Slots];
         private int activeAsteroids = GameVariables.NumAsteroids1 + GameVariables.NumAsteroids2;
-        private int destroyedAsteroids = 0;
         private int asteroidSpeed = 0;
 
         //death/respawn timers
@@ -87,10 +86,10 @@ namespace GalactikWars.Screens
 
         private readonly Random random = new();
 
-        //float shipTrailX, shipTrailY;
+        private float shipTrailX, shipTrailY;
         private float explosionX, explosionY;
         private readonly ParticleSystem particles = new();
-        //List<Particle> shipTrail = new List<Particle>();
+        private readonly List<Particle> shipTrail = [];
         private readonly List<Particle> explosion = [];
 
         #endregion
@@ -324,15 +323,89 @@ namespace GalactikWars.Screens
             }
         }
 
+        ///<summary>
+        ///Projects a world position to screen pixels, so particle emitters
+        ///land exactly on the object they belong to at any resolution or
+        ///zoom level (the old 800x600-era screen math broke on other sizes).
+        ///</summary>
+        private Vector2 WorldToScreen(Vector3 worldPosition)
+        {
+            Vector3 screen = ScreenManager.GraphicsDevice.Viewport.Project(
+                worldPosition, camera.Projection, camera.View, Matrix.Identity);
+
+            return new Vector2(screen.X, screen.Y);
+        }
+
+        ///<summary>
+        ///Emits the green jet exhaust: it burns at the tail of the ship, at
+        ///a distance that scales with the ship model's own size (ships are
+        ///different sizes), and stretches back along the thrust line like a
+        ///jet engine flame.
+        ///</summary>
+        private void EmitExhaust(Player p)
+        {
+            //the ship on screen
+            Vector2 shipScreen = WorldToScreen(p.ship.Position);
+
+            //the tail of the ship in world space: the opposite end of the
+            //nose (the nose is RotationMatrix.Backward, where bullets and
+            //rockets exit)
+            Vector3 worldTail = -p.ship.RotationMatrix.Backward;
+
+            //the exhaust distance follows the ship model's bounding sphere,
+            //so the plasma sits at the tail of every hull, not on top of it
+            float tailDistance = p.ship.Model.Meshes[0].BoundingSphere.Radius
+                * 1.15f;
+
+            Vector2 tailTipScreen = WorldToScreen(
+                p.ship.Position + worldTail * tailDistance);
+
+            //the exhaust direction on screen, pointing away from the hull
+            Vector2 tailDir = new(
+                tailTipScreen.X - shipScreen.X,
+                tailTipScreen.Y - shipScreen.Y);
+
+            if (tailDir.LengthSquared() > 0.0001f)
+            {
+                tailDir.Normalize();
+            }
+
+            shipTrailX = tailTipScreen.X;
+            shipTrailY = tailTipScreen.Y;
+
+            //the plume stretches about one hull-length behind the tail and
+            //scales with zoom, so it reads as a jet engine at any distance
+            float plumeLength = Vector2.Distance(shipScreen, tailTipScreen)
+                * 1.1f;
+            float lateralSpread = plumeLength * 0.35f;
+
+            particles.particlesCreate(shipTrail, shipTrailX, shipTrailY,
+                2, 1, tailDir.X, tailDir.Y, plumeLength, lateralSpread); // Make the particles.
+        }
+
         private void zoomCamera(float newCameraHeight)
         {
             if (GameVariables._3D)
             {
+                //the 3D camera's height lives on its (negative) Y axis
+                float currentHeight = -camera.Position.Y * 3.0f;
+
+                newCameraHeight = MathHelper.Clamp(
+                    currentHeight + newCameraHeight,
+                    GameVariables.MinZoomHeight, GameVariables.MaxZoomHeight)
+                    - currentHeight;
+
                 camera.SetTranslation(new Vector3(0.0f, -newCameraHeight / 3,
                     newCameraHeight / 1000));
             }
             else
             {
+                //clamp the camera height so fully zoomed views stay sane
+                newCameraHeight = MathHelper.Clamp(
+                    camera.Position.Z + newCameraHeight,
+                    GameVariables.MinZoomHeight, GameVariables.MaxZoomHeight)
+                    - camera.Position.Z;
+
                 camera.SetTranslation(new Vector3(0.0f, 0.0f, newCameraHeight));
             }
         }
@@ -494,17 +567,16 @@ namespace GalactikWars.Screens
                     activeAsteroids = 0;
                     p.AtomBombs -= 1;
 
-                    //The x placement of the emitter.
-                    explosionX = 400;
-
-                    //The y placement of the emitter
-                    explosionY = 300;
+                    //the bomb detonates at the world origin (screen centre)
+                    Vector2 bombScreen = WorldToScreen(Vector3.Zero);
+                    explosionX = bombScreen.X;
+                    explosionY = bombScreen.Y;
 
                     particles.particlesCreate(explosion, explosionX, explosionY,
                         random.Next(50, 75), 2); // Make the particles.*/
 
                     // Make a sound when we fire.
-                    soundHandler.PlayCue("explosion4");
+                    soundHandler.PlayCue("explosion3");
                 }
 
                 particles.particlesUpdate(explosion, 2);
@@ -531,24 +603,24 @@ namespace GalactikWars.Screens
                     }
                 }
 
-                //Rotate to the viwer left while the Left key down
-                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.Left,
+                //Rotate to the viewer left while the A key is down
+                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.A,
                     PlayerIndex.One))
                 {
                     p.ship.Rotation += 0.10f;
                     soundHandler.PlayMyEngineSound();
                 }
 
-                //Rotate to the viewer right while the Right key down
-                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.Right,
+                //Rotate to the viewer right while the D key is down
+                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.D,
                     PlayerIndex.One))
                 {
                     p.ship.Rotation -= 0.10f;
                     soundHandler.PlayMyEngineSound();
                 }
 
-                //Move Up while the Up key is pressed
-                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.Up,
+                //Move Up while the W key is pressed
+                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.W,
                     PlayerIndex.One))
                 {
                     //Create some velocity if the Up key is down.
@@ -565,10 +637,13 @@ namespace GalactikWars.Screens
                     p.ship.Update(modelVelocityAdd);
 
                     soundHandler.PlayMyEngineSound();
+
+                    //green plasma back push
+                    EmitExhaust(p);
                 }
 
-                //Move Down while the Down key is pressed
-                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.Down,
+                //Move Down while the S key is pressed
+                if (p.ship.IsActive && input.IsNewKeyStillPress(Keys.S,
                     PlayerIndex.One))
                 {
                     //Create some velocity if the Down key is down.
@@ -585,34 +660,20 @@ namespace GalactikWars.Screens
                     p.ship.Update(modelVelocityAdd);
 
                     soundHandler.PlayMyEngineSound();
+
+                    //green plasma back push
+                    EmitExhaust(p);
                 }
 
-                if (p.ship.IsActive && !input.IsNewKeyStillPress(Keys.Up, PlayerIndex.One)
-                    && !input.IsNewKeyStillPress(Keys.Down, PlayerIndex.One)
-                    && !input.IsNewKeyStillPress(Keys.Left, PlayerIndex.One)
-                    && !input.IsNewKeyStillPress(Keys.Right, PlayerIndex.One))
+                if (p.ship.IsActive && !input.IsNewKeyStillPress(Keys.W, PlayerIndex.One)
+                    && !input.IsNewKeyStillPress(Keys.S, PlayerIndex.One)
+                    && !input.IsNewKeyStillPress(Keys.A, PlayerIndex.One)
+                    && !input.IsNewKeyStillPress(Keys.D, PlayerIndex.One))
                 {
-                    ////The x placement of the emitter.
-                    //shipTrailX = (((p.ship.Position.X + (GameVariables.PlayfieldSizeX / 
-                    //    2.0f)) / (GameVariables.PlayfieldSizeX)) * (10.0f + 
-                    //    ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) + 
-                    //    195.0f;
-
-                    ////The y placement of the emitter.
-                    //shipTrailY = (((60.0f + 
-                    //    ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f)) -
-                    //   (((p.ship.Position.Y + (GameVariables.PlayfieldSizeY / 2.0f)) /
-                    //   (GameVariables.PlayfieldSizeY)) * (60.0f + 
-                    //   ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f))))) + 
-                    //   145.0f;
-
-                    //particles.particlesCreate(shipTrail, shipTrailX, shipTrailY, 
-                    //    random.Next(1, 2), 1);// Make the particles.
-
                     soundHandler.PauseMyEngineSound();
                 }
 
-                //particles.particlesUpdate(shipTrail, 1);
+                particles.particlesUpdate(shipTrail, 1);
 
                 if (input.IsNewKeyPress(Keys.F1))
                 {
@@ -632,17 +693,30 @@ namespace GalactikWars.Screens
                 //ZOOM IN if E key is pressed
                 if (input.IsNewKeyStillPress(Keys.E, PlayerIndex.One))
                 {
-                    GameVariables.PlayfieldSizeX -= 200;
-                    GameVariables.PlayfieldSizeY -= 200;
+                    //clamp the playfield so it can never collapse to zero
+                    GameVariables.PlayfieldSizeX = MathHelper.Clamp(
+                        GameVariables.PlayfieldSizeX - 200,
+                        GameVariables.MinPlayfieldSize,
+                        GameVariables.MaxPlayfieldSize);
+                    GameVariables.PlayfieldSizeY = MathHelper.Clamp(
+                        GameVariables.PlayfieldSizeY - 200,
+                        GameVariables.MinPlayfieldSize,
+                        GameVariables.MaxPlayfieldSize);
 
                     zoomCamera(-500);
                 }
 
-                //ZOOM OUT if W key is pressed
-                if (input.IsNewKeyStillPress(Keys.W, PlayerIndex.One))
+                //ZOOM OUT if Q key is pressed
+                if (input.IsNewKeyStillPress(Keys.Q, PlayerIndex.One))
                 {
-                    GameVariables.PlayfieldSizeX += 200;
-                    GameVariables.PlayfieldSizeY += 200;
+                    GameVariables.PlayfieldSizeX = MathHelper.Clamp(
+                        GameVariables.PlayfieldSizeX + 200,
+                        GameVariables.MinPlayfieldSize,
+                        GameVariables.MaxPlayfieldSize);
+                    GameVariables.PlayfieldSizeY = MathHelper.Clamp(
+                        GameVariables.PlayfieldSizeY + 200,
+                        GameVariables.MinPlayfieldSize,
+                        GameVariables.MaxPlayfieldSize);
 
                     zoomCamera(+500);
                 }
@@ -724,26 +798,18 @@ namespace GalactikWars.Screens
                         GameVariables.AsteroidSplitCount);
                     activeAsteroids += 1;
 
-                    //The x placement of the emitter.
-                    explosionX = (((collisionsHandler.explosionPosition.X +
-                        (GameVariables.PlayfieldSizeX / 2.0f)) /
-                        (GameVariables.PlayfieldSizeX)) * (10.0f +
-                        ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) +
-                        175.0f;
-
-                    //The y placement of the emitter.
-                    explosionY = (((60.0f +
-                        ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f)) -
-                        (((collisionsHandler.explosionPosition.Y
-                        + (GameVariables.PlayfieldSizeY / 2.0f)) /
-                        (GameVariables.PlayfieldSizeY)) *
-                        (60.0f + ((float)GraphicsDeviceManager.DefaultBackBufferHeight /
-                        2.0f))))) + 120.0f;
+                    //the emitter sits on the explosion, on screen
+                    Vector2 explosionScreen = WorldToScreen(new Vector3(
+                        collisionsHandler.explosionPosition.X,
+                        collisionsHandler.explosionPosition.Y, 0.0f));
+                    explosionX = explosionScreen.X;
+                    explosionY = explosionScreen.Y;
 
                     particles.particlesCreate(explosion, explosionX, explosionY,
                         random.Next(5, 8), 2);
 
-                    soundHandler.PlayCue("explosion2");
+                    //a large asteroid breaks into smaller ones
+                    soundHandler.PlayCue("explosion4");
                 }
                 else if (collisionsHandler.CheckForBulletAsteroidCollision(
                     bulletModel.Meshes[0].BoundingSphere.Radius,
@@ -752,26 +818,18 @@ namespace GalactikWars.Screens
                 {
                     activeAsteroids -= 1;
 
-                    //The x placement of the emitter.
-                    explosionX = (((collisionsHandler.explosionPosition.X +
-                        (GameVariables.PlayfieldSizeX / 2.0f)) /
-                        (GameVariables.PlayfieldSizeX)) * (10.0f +
-                        ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) +
-                        175.0f;
-
-                    //The y placement of the emitter.
-                    explosionY = (((60.0f +
-                        ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f)) -
-                        (((collisionsHandler.explosionPosition.Y
-                        + (GameVariables.PlayfieldSizeY / 2.0f)) /
-                        (GameVariables.PlayfieldSizeY)) *
-                        (60.0f + ((float)GraphicsDeviceManager.DefaultBackBufferHeight /
-                        2.0f))))) + 120.0f;
+                    //the emitter sits on the explosion, on screen
+                    Vector2 explosionScreen = WorldToScreen(new Vector3(
+                        collisionsHandler.explosionPosition.X,
+                        collisionsHandler.explosionPosition.Y, 0.0f));
+                    explosionX = explosionScreen.X;
+                    explosionY = explosionScreen.Y;
 
                     particles.particlesCreate(explosion, explosionX, explosionY,
                         random.Next(5, 8), 2);
 
-                    soundHandler.PlayCue("explosion2");
+                    //a small asteroid is destroyed
+                    soundHandler.PlayCue("explosion1");
                 }
 
                 int rocketHit = collisionsHandler.CheckForRocketAsteroidCollision(
@@ -796,31 +854,29 @@ namespace GalactikWars.Screens
                         activeAsteroids -= 1;
                     }
 
-                    //The x placement of the emitter.
-                    explosionX = (((collisionsHandler.explosionPosition.X +
-                        (GameVariables.PlayfieldSizeX / 2.0f)) /
-                        (GameVariables.PlayfieldSizeX)) * (30.0f +
-                        ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) +
-                        175.0f;
-
-                    //The y placement of the emitter.
-                    explosionY = (((65.0f +
-                        ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f)) -
-                       (((collisionsHandler.explosionPosition.Y +
-                       (GameVariables.PlayfieldSizeY / 2.0f)) /
-                       (GameVariables.PlayfieldSizeY)) *
-                       (65.0f + ((float)GraphicsDeviceManager.DefaultBackBufferHeight /
-                       2.0f))))) + 120.0f;
+                    //the emitter sits on the explosion, on screen
+                    Vector2 rocketExplosionScreen = WorldToScreen(new Vector3(
+                        collisionsHandler.explosionPosition.X,
+                        collisionsHandler.explosionPosition.Y, 0.0f));
+                    explosionX = rocketExplosionScreen.X;
+                    explosionY = rocketExplosionScreen.Y;
 
                     particles.particlesCreate(explosion, explosionX, explosionY,
                         random.Next(10, 15), 2);
 
-                    soundHandler.PlayCue("explosion2");
+                    if (rocketHit == 2)
+                    {
+                        //the large asteroid broke into smaller ones
+                        soundHandler.PlayCue("explosion4");
+                    }
+                    else
+                    {
+                        //the small asteroid was destroyed
+                        soundHandler.PlayCue("explosion1");
+                    }
                 }
 
                 particles.particlesUpdate(explosion, 2);
-
-                destroyedAsteroids = 0;
 
                 //recalculate the ship radius
                 shipRadius(p, 80);
@@ -834,23 +890,17 @@ namespace GalactikWars.Screens
 
                     if (p.Shield < 0)
                     {
-                        //The x placement of the emitter.
-                        explosionX = (((p.ship.Position.X + (GameVariables.PlayfieldSizeX / 2.0f)) /
-                            (GameVariables.PlayfieldSizeX)) * (10.0f +
-                            ((float)GraphicsDeviceManager.DefaultBackBufferWidth / 2.0f))) +
-                            195.0f;
-
-                        //The y placement of the emitter.
-                        explosionY = (((60.0f +
-                            ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f)) -
-                            (((p.ship.Position.Y + (GameVariables.PlayfieldSizeY / 2.0f)) /
-                           (GameVariables.PlayfieldSizeY)) * (60.0f +
-                           ((float)GraphicsDeviceManager.DefaultBackBufferHeight / 2.0f))))) + 145.0f;
+                        //the emitter sits on the destroyed ship, on screen
+                        Vector2 shipExplosionScreen = WorldToScreen(
+                            p.ship.Position);
+                        explosionX = shipExplosionScreen.X;
+                        explosionY = shipExplosionScreen.Y;
 
                         particles.particlesCreate(explosion, explosionX, explosionY,
                             random.Next(16, 18), 2);
 
-                        soundHandler.PlayCue("explosion3");
+                        //the ship and the asteroid are both destroyed
+                        soundHandler.PlayCue("explosion2");
                     }
                     else
                     {
@@ -1000,8 +1050,8 @@ namespace GalactikWars.Screens
 
 
             /*ship trail*/
-            //particles.drawParticles(gameTime, ScreenManager.SpriteBatch, rasto, 1, 
-            //particlesTexture);
+            particles.drawParticles(gameTime, ScreenManager.SpriteBatch, shipTrail, 1,
+                particlesTexture);
             /*Explosions*/
             particles.drawParticles(gameTime, ScreenManager.SpriteBatch, explosion, 2,
                 particlesTexture);

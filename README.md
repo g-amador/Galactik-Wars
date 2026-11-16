@@ -141,13 +141,13 @@ the shields are gone, so are you — until you respawn.
 
 | Key | Action |
 | --- | ------ |
-| `↑` / `↓` | Move ship |
-| `←` / `→` | Rotate ship |
+| `W` / `S` | Move ship |
+| `A` / `D` | Rotate ship |
 | `Space` | Fire bullets |
 | `R` | Fire rockets (limited ammo) |
 | `B` | Atom bomb |
 | `F1` / `F2` | Switch camera (2D top-down / 3D) |
-| `E` / `W` | Zoom in / zoom out |
+| `E` / `Q` | Zoom in / zoom out |
 | `F11` | Toggle fullscreen |
 | `ESC` | Pause menu |
 
@@ -284,7 +284,7 @@ upcoming phases are planned top-down.
 ### 🎯 Phase 2 — Gameplay Polish ✅
 
 * [x] Modernized controls — `Space` for bullets, `R` for rockets, `B` for the
-  atom bomb; movement is keyboard-only (arrow keys to move, rotate)
+  atom bomb; movement is keyboard-only (`W`/`S` to thrust, `A`/`D` to rotate)
 * [x] Full mouse support — left button fires bullets, right button fires
   rockets, middle button triggers the atom bomb
 * [x] Homing rockets that seek the nearest asteroid, with limited ammo
@@ -295,11 +295,23 @@ upcoming phases are planned top-down.
   lives remain; with no lives left the game ends and returns to the main menu
 * [x] Brighter model lighting and a background that stretches to fill the
   whole screen (with a subtle ship-following parallax)
+* [x] Bullets and rockets exit from the ship's nose (`RotationMatrix.Backward`)
+* [x] Green jet-engine exhaust burning from the tail, sized per hull
+  (bounding-sphere based) with a heat-graded plume
+* [x] Explosion/burst effects land exactly on their targets at any
+  resolution or zoom (camera-projection emitters via `WorldToScreen`)
+* [x] Zoom limits — camera height and playfield size are clamped, so fully
+  zoomed in/out (`E`/`Q`) views stay stable
+* [x] Rockets keep their nose on the flight path while homing; multiplayer
+  rockets home toward the enemy ship
 
 ### 🌌 Phase 3 — Level 2: Enemy Waves & Bosses 🔜
 
 The classic-shooter level structure the 2008 reports already envisioned:
 
+* [ ] Reaction-control jets — a left jet near the nose when pressing `A` and
+  a right jet when pressing `D` (same green jet style as the main `W`/`S`
+  exhaust), so rotation and braking read like real maneuvering in space
 * [ ] Red enemy ships and blue ally ships in single-player
 * [ ] Pick one ally escort, each with a different advantage: more shield,
   faster, more missiles, more atom bombs or faster normal shooting
@@ -312,6 +324,8 @@ The classic-shooter level structure the 2008 reports already envisioned:
 ### 🔮 Phase 4 — Backlog
 
 * [ ] Better explosions with layered particle effects, and the atom bomb as an expanding EMP-style shockwave ring fired from the ship
+* [ ] Improved volume options — Music and Effect volume on separate rows, adjustable with the mouse (click/drag a `- o +` slider) or the `-`/`+` keys on the selected row, always showing integer percentages (no float rounding artifacts)
+* [ ] Glowing shield effect — a glowing sphere around the ship (shader-based, no model needed) that fades as the shield decreases and flashes when it takes a hit
 * [ ] Event prediction (predicting collisions/movements ahead of time — the one failed objective from the original reports)
 * [ ] More multiplayer modes: up to 3 game instances on one PC with distinct controls per player, and AI-controlled opponents in multiplayer
 * [ ] Show all controls on the pause screen

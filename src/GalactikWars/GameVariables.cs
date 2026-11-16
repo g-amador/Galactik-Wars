@@ -20,6 +20,13 @@ namespace GalactikWars
         //camera variables
         public static float CameraHeight = 50000.0f;
 
+        //zoom limits: without them the camera could reach the playfield plane
+        //(or go below it) and the playfield could collapse to zero or negative
+        public const float MinZoomHeight = 10000.0f;
+        public const float MaxZoomHeight = 200000.0f;
+        public const float MinPlayfieldSize = 10000.0f;
+        public const float MaxPlayfieldSize = 100000.0f;
+
         //asteroid variables
         public const int NumAsteroids1 = 10;
         public const int NumAsteroids2 = NumAsteroids1 * 2;

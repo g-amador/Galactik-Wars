@@ -103,16 +103,64 @@ bite you if you copy code from git history:
 
 How the game plays today — keep these in sync when touching gameplay code:
 
-- **Controls**: `Space` fires bullets, `R` fires rockets, `B` triggers the
-  atom bomb (single-player only). Mouse buttons map to the same weapons
-  (left = bullets, right = rockets, middle = bomb). Movement is
-  **keyboard-only** — the old mouse-steering (`VariationX/Y`, `MouseMoved`)
-  was removed from `HandleInput`; `GameVariables.MouseVisible/MouseActive`
-  are `true` for the weapon buttons.
+- **Controls**: `W`/`S` move, `A`/`D` rotate, `Space` fires bullets, `R`
+  fires rockets, `B` triggers the atom bomb (single-player only). `E`/`Q`
+  zoom. Mouse buttons map to the same weapons (left = bullets, right =
+  rockets, middle = bomb). Movement is **keyboard-only** — the old
+  mouse-steering (`VariationX/Y`, `MouseMoved`) was removed from
+  `HandleInput`; `GameVariables.MouseVisible/MouseActive` are `true` for the
+  weapon buttons.
+- **Sound cue mapping** (the reports' intent, keep it when touching audio):
+  engine loops are `engine_1` (own ship) / `engine_2` (others) via
+  `PlayMyEngineSound`; a large asteroid breaking into smaller ones is
+  `explosion4`; a small asteroid being destroyed is `explosion1`; a ship and
+  a ship/meteor being destroyed together is `explosion2`; the atom bomb is
+  `explosion3`; a meteor hitting a shield is `phase_collide_ship1`; a ship
+  shield hitting another ship shield (multiplayer) is `shield_collide_ship1`.
+- **Engine exhaust**: while thrusting (`W` or `S`), the single-player screen
+  emits a green **jet-engine plume** behind the ship. The tail is
+  `-RotationMatrix.Backward` — `RotationMatrix.Backward` is `(sin r, −cos r,
+  0)` and that end is the ship's **nose/front** (it is where bullets and
+  rockets exit); the exhaust must never go back to `+(sin, −cos)` or it
+  burns at the front. The tail distance is the ship model's own
+  bounding-sphere radius (the 6 ship hulls are different sizes); the plume
+  stretches about one hull-length behind the tail (scaled by zoom) with a
+  lateral jitter, and each particle's `lifeSpan` grades from 8 at the tail
+  (bright green) to 1 at the tip (dark green) — bright core, fading plume.
+  Particles are type 1 (`CreateTrailParticles`, 4/frame), drawn at their
+  `xyorg` only. Reaction-control jets (`A`/`D`, near the nose) are the first
+  step of phase 3. Do not
+  reuse the explosion emitter-count logic for trails — the ship's emitter
+  origin changes every frame.
+- **Particle emitters**: every explosion/burst emitter position in the
+  single-player screen goes through the same `WorldToScreen` helper —
+  meteor explosions (`CollisionsHandler.explosionPosition`, a `Vector2`
+  lifted to `Vector3(X, Y, 0)`), ship death, and the atom bomb (world
+  origin = screen centre). The old 800×600-era hand math put bursts at the
+  wrong X — never re-introduce those formulas.
+- **Zoom limits**: `E`/`Q` change the camera height (±500, accumulated by
+  `CCamera.SetTranslation`) and the playfield size (±200). Both are clamped
+  — camera height within `GameVariables.MinZoomHeight/MaxZoomHeight`
+  (10000–200000, 2D uses `camera.Position.Z`, 3D the negative-Y height),
+  playfield within `MinPlayfieldSize/MaxPlayfieldSize` (10000–100000) — so
+  fully zoomed in/out views can no longer collapse the camera onto the
+  playfield plane or the playfield to zero/negative.
+- **Weapon spawn points**: bullets and rockets exit from the ship's **nose**:
+  `RotationMatrix.Backward`, which evaluates to `(sin r, −cos r, 0)` — the
+  front end. The tail is `-RotationMatrix.Backward` (= `.Forward`), where
+  the engine exhaust burns.
 - **Rockets**: limited ammo (`GameVariables.RocketAmmo`, 10 per life),
   tracked by `Player.rockets` and shown on the single-player HUD. Before the
   player updates, `GameplayScreenSinglePlayer.HomeRockets` steers every
-  active rocket toward the nearest active asteroid (`Rocket.SteerToward`).
+  active rocket toward the nearest active asteroid via `Rocket.SteerToward`
+  — a turn-rate-limited missile model (thruster correction, arcs instead of
+  snapping). `Rocket.Update` re-derives `rotation` from `direction` every
+  frame (`CreateRotationX(PiOver2) * CreateRotationZ(atan2(-dir.X, dir.Y))`)
+  so the drawn nose keeps pointing along the flight path while homing; the
+  rocket model shares the ship's nose convention (nose = matrix-backward).
+  Multiplayer rockets home the same way toward the opposing ship via
+  `GameplayScreenMultiplayer.HomeRockets` (deterministic per synced ship
+  positions).
 - **Asteroid splitting**: destroying a large asteroid spawns
   `GameVariables.AsteroidSplitCount` (2) small ones via
   `SpawnSplitAsteroids`, using the extra slots at the end of `asteroid2List`

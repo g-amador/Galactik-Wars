@@ -398,10 +398,12 @@ namespace GalactikWars.Screens
             {
                 if (p1.Shield < 0)
                 {
-                    soundHandler.PlayCue("explosion3");
+                    //the ship and the bullet are both destroyed
+                    soundHandler.PlayCue("explosion2");
                 }
                 else
                 {
+                    //the ship's shield took the hit
                     soundHandler.PlayCue("phase_collide_ship1");
                 }
             }
@@ -411,10 +413,12 @@ namespace GalactikWars.Screens
             {
                 if (p2.Shield < 0)
                 {
-                    soundHandler.PlayCue("explosion3");
+                    //the ship and the bullet are both destroyed
+                    soundHandler.PlayCue("explosion2");
                 }
                 else
                 {
+                    //the ship's shield took the hit
                     soundHandler.PlayCue("phase_collide_ship1");
                 }
             }
@@ -422,14 +426,12 @@ namespace GalactikWars.Screens
             if (collisionsHandler.CheckForRocketShip(
                 rocketModel.Meshes[0].BoundingSphere.Radius, p2, p1))
             {
+                //the rocket and its target are both destroyed
                 soundHandler.PlayCue("explosion2");
 
-                if (p2.Shield < 0)
+                if (p2.Shield >= 0)
                 {
-                    soundHandler.PlayCue("explosion3");
-                }
-                else
-                {
+                    //the ship's shield took the hit
                     soundHandler.PlayCue("phase_collide_ship1");
                 }
             }
@@ -437,14 +439,12 @@ namespace GalactikWars.Screens
             if (collisionsHandler.CheckForRocketShip(
                 rocketModel.Meshes[0].BoundingSphere.Radius, p1, p2))
             {
+                //the rocket and its target are both destroyed
                 soundHandler.PlayCue("explosion2");
 
-                if (p1.Shield < 0)
+                if (p1.Shield >= 0)
                 {
-                    soundHandler.PlayCue("explosion3");
-                }
-                else
-                {
+                    //the ship's shield took the hit
                     soundHandler.PlayCue("phase_collide_ship1");
                 }
             }
@@ -486,7 +486,13 @@ namespace GalactikWars.Screens
 
                 if ((p1.Shield > 0) || (p2.Shield > 0))
                 {
-                    soundHandler.PlayCue("phase_collide_ship1");
+                    //one ship's shield hit the other ship's shield
+                    soundHandler.PlayCue("shield_collide_ship1");
+                }
+                else
+                {
+                    //both ships are destroyed
+                    soundHandler.PlayCue("explosion2");
                 }
             }
         }
@@ -534,6 +540,41 @@ namespace GalactikWars.Screens
             {
                 p.Radius = p.ship.Model.Meshes[0].BoundingSphere.Radius
                     * GameVariables.shipBoundingSphereScale * 2;
+            }
+        }
+
+        ///<summary>
+        ///Steers every active rocket towards the opposing ship, so missiles
+        ///arc towards their target instead of flying straight. Each machine
+        ///runs the same deterministic steering against the synced ship
+        ///positions, so the simulations stay consistent.
+        ///</summary>
+        private void HomeRockets(GameTime gameTime)
+        {
+            if (players.Length < 2)
+            {
+                return;
+            }
+
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            for (int i = 0; i < players.Length; i++)
+            {
+                Player target = players[(i + 1) % players.Length];
+
+                if (!target.ship.IsActive)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < players[i].rocketList.Length; j++)
+                {
+                    if (players[i].rocketList[j].IsActive)
+                    {
+                        players[i].rocketList[j].SteerToward(
+                            target.ship.Position, 3.0f, delta);
+                    }
+                }
             }
         }
 
@@ -606,42 +647,42 @@ namespace GalactikWars.Screens
                     isFiringRockets = true;
                 }
 
-                //Rotate to the viwer left while the Left key down
+                //Rotate to the viewer left while the A key is down
                 if (players[playerID].ship.IsActive &&
-                    input.IsNewKeyStillPress(Keys.Left, PlayerIndex.One))
+                    input.IsNewKeyStillPress(Keys.A, PlayerIndex.One))
                 {
                     soundHandler.PlayMyEngineSound();
                     isRotatingLeft = true;
                 }
 
-                //Rotate to the viewer right while the Right key down
+                //Rotate to the viewer right while the D key is down
                 if (players[playerID].ship.IsActive &&
-                    input.IsNewKeyStillPress(Keys.Right, PlayerIndex.One))
+                    input.IsNewKeyStillPress(Keys.D, PlayerIndex.One))
                 {
                     soundHandler.PlayMyEngineSound();
                     isRotatingRight = true;
                 }
 
-                //Move Up while the Up key is pressed
-                if (players[playerID].ship.IsActive && input.IsNewKeyStillPress(Keys.Up,
+                //Move Up while the W key is pressed
+                if (players[playerID].ship.IsActive && input.IsNewKeyStillPress(Keys.W,
                     PlayerIndex.One))
                 {
                     soundHandler.PlayMyEngineSound();
                     isMovingUp = true;
                 }
 
-                //Move Down while the Down key is pressed
-                if (players[playerID].ship.IsActive && input.IsNewKeyStillPress(Keys.Down,
+                //Move Down while the S key is pressed
+                if (players[playerID].ship.IsActive && input.IsNewKeyStillPress(Keys.S,
                     PlayerIndex.One))
                 {
                     soundHandler.PlayMyEngineSound();
                     isMovingDown = true;
                 }
 
-                if (!input.IsNewKeyStillPress(Keys.Up, PlayerIndex.One)
-                    && !input.IsNewKeyStillPress(Keys.Down, PlayerIndex.One)
-                    && !input.IsNewKeyStillPress(Keys.Left, PlayerIndex.One)
-                    && !input.IsNewKeyStillPress(Keys.Right, PlayerIndex.One))
+                if (!input.IsNewKeyStillPress(Keys.W, PlayerIndex.One)
+                    && !input.IsNewKeyStillPress(Keys.S, PlayerIndex.One)
+                    && !input.IsNewKeyStillPress(Keys.A, PlayerIndex.One)
+                    && !input.IsNewKeyStillPress(Keys.D, PlayerIndex.One))
                 {
                     isMovingUp = false;
                     isMovingDown = false;
@@ -780,6 +821,9 @@ namespace GalactikWars.Screens
                     activePlayers--;
                 }
             }
+
+            //missiles home in on the opposing ship, nose on target
+            HomeRockets(gameTime);
 
             camera.Update();
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
