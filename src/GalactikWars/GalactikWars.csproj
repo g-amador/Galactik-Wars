@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>GalactikWars</RootNamespace>
+    <AssemblyName>GalactikWars</AssemblyName>
+    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <AssemblyTitle>Galactik Wars</AssemblyTitle>
+    <Product>Galactik Wars</Product>
+    <Description>Galactik Wars — 3D multiplayer space combat, ported from XNA 2.0 to MonoGame.</Description>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="..\..\assets\Content.mgcb" />
+  </ItemGroup>
+
+</Project>

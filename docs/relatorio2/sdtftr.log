@@ -1,0 +1,420 @@
+This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.7) (preloaded format=pdflatex 2008.4.25)  7 JUL 2008 14:36
+entering extended mode
+**sdtftr.tex
+(sdtftr.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman, ngerman, french, loaded.
+("C:\Program Files\MiKTeX 2.7\tex\latex\base\article.cls"
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+("C:\Program Files\MiKTeX 2.7\tex\latex\base\size12.clo"
+File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\psnfss\times.sty"
+Package: times 2005/04/12 PSNFSS-v9.2a (SPQR) 
+) (sdtftr.sty)
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\graphics.sty"
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\pdftex.def"
+File: pdftex.def 2007/06/12 v0.04h Graphics/color for pdfTeX
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\epsfig.sty"
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+\epsfxsize=\dimen105
+\epsfysize=\dimen106
+) (sdtftr.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 27.
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\psnfss\ot1ptm.fd"
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+("C:\Program Files\MiKTeX 2.7\tex\context\base\supp-pdf.tex"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count88
+\scratchdimen=\dimen107
+\scratchbox=\box26
+\nofMPsegments=\count89
+\nofMParguments=\count90
+\MPscratchCnt=\count91
+\MPscratchDim=\dimen108
+\MPnumerator=\count92
+\everyMPtoPDFconversion=\toks15
+)
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <17.28> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 29.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 29.
+ <images/ubi.JPG, id=1, 76.6062pt x 112.0185pt>
+File: images/ubi.JPG Graphic file (type jpg)
+ <use images/ubi.JPG>
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+
+ []
+
+
+Overfull \hbox (89.0038pt too wide) in paragraph at lines 29--29
+[]  []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+
+ []
+
+[1{C:/Documents and Settings/All Users/Application Data/MiKTeX/2.7/pdftex/confi
+g/pdftex.map}
+Non-PDF special ignored! <images/ubi.JPG>] [1
+
+]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 34.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 34.
+ [2]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 37.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 45.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 45.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 45.
+
+Overfull \hbox (16.42499pt too wide) in paragraph at lines 38--46
+[]$[]$ 
+ []
+
+[3]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 50.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
+[5]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 81.
+ ("C:\Program Files\MiKTeX 2.7\tex\latex\psnfss\omsptm.fd"
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 81.
+Missing character: There is no á in font ptmr7t!
+
+Underfull \hbox (badness 1337) in paragraph at lines 88--92
+\OT1/ptm/m/n/12 com al-gu-mas limita[][]oes) teria sido su-fi-ciente (ver quadr
+o com-par-a-
+ []
+
+[6]
+Missing character: There is no á in font ptmr7t!
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 119.
+ [7]
+Underfull \hbox (badness 10000) in paragraph at lines 138--142
+
+ []
+
+Missing character: There is no ã in font ptmr7t!
+Missing character: There is no í in font ptmr7t!
+<images/Menu.jpg, id=33, 895.09406pt x 453.94594pt>
+File: images/Menu.jpg Graphic file (type jpg)
+ <use images/Menu.jpg>
+Overfull \hbox (150.41565pt too wide) in paragraph at lines 199--200
+ [][] 
+ []
+
+
+Underfull \vbox (badness 1728) has occurred while \output is active []
+
+ [8]
+Underfull \hbox (badness 10000) in paragraph at lines 205--223
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9 <images/Menu.jpg>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10]
+[11]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [12]
+Underfull \hbox (badness 3098) in paragraph at lines 323--324
+[]\OT1/ptm/m/n/12 Criar Sess[]ao (abrir um
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 325--326
+[]\OT1/ptm/m/n/12 Iniciar jogo (sair do
+ []
+
+
+Underfull \hbox (badness 3579) in paragraph at lines 327--328
+[]\OT1/ptm/m/n/12 Terminar jogo (sair do
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--328
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 338--339
+[]\OT1/ptm/m/n/12 Informar que se est[]a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 338--339
+\OT1/ptm/m/n/12 pronto para ini-ciar
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 339--340
+[]\OT1/ptm/m/n/12 Confirmar este es-tado
+ []
+
+
+Underfull \hbox (badness 1609) in paragraph at lines 339--340
+\OT1/ptm/m/n/12 para saber quando jogo
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 340--341
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [13]
+Underfull \hbox (badness 10000) in paragraph at lines 347--351
+\OT1/ptm/m/n/12 XNA "Sys-tem.Threading", "Mi-crosoft.Xna.Framework.GamerService
+s" e
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 347--351
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 353--354
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--360
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 361--362
+
+ []
+
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+
+Overfull \hbox (17.62482pt too wide) in paragraph at lines 346--375
+[]$[]$ 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [14]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15]
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 425--430
+
+ []
+
+[17]
+Underfull \hbox (badness 10000) in paragraph at lines 443--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 449--456
+
+ []
+
+Missing character: There is no é in font ptmr7t!
+
+Underfull \hbox (badness 10000) in paragraph at lines 458--461
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 463--468
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 472--473
+
+ []
+
+
+Overfull \hbox (17.62482pt too wide) in paragraph at lines 471--502
+[]$[]$ 
+ []
+
+[18] <images/p2p_sc.jpg, id=69, 133.6995pt x 61.6704pt>
+File: images/p2p_sc.jpg Graphic file (type jpg)
+
+<use images/p2p_sc.jpg>
+Overfull \hbox (17.62482pt too wide) in paragraph at lines 514--526
+[]$[]$ 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [19]
+<images/game.jpg, id=73, 133.6995pt x 61.6704pt>
+File: images/game.jpg Graphic file (type jpg)
+ <use images/game.jpg>
+Underfull \hbox (badness 4582) in paragraph at lines 561--563
+[]\OT1/ptm/m/n/12 Tal como tin-hamos referido na primeira parte po-di-amos ema-
+gre-cer a
+ []
+
+
+Overfull \hbox (17.62482pt too wide) in paragraph at lines 542--564
+[]$[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--564
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20 <images/p2p_sc.jpg>] [21 <images/game.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 567--572
+
+ []
+
+
+Overfull \hbox (17.62482pt too wide) in paragraph at lines 566--574
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 590--603
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [22]
+[23]
+Underfull \hbox (badness 10000) in paragraph at lines 614--616
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 616--617
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 617--618
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 618--619
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 608--627
+
+ []
+
+[24] (sdtftr.aux) ) 
+Here is how much of TeX's memory you used:
+ 1054 strings out of 95340
+ 12637 string characters out of 1184155
+ 62452 words of memory out of 1500000
+ 4258 multiletter control sequences out of 110000
+ 28076 words of font info for 57 fonts, out of 1200000 for 2000
+ 14 hyphenation exceptions out of 8191
+ 25i,13n,19p,190b,287s stack positions out of 5000i,500n,10000p,200000b,5000s
+{C:/Program Files/MiKTeX 2.7/fonts/enc/dvips/8r.enc}<C:/Prog
+ram Files/MiKTeX 2.7/fonts/type1/bluesky/cm/cmss17.pfb><C:/Program Files/MiKTeX
+ 2.7/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.7/fonts/type1
+/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.7/fonts/type1/urw/times/utmr8a
+.pfb><C:/Program Files/MiKTeX 2.7/fonts/type1/urw/times/utmri8a.pfb>
+Output written on sdtftr.pdf (25 pages, 338774 bytes).
+PDF statistics:
+ 108 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+
