@@ -76,6 +76,16 @@ namespace GalactikWars.Screens
         //Player
         private readonly Player p = new();
 
+        //red enemy ships and the blue ally escort (phase 3)
+        private readonly List<EnemyShip> enemyShips = [];
+        private readonly EnemyShip allyShip = new();
+        private Model enemyShipModel = null;
+        private Model allyShipModel = null;
+        private Matrix[] enemyShipTransforms = null;
+        private Matrix[] allyShipTransforms = null;
+        private float enemyRespawnTimer = 0.0f;
+        private float allyRespawnTimer = 0.0f;
+
         private Vector2 scorePosition = new(60, 110);
         private Vector2 shieldPosition = new(60, 90);
         private Vector2 remainingLivesPosition = new(60, 70);
@@ -83,6 +93,7 @@ namespace GalactikWars.Screens
         private Vector2 remainingAsteroidPosition = new(60, 30);
         private Vector2 levelPosition = new(60, 10);
         private Vector2 remainingRocketsPosition = new(60, 130);
+        private Vector2 enemiesPosition = new(60, 150);
 
         private readonly Random random = new();
 
@@ -203,6 +214,20 @@ namespace GalactikWars.Screens
             lucidaConsole = content.Load<SpriteFont>("fonts/LucidaConsole");
             spriteBatch = ScreenManager.SpriteBatch;
             font = ScreenManager.Font;
+
+            //red enemy ships and the blue ally escort (phase 3)
+            enemyShipModel = content.Load<Model>("models/p1_pencil");
+            enemyShipTransforms = SetupEffectDefaults(enemyShipModel);
+            allyShipModel = content.Load<Model>("models/p1_saucer");
+            allyShipTransforms = SetupEffectDefaults(allyShipModel);
+
+            //the starting red squadron and the blue escort
+            for (int i = 0; i < GameVariables.NumEnemyShips; i++)
+            {
+                SpawnEnemyShip();
+            }
+
+            SpawnAllyShip();
         }
 
         ///<summary>
@@ -324,6 +349,207 @@ namespace GalactikWars.Screens
         }
 
         ///<summary>
+        ///Spawns a red enemy ship at a random spot comfortably away from the
+        ///player.
+        ///</summary>
+        private void SpawnEnemyShip()
+        {
+            EnemyShip enemy = new()
+            {
+                IsAlly = false,
+                IsActive = true,
+                Model = enemyShipModel,
+                Transforms = enemyShipTransforms,
+                Shield = GameVariables.Shield,
+                //stagger the opening shots between ships
+                fireTimer = 1.5f + (float)random.NextDouble()
+            };
+
+            do
+            {
+                enemy.Position = new Vector3(
+                    (float)(random.NextDouble() * 2 - 1)
+                        * GameVariables.PlayfieldSizeX * 0.9f,
+                    (float)(random.NextDouble() * 2 - 1)
+                        * GameVariables.PlayfieldSizeY * 0.9f,
+                    0.0f);
+            }
+            while (Vector3.DistanceSquared(enemy.Position, p.ship.Position)
+                < GameVariables.EnemySpawnDistance
+                    * GameVariables.EnemySpawnDistance);
+
+            enemy.Radius = enemyShipModel.Meshes[0].BoundingSphere.Radius
+                * GameVariables.shipBoundingSphereScale * 2;
+
+            enemyShips.Add(enemy);
+        }
+
+        ///<summary>
+        ///Spawns (or respawns) the blue ally escort near the player.
+        ///</summary>
+        private void SpawnAllyShip()
+        {
+            allyShip.IsAlly = true;
+            allyShip.IsActive = true;
+            allyShip.Model = allyShipModel;
+            allyShip.Transforms = allyShipTransforms;
+            allyShip.Shield = GameVariables.Shield;
+            allyShip.fireTimer = 1.0f;
+            allyShip.Radius = allyShipModel.Meshes[0].BoundingSphere.Radius
+                * GameVariables.shipBoundingSphereScale * 2;
+            allyShip.Velocity = Vector3.Zero;
+            allyShip.Position = p.ship.Position + new Vector3(3000.0f, -3000.0f, 0.0f);
+            allyShip.Rotation = p.ship.Rotation;
+
+            allyRespawnTimer = 0.0f;
+        }
+
+        ///<summary>
+        ///Steers the red enemies and the blue ally: enemies close in on the
+        ///player with their guns locked on, while the ally escorts the
+        ///player and shoots at the nearest enemy.
+        ///</summary>
+        private void SteerShips(GameTime gameTime)
+        {
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            foreach (EnemyShip enemy in enemyShips)
+            {
+                if (!enemy.IsActive || enemy.IsAlly)
+                {
+                    continue;
+                }
+
+                if (!p.ship.IsActive)
+                {
+                    continue;   //the player is down: the squadron drifts
+                }
+
+                Vector3 toPlayer = p.ship.Position - enemy.Position;
+                float distance = toPlayer.Length();
+
+                if (distance < 0.001f)
+                {
+                    continue;
+                }
+
+                //turn the nose towards the player (the nose is the
+                //matrix-backward direction, like the player's ship)
+                float desired = (float)Math.Atan2(toPlayer.X, -toPlayer.Y);
+                float diff = desired - enemy.Rotation;
+
+                while (diff > MathHelper.Pi)
+                {
+                    diff -= MathHelper.TwoPi;
+                }
+
+                while (diff < -MathHelper.Pi)
+                {
+                    diff += MathHelper.TwoPi;
+                }
+
+                enemy.Rotation += MathHelper.Clamp(diff,
+                    -GameVariables.EnemyTurnRate * delta,
+                    GameVariables.EnemyTurnRate * delta);
+
+                //close in from afar, ease off inside the standoff ring
+                if (distance > GameVariables.EnemyStandoff)
+                {
+                    enemy.Velocity += Vector3.Normalize(toPlayer)
+                        * GameVariables.EnemyThrust * delta;
+                }
+
+                //fire along the nose when roughly on target and in range
+                if (enemy.fireTimer <= 0.0f && Math.Abs(diff) < 0.35f
+                    && distance < GameVariables.EnemyFireRange)
+                {
+                    if (enemy.ShootBullet())
+                    {
+                        soundHandler.PlayCue("tx0_fire1");
+                    }
+
+                    enemy.fireTimer = 0.9f + (float)random.NextDouble();
+                }
+            }
+
+            //the blue ally escorts: it flies with the player, guns on enemies
+            if (allyShip.IsActive)
+            {
+                Vector3 toPlayer = p.ship.Position - allyShip.Position;
+                float distance = toPlayer.Length();
+
+                if (p.ship.IsActive && distance > GameVariables.AllyStandoff)
+                {
+                    allyShip.Velocity += Vector3.Normalize(toPlayer)
+                        * GameVariables.AllyThrust * delta;
+
+                    //the escort gets the same twin frontal bursts as the
+                    //player's ship while it thrusts
+                    EmitForwardThrusters(allyShip.Position,
+                        allyShip.RotationMatrix,
+                        allyShip.Model.Meshes[0].BoundingSphere.Radius);
+                }
+
+                //aim at the nearest active enemy and fire when aligned
+                float bestDistanceSq = GameVariables.AllyFireRange
+                    * GameVariables.AllyFireRange;
+                EnemyShip bestTarget = null;
+
+                foreach (EnemyShip enemy in enemyShips)
+                {
+                    if (enemy.IsActive && !enemy.IsAlly)
+                    {
+                        float distanceSq = Vector3.DistanceSquared(
+                            allyShip.Position, enemy.Position);
+
+                        if (distanceSq < bestDistanceSq)
+                        {
+                            bestDistanceSq = distanceSq;
+                            bestTarget = enemy;
+                        }
+                    }
+                }
+
+                Vector3 aimTarget = (bestTarget != null)
+                    ? bestTarget.Position
+                    : p.ship.Position;
+
+                Vector3 toAim = aimTarget - allyShip.Position;
+
+                if (toAim.LengthSquared() > 0.001f)
+                {
+                    float desired = (float)Math.Atan2(toAim.X, -toAim.Y);
+                    float diff = desired - allyShip.Rotation;
+
+                    while (diff > MathHelper.Pi)
+                    {
+                        diff -= MathHelper.TwoPi;
+                    }
+
+                    while (diff < -MathHelper.Pi)
+                    {
+                        diff += MathHelper.TwoPi;
+                    }
+
+                    allyShip.Rotation += MathHelper.Clamp(diff,
+                        -GameVariables.EnemyTurnRate * delta,
+                        GameVariables.EnemyTurnRate * delta);
+
+                    if (bestTarget != null && allyShip.fireTimer <= 0.0f
+                        && Math.Abs(diff) < 0.35f)
+                    {
+                        if (allyShip.ShootBullet())
+                        {
+                            soundHandler.PlayCue("tx0_fire1");
+                        }
+
+                        allyShip.fireTimer = 0.8f + (float)random.NextDouble();
+                    }
+                }
+            }
+        }
+
+        ///<summary>
         ///Projects a world position to screen pixels, so particle emitters
         ///land exactly on the object they belong to at any resolution or
         ///zoom level (the old 800x600-era screen math broke on other sizes).
@@ -431,29 +657,34 @@ namespace GalactikWars.Screens
                 2, 1, plumeDir.X, plumeDir.Y, plumeLength, lateralSpread);
         }
 
-        ///<summary>
-        ///Forward thrust (W): two bursts vent from the front of the ship,
-        ///flanking the nose and pushing away from the hull — the reaction
-        ///drives the ship along its travel direction, like twin nose
-        ///thrusters.
-        ///</summary>
         private void EmitForwardThrusters(Player p)
         {
+            EmitForwardThrusters(p.ship.Position, p.ship.RotationMatrix,
+                p.ship.Model.Meshes[0].BoundingSphere.Radius);
+        }
+
+        ///<summary>
+        ///Forward thrust: two bursts vent from the front of a ship, flanking
+        ///the nose and pushing away from the hull — the reaction drives the
+        ///ship along its travel direction, like twin nose thrusters.
+        ///</summary>
+        private void EmitForwardThrusters(Vector3 position,
+            Matrix rotationMatrix, float hullRadius)
+        {
             //the nose of the ship in world space (same end the bullets exit)
-            Vector3 worldNose = p.ship.RotationMatrix.Backward;
+            Vector3 worldNose = rotationMatrix.Backward;
 
             //the lateral axis, for the twin nozzle offset
             Vector3 worldSide = new(
-                +(float)Math.Cos(p.ship.Rotation),
-                +(float)Math.Sin(p.ship.Rotation), 0.0f);
+                rotationMatrix.Backward.Y,
+                -rotationMatrix.Backward.X, 0.0f);
 
-            float headDistance = p.ship.Model.Meshes[0].BoundingSphere.Radius
-                * 1.05f;
+            float headDistance = hullRadius * 1.05f;
 
             //two nozzles flanking the centerline near the nose
             for (int side = -1; side <= 1; side += 2)
             {
-                Vector3 nozzle = p.ship.Position + worldNose * headDistance
+                Vector3 nozzle = position + worldNose * headDistance
                     + worldSide * side * headDistance * 0.35f;
 
                 //the flame vents forward, away from the hull
@@ -471,7 +702,7 @@ namespace GalactikWars.Screens
                 }
 
                 float plumeLength = Vector2.Distance(
-                    WorldToScreen(p.ship.Position), nozzleScreen) * 0.85f;
+                    WorldToScreen(position), nozzleScreen) * 0.85f;
                 float lateralSpread = plumeLength * 0.3f;
 
                 particles.particlesCreate(shipTrail, nozzleScreen.X,
@@ -664,6 +895,22 @@ namespace GalactikWars.Screens
                     activeAsteroids = 0;
                     p.AtomBombs -= 1;
 
+                    //the blast takes the red enemy ships with it
+                    foreach (EnemyShip enemy in enemyShips)
+                    {
+                        if (enemy.IsActive && !enemy.IsAlly)
+                        {
+                            enemy.IsActive = false;
+                            p.Score += GameVariables.EnemyShipBonus;
+
+                            Vector2 enemyBombScreen = WorldToScreen(
+                                enemy.Position);
+                            particles.particlesCreate(explosion,
+                                enemyBombScreen.X, enemyBombScreen.Y,
+                                random.Next(12, 16), 2);
+                        }
+                    }
+
                     //the bomb detonates at the world origin (screen centre)
                     Vector2 bombScreen = WorldToScreen(Vector3.Zero);
                     explosionX = bombScreen.X;
@@ -840,7 +1087,62 @@ namespace GalactikWars.Screens
             {
                 HomeRockets(gameTime);
 
+                //steer the red enemies and the blue ally, then simulate them
+                SteerShips(gameTime);
+
                 p.Update(gameTime);
+
+                foreach (EnemyShip enemy in enemyShips)
+                {
+                    if (enemy.IsActive)
+                    {
+                        enemy.Update(gameTime);
+                    }
+                }
+
+                if (allyShip.IsActive)
+                {
+                    allyShip.Update(gameTime);
+                }
+
+                //a destroyed red enemy returns after a short delay, as long
+                //as the squadron is below its quota
+                enemyRespawnTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (enemyRespawnTimer >= GameVariables.EnemySpawnSeconds)
+                {
+                    enemyRespawnTimer = 0.0f;
+
+                    int activeEnemies = 0;
+
+                    foreach (EnemyShip enemy in enemyShips)
+                    {
+                        if (enemy.IsActive && !enemy.IsAlly)
+                        {
+                            activeEnemies += 1;
+                        }
+                    }
+
+                    if (activeEnemies < GameVariables.NumEnemyShips)
+                    {
+                        SpawnEnemyShip();
+                    }
+                }
+
+                //the blue ally returns a few seconds after it falls, as long
+                //as the player is still flying
+                if (!allyShip.IsActive && p.ship.IsActive && p.lives > 0)
+                {
+                    allyRespawnTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (allyRespawnTimer >= 3.0f)
+                    {
+                        SpawnAllyShip();
+
+                        //Make a sound when we warp.
+                        soundHandler.PlayCue("hyperspace_activate");
+                    }
+                }
 
                 //auto respawn: when the ship is destroyed but lives remain,
                 //warp back into the fight after a short pause
@@ -979,6 +1281,123 @@ namespace GalactikWars.Screens
                     }
                 }
 
+                //player and ally fire against the red enemy / blue ally ships
+                foreach (EnemyShip enemy in enemyShips)
+                {
+                    if (!enemy.IsActive || enemy.IsAlly)
+                    {
+                        continue;
+                    }
+
+                    if (collisionsHandler.CheckForBulletEnemyShip(
+                        bulletModel.Meshes[0].BoundingSphere.Radius,
+                        p, enemy)
+                        && !enemy.IsActive)
+                    {
+                        //the shot destroyed the enemy
+                        Vector2 enemyExplosionScreen = WorldToScreen(new Vector3(
+                            collisionsHandler.explosionPosition.X,
+                            collisionsHandler.explosionPosition.Y, 0.0f));
+                        particles.particlesCreate(explosion,
+                            enemyExplosionScreen.X, enemyExplosionScreen.Y,
+                            random.Next(10, 15), 2);
+
+                        //a red enemy ship was destroyed
+                        soundHandler.PlayCue("explosion2");
+                    }
+
+                    if (collisionsHandler.CheckForRocketEnemyShip(
+                        rocketModel.Meshes[0].BoundingSphere.Radius,
+                        p, enemy))
+                    {
+                        //the rocket destroyed the enemy outright
+                        Vector2 enemyRocketScreen = WorldToScreen(new Vector3(
+                            collisionsHandler.explosionPosition.X,
+                            collisionsHandler.explosionPosition.Y, 0.0f));
+                        particles.particlesCreate(explosion,
+                            enemyRocketScreen.X, enemyRocketScreen.Y,
+                            random.Next(10, 15), 2);
+
+                        soundHandler.PlayCue("explosion2");
+                    }
+                }
+
+                //the ally's guns count for the player's score
+                foreach (EnemyShip enemy in enemyShips)
+                {
+                    if (!enemy.IsActive || enemy.IsAlly)
+                    {
+                        continue;
+                    }
+
+                    if (collisionsHandler.CheckForAllyBulletEnemyShip(
+                        bulletModel.Meshes[0].BoundingSphere.Radius,
+                        allyShip, enemy)
+                        && !enemy.IsActive)
+                    {
+                        //the ally shot destroyed the enemy: credit the player
+                        p.Score += GameVariables.EnemyShipBonus;
+
+                        Vector2 allyKillScreen = WorldToScreen(new Vector3(
+                            collisionsHandler.explosionPosition.X,
+                            collisionsHandler.explosionPosition.Y, 0.0f));
+                        particles.particlesCreate(explosion,
+                            allyKillScreen.X, allyKillScreen.Y,
+                            random.Next(10, 15), 2);
+
+                        soundHandler.PlayCue("explosion2");
+                    }
+                }
+
+                //red enemy fire against the player and the blue ally
+                foreach (EnemyShip enemy in enemyShips)
+                {
+                    if (!enemy.IsActive || enemy.IsAlly)
+                    {
+                        continue;
+                    }
+
+                    if (collisionsHandler.CheckForEnemyBulletShip(
+                        bulletModel.Meshes[0].BoundingSphere.Radius,
+                        p, enemy))
+                    {
+                        if (!p.ship.IsActive)
+                        {
+                            //the player's ship was destroyed
+                            Vector2 shipHitScreen = WorldToScreen(new Vector3(
+                                collisionsHandler.explosionPosition.X,
+                                collisionsHandler.explosionPosition.Y, 0.0f));
+                            particles.particlesCreate(explosion,
+                                shipHitScreen.X, shipHitScreen.Y,
+                                random.Next(16, 18), 2);
+
+                            soundHandler.PlayCue("explosion2");
+                        }
+                        else
+                        {
+                            //a meteor-class shield hit
+                            soundHandler.PlayCue("phase_collide_ship1");
+                        }
+                    }
+
+                    if (allyShip.IsActive
+                        && collisionsHandler.CheckForEnemyBulletAlly(
+                            bulletModel.Meshes[0].BoundingSphere.Radius,
+                            allyShip, enemy)
+                        && !allyShip.IsActive)
+                    {
+                        //the blue escort went down
+                        Vector2 allyHitScreen = WorldToScreen(new Vector3(
+                            collisionsHandler.explosionPosition.X,
+                            collisionsHandler.explosionPosition.Y, 0.0f));
+                        particles.particlesCreate(explosion,
+                            allyHitScreen.X, allyHitScreen.Y,
+                            random.Next(12, 16), 2);
+
+                        soundHandler.PlayCue("explosion2");
+                    }
+                }
+
                 particles.particlesUpdate(explosion, 2);
 
                 //recalculate the ship radius
@@ -1114,6 +1533,57 @@ namespace GalactikWars.Screens
             DrawShooting(p);
             DrawPlayer(p);
 
+            //red enemy ships and their bullets
+            foreach (EnemyShip enemy in enemyShips)
+            {
+                if (enemy.IsActive)
+                {
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+
+                    Matrix enemyTransform = enemy.RotationMatrix
+                        * Matrix.CreateTranslation(enemy.Position);
+                    DrawModel(enemy.Model, enemyTransform, enemy.Transforms,
+                        new Vector3(0.70f, 0.12f, 0.12f));
+
+                    for (int i = 0; i < GameVariables.NumBullets; i++)
+                    {
+                        if (enemy.bulletList[i].IsActive)
+                        {
+                            Matrix bulletTransform = Matrix.CreateTranslation(
+                                enemy.bulletList[i].position);
+                            DrawModel(bulletModel, bulletTransform,
+                                bulletTransforms);
+                        }
+                    }
+
+                    spriteBatch.End();
+                }
+            }
+
+            //the blue ally escort
+            if (allyShip.IsActive)
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+
+                Matrix allyTransform = allyShip.RotationMatrix
+                    * Matrix.CreateTranslation(allyShip.Position);
+                DrawModel(allyShip.Model, allyTransform, allyShip.Transforms,
+                    new Vector3(0.15f, 0.30f, 0.70f));
+
+                for (int i = 0; i < GameVariables.NumBullets; i++)
+                {
+                    if (allyShip.bulletList[i].IsActive)
+                    {
+                        Matrix bulletTransform = Matrix.CreateTranslation(
+                            allyShip.bulletList[i].position);
+                        DrawModel(bulletModel, bulletTransform,
+                            bulletTransforms);
+                    }
+                }
+
+                spriteBatch.End();
+            }
+
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             spriteBatch.DrawString(lucidaConsole, "Score: " + p.Score, scorePosition, Color.LightGreen);
@@ -1122,6 +1592,19 @@ namespace GalactikWars.Screens
             spriteBatch.DrawString(lucidaConsole, "Asteroids: " + activeAsteroids, remainingAsteroidPosition, Color.LightGreen);
             spriteBatch.DrawString(lucidaConsole, "AtomBombs: " + p.AtomBombs, remainingAtomBombsPosition, Color.LightGreen);
             spriteBatch.DrawString(lucidaConsole, "Rockets: " + p.Rockets, remainingRocketsPosition, Color.LightGreen);
+
+            int activeEnemyCount = 0;
+
+            foreach (EnemyShip enemy in enemyShips)
+            {
+                if (enemy.IsActive && !enemy.IsAlly)
+                {
+                    activeEnemyCount += 1;
+                }
+            }
+
+            spriteBatch.DrawString(lucidaConsole, "Enemies: " + activeEnemyCount,
+                enemiesPosition, Color.LightGreen);
 
             if (p.Shield < 0)
             {
@@ -1210,7 +1693,8 @@ namespace GalactikWars.Screens
             }
         }
 
-        public void DrawModel(Model model, Matrix modelTransform, Matrix[] absoluteBoneTransforms)
+        public void DrawModel(Model model, Matrix modelTransform,
+            Matrix[] absoluteBoneTransforms, Vector3? ambientTint = null)
         {
             //Draw the model, a model can have multiple meshes, so loop
             foreach (ModelMesh mesh in model.Meshes)
@@ -1219,8 +1703,11 @@ namespace GalactikWars.Screens
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
-                    //brighter ambient light so the models are not so dark
-                    effect.AmbientLightColor = new Vector3(0.55f, 0.55f, 0.55f);
+                    //brighter ambient light so the models are not so dark;
+                    //a tint (red enemies, blue allies) replaces the neutral
+                    //ambient color
+                    effect.AmbientLightColor = ambientTint
+                        ?? new Vector3(0.55f, 0.55f, 0.55f);
                     effect.World = absoluteBoneTransforms[mesh.ParentBone.Index] * modelTransform;
                     effect.View = camera.View;
                     camera.SetProjection(GameVariables.CameraHeight * 100.0f);

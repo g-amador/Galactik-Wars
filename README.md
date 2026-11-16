@@ -314,7 +314,10 @@ The classic-shooter level structure the 2008 reports already envisioned:
 * [x] Reaction-control jets — a left jet near the nose when pressing `A` and
   a right jet when pressing `D` (same green jet style as the main `W`/`S`
   exhaust), so rotation and braking read like real maneuvering in space
-* [ ] Red enemy ships and blue ally ships in single-player
+* [x] Red enemy ships and blue ally ships in single-player — red ships hunt
+  the player with guns locked on (respawning over time), a blue ally escort
+  flies alongside, guards the player and engages enemies; both are drawn
+  tinted (red/blue) and the atom bomb wipes the squadron
 * [ ] Pick one ally escort, each with a different advantage: more shield,
   faster, more missiles, more atom bombs or faster normal shooting
 * [ ] A looping starfield background scrolling continuously top → down
@@ -325,6 +328,7 @@ The classic-shooter level structure the 2008 reports already envisioned:
 
 ### 🔮 Phase 4 — Backlog
 
+* [ ] Single configuration file — move all tunables (volumes, key bindings, ship/rocket/asteroid stats, zoom limits, enemy waves...) into one `config.json`, loaded at startup with `System.Text.Json` (built into .NET 10 — the standard choice for game settings; more portable than a legacy `.ini`, and a `.cs` file is compiled code, not data)
 * [ ] Better explosions with layered particle effects, and the atom bomb as an expanding EMP-style shockwave ring fired from the ship
 * [ ] Improved volume options — Music and Effect volume on separate rows, adjustable with the mouse (click/drag a `- o +` slider) or the `-`/`+` keys on the selected row, always showing integer percentages (no float rounding artifacts)
 * [ ] Glowing shield effect — a glowing sphere around the ship (shader-based, no model needed) that fades as the shield decreases and flashes when it takes a hit

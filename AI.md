@@ -105,7 +105,9 @@ How the game plays today — keep these in sync when touching gameplay code:
 
 - **Controls**: `W`/`S` move, `A`/`D` rotate, `Space` fires bullets, `R`
   fires rockets, `B` triggers the atom bomb (single-player only). `E`/`Q`
-  zoom. Mouse buttons map to the same weapons (left = bullets, right =
+  zoom. Menus are navigable with `W`/`S` as well as the arrow keys
+  (`InputState.MenuUp/MenuDown`; select = `Space`/`Enter`, cancel =
+  `Escape`). Mouse buttons map to the same weapons (left = bullets, right =
   rockets, middle = bomb). Movement is **keyboard-only** — the old
   mouse-steering (`VariationX/Y`, `MouseMoved`) was removed from
   `HandleInput`; `GameVariables.MouseVisible/MouseActive` are `true` for the
@@ -178,6 +180,24 @@ How the game plays today — keep these in sync when touching gameplay code:
   returns 0 (no hit), 1 (small destroyed) or 2 (large destroyed — caller
   splits). All of this is single-player only: multiplayer is ship-vs-ship
   with no asteroids.
+- **Enemy/ally ships (phase 3, single-player only)**: `EnemyShip`
+  (Entities/EnemyShip.cs) covers both roles via `IsAlly` — red enemies
+  (`p1_pencil` model, red ambient tint) hunt the player: they steer the
+  nose (`RotationMatrix.Backward`, same convention as the player ship)
+  toward the player at `GameVariables.EnemyTurnRate`, strafe toward them
+  (thrust independent of facing) until `EnemyStandoff`, and fire along the
+  nose when aligned (< 0.35 rad) and in range, on a ~0.9–1.9 s cooldown.
+  Destroyed enemies respawn after `EnemySpawnSeconds` while the count is
+  below `NumEnemyShips`. The blue ally (`p1_saucer`, blue tint) escorts:
+  it flies toward the player until `AllyStandoff` (emitting the same twin
+  frontal bursts while thrusting), aims at the nearest active enemy and
+  fires; it respawns 3 s after falling (only while the player lives). Hits:
+  bullets −10 shield, rockets destroy outright (`CheckForBulletEnemyShip`,
+  `CheckForRocketEnemyShip`, `CheckForAllyBulletEnemyShip` — ally kills
+  credit the player's score —, `CheckForEnemyBulletShip`,
+  `CheckForEnemyBulletAlly`); kills score `EnemyShipBonus` (500) and the
+  atom bomb also wipes the squadron. Enemy/ally ships ignore asteroids
+  (future polish) and multiplayer has none of this.
 - **Death flow (single-player)**: no manual respawn key. When the ship dies
   with lives left, a 1 s `respawnTimer` calls `WarpToCenter()` with the
   `hyperspace_activate` cue. With zero lives, a 4 s `gameOverTimer` returns

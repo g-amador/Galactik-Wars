@@ -137,6 +137,196 @@ namespace GalactikWars.Handlers
 
         #endregion
 
+        #region Enemy Ships
+
+        //player or ally bullets hitting a red enemy / blue ally ship
+        public bool CheckForBulletEnemyShip(float bulletRadius, Player shooter,
+            EnemyShip target)
+        {
+            if (target.IsActive)
+            {
+                BoundingSphere shipSphere = new(target.Position, target.Radius);
+
+                for (int i = 0; i < shooter.bulletList.Length; i++)
+                {
+                    if (shooter.bulletList[i].IsActive)
+                    {
+                        BoundingSphere bulletSphere = new(
+                            shooter.bulletList[i].position, bulletRadius);
+
+                        if (bulletSphere.Intersects(shipSphere))
+                        {
+                            shooter.bulletList[i].IsActive = false;
+                            target.Shield -= GameVariables.BulletDamage;
+
+                            if (target.Shield < 0)
+                            {
+                                target.IsActive = false;
+                                shooter.Score += GameVariables.EnemyShipBonus;
+                                explosionPosition.X = target.Position.X;
+                                explosionPosition.Y = target.Position.Y;
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        //blue ally bullets hitting a red enemy ship (kills credit the
+        //player, handled by the caller)
+        public bool CheckForAllyBulletEnemyShip(float bulletRadius,
+            EnemyShip shooter, EnemyShip target)
+        {
+            if (target.IsActive && shooter.IsActive)
+            {
+                BoundingSphere shipSphere = new(target.Position, target.Radius);
+
+                for (int i = 0; i < shooter.bulletList.Length; i++)
+                {
+                    if (shooter.bulletList[i].IsActive)
+                    {
+                        BoundingSphere bulletSphere = new(
+                            shooter.bulletList[i].position, bulletRadius);
+
+                        if (bulletSphere.Intersects(shipSphere))
+                        {
+                            shooter.bulletList[i].IsActive = false;
+                            target.Shield -= GameVariables.BulletDamage;
+
+                            if (target.Shield < 0)
+                            {
+                                target.IsActive = false;
+                                explosionPosition.X = target.Position.X;
+                                explosionPosition.Y = target.Position.Y;
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        //rockets destroy red enemy / blue ally ships outright
+        public bool CheckForRocketEnemyShip(float rocketRadius, Player shooter,
+            EnemyShip target)
+        {
+            if (target.IsActive)
+            {
+                BoundingSphere shipSphere = new(target.Position, target.Radius);
+
+                for (int i = 0; i < shooter.rocketList.Length; i++)
+                {
+                    if (shooter.rocketList[i].IsActive)
+                    {
+                        BoundingSphere rocketSphere = new(
+                            shooter.rocketList[i].position, rocketRadius);
+
+                        if (rocketSphere.Intersects(shipSphere))
+                        {
+                            shooter.rocketList[i].IsActive = false;
+                            target.Shield = -1;
+                            target.IsActive = false;
+                            shooter.Score += GameVariables.EnemyShipBonus;
+                            explosionPosition.X = target.Position.X;
+                            explosionPosition.Y = target.Position.Y;
+
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        //red enemy fire hitting the player's shield
+        public bool CheckForEnemyBulletShip(float bulletRadius, Player p,
+            EnemyShip enemy)
+        {
+            if (p.ship.IsActive && enemy.IsActive)
+            {
+                BoundingSphere shipSphere = new(
+                    p.ship.Position, p.Radius *
+                    GameVariables.shipBoundingSphereScale);
+
+                for (int i = 0; i < enemy.bulletList.Length; i++)
+                {
+                    if (enemy.bulletList[i].IsActive)
+                    {
+                        BoundingSphere bulletSphere = new(
+                            enemy.bulletList[i].position, bulletRadius);
+
+                        if (bulletSphere.Intersects(shipSphere))
+                        {
+                            enemy.bulletList[i].IsActive = false;
+                            p.Shield -= GameVariables.BulletDamage;
+
+                            if (p.Shield < 0)
+                            {
+                                p.ship.IsActive = false;
+                                p.lives--;
+                                explosionPosition.X = p.ship.Position.X;
+                                explosionPosition.Y = p.ship.Position.Y;
+
+                                if (p.Score - GameVariables.DeathPenalty < 0)
+                                {
+                                    p.Score = 0;
+                                }
+                                else
+                                {
+                                    p.Score -= GameVariables.DeathPenalty;
+                                }
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        //red enemy fire hitting the blue ally escort
+        public bool CheckForEnemyBulletAlly(float bulletRadius, EnemyShip ally,
+            EnemyShip enemy)
+        {
+            if (ally.IsActive && enemy.IsActive)
+            {
+                BoundingSphere allySphere = new(ally.Position, ally.Radius);
+
+                for (int i = 0; i < enemy.bulletList.Length; i++)
+                {
+                    if (enemy.bulletList[i].IsActive)
+                    {
+                        BoundingSphere bulletSphere = new(
+                            enemy.bulletList[i].position, bulletRadius);
+
+                        if (bulletSphere.Intersects(allySphere))
+                        {
+                            enemy.bulletList[i].IsActive = false;
+                            ally.Shield -= GameVariables.BulletDamage;
+
+                            if (ally.Shield < 0)
+                            {
+                                ally.IsActive = false;
+                                explosionPosition.X = ally.Position.X;
+                                explosionPosition.Y = ally.Position.Y;
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        #endregion
+
         #region Weapon Weapon
 
         public bool CheckForBulletRocket(float bulletRadius, float rocketRadius,

@@ -62,6 +62,20 @@ namespace GalactikWars
         public const int KillAsteroidBonus = 25;
         public const int KillShipBonus = 5000;
 
+        //enemy and ally ships (phase 3)
+        public const int NumEnemyShips = 3;            //red enemies active at a time
+        public const float EnemySpawnSeconds = 6.0f;   //delay before a destroyed enemy returns
+        public const float EnemySpawnDistance = 12000.0f;  //min spawn distance from the player
+        public const float EnemyThrust = 240.0f;       //chase acceleration, units/s^2
+        public const float EnemyTurnRate = 2.0f;       //radians per second
+        public const float EnemyStandoff = 6000.0f;    //stop closing inside this range
+        public const float EnemyFireRange = 30000.0f;
+        public const int EnemyShipBonus = 500;
+        public const int NumAllyShips = 1;
+        public const float AllyThrust = 200.0f;
+        public const float AllyStandoff = 4500.0f;     //escort distance from the player
+        public const float AllyFireRange = 35000.0f;
+
         //playfield variables
         public static float PlayfieldSizeX = 35000f;
         public static float PlayfieldSizeY = 25000f;

@@ -68,6 +68,7 @@ namespace GalactikWars.ScreenManager
             get
             {
                 return IsNewKeyPress(Keys.Up) ||
+                       IsNewKeyPress(Keys.W) ||
                        IsNewButtonPress(Buttons.DPadUp) ||
                        IsNewButtonPress(Buttons.LeftThumbstickUp);
             }
@@ -83,6 +84,7 @@ namespace GalactikWars.ScreenManager
             get
             {
                 return IsNewKeyPress(Keys.Down) ||
+                       IsNewKeyPress(Keys.S) ||
                        IsNewButtonPress(Buttons.DPadDown) ||
                        IsNewButtonPress(Buttons.LeftThumbstickDown);
             }
