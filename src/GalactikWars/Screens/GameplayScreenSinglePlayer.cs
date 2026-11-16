@@ -383,6 +383,103 @@ namespace GalactikWars.Screens
                 2, 1, tailDir.X, tailDir.Y, plumeLength, lateralSpread); // Make the particles.
         }
 
+        ///<summary>
+        ///Fires a reaction-control jet near the head while rotating:
+        ///pressing A burns the left-side jet, pressing D the right-side one.
+        ///The flame always points away from the hull, pushing the nose into
+        ///the turn — like real maneuvering thrusters in space.
+        ///</summary>
+        private void EmitRcsJet(Player p, int side)
+        {
+            //the nose of the ship in world space (same end the bullets exit)
+            Vector3 worldNose = p.ship.RotationMatrix.Backward;
+
+            //the lateral direction the nose swings towards when rotating
+            Vector3 worldSide = new(
+                +(float)Math.Cos(p.ship.Rotation),
+                +(float)Math.Sin(p.ship.Rotation), 0.0f);
+
+            float headDistance = p.ship.Model.Meshes[0].BoundingSphere.Radius
+                * 1.05f;
+
+            //the jet nozzle sits just off the head, on the flame's side
+            Vector3 nozzle = p.ship.Position + worldNose * headDistance
+                + worldSide * side * headDistance * 0.5f;
+
+            //the flame pushes away from that side, into the turn
+            Vector3 flameDir = worldSide * side;
+
+            Vector2 nozzleScreen = WorldToScreen(nozzle);
+            Vector2 flameTipScreen = WorldToScreen(
+                nozzle + flameDir * headDistance);
+
+            Vector2 plumeDir = new(
+                flameTipScreen.X - nozzleScreen.X,
+                flameTipScreen.Y - nozzleScreen.Y);
+
+            if (plumeDir.LengthSquared() > 0.0001f)
+            {
+                plumeDir.Normalize();
+            }
+
+            //a shorter puff than the main engine: a thruster, not a burn
+            float plumeLength = Vector2.Distance(
+                WorldToScreen(p.ship.Position), nozzleScreen) * 0.8f;
+            float lateralSpread = plumeLength * 0.35f;
+
+            particles.particlesCreate(shipTrail, nozzleScreen.X, nozzleScreen.Y,
+                2, 1, plumeDir.X, plumeDir.Y, plumeLength, lateralSpread);
+        }
+
+        ///<summary>
+        ///Forward thrust (W): two bursts vent from the front of the ship,
+        ///flanking the nose and pushing away from the hull — the reaction
+        ///drives the ship along its travel direction, like twin nose
+        ///thrusters.
+        ///</summary>
+        private void EmitForwardThrusters(Player p)
+        {
+            //the nose of the ship in world space (same end the bullets exit)
+            Vector3 worldNose = p.ship.RotationMatrix.Backward;
+
+            //the lateral axis, for the twin nozzle offset
+            Vector3 worldSide = new(
+                +(float)Math.Cos(p.ship.Rotation),
+                +(float)Math.Sin(p.ship.Rotation), 0.0f);
+
+            float headDistance = p.ship.Model.Meshes[0].BoundingSphere.Radius
+                * 1.05f;
+
+            //two nozzles flanking the centerline near the nose
+            for (int side = -1; side <= 1; side += 2)
+            {
+                Vector3 nozzle = p.ship.Position + worldNose * headDistance
+                    + worldSide * side * headDistance * 0.35f;
+
+                //the flame vents forward, away from the hull
+                Vector2 nozzleScreen = WorldToScreen(nozzle);
+                Vector2 flameTipScreen = WorldToScreen(
+                    nozzle + worldNose * headDistance);
+
+                Vector2 plumeDir = new(
+                    flameTipScreen.X - nozzleScreen.X,
+                    flameTipScreen.Y - nozzleScreen.Y);
+
+                if (plumeDir.LengthSquared() > 0.0001f)
+                {
+                    plumeDir.Normalize();
+                }
+
+                float plumeLength = Vector2.Distance(
+                    WorldToScreen(p.ship.Position), nozzleScreen) * 0.85f;
+                float lateralSpread = plumeLength * 0.3f;
+
+                particles.particlesCreate(shipTrail, nozzleScreen.X,
+                    nozzleScreen.Y, 2, 1, plumeDir.X, plumeDir.Y,
+                    plumeLength, lateralSpread);
+            }
+        }
+
         private void zoomCamera(float newCameraHeight)
         {
             if (GameVariables._3D)
@@ -609,6 +706,9 @@ namespace GalactikWars.Screens
                 {
                     p.ship.Rotation += 0.10f;
                     soundHandler.PlayMyEngineSound();
+
+                    //reaction-control jet on the left side of the head
+                    EmitRcsJet(p, -1);
                 }
 
                 //Rotate to the viewer right while the D key is down
@@ -617,6 +717,9 @@ namespace GalactikWars.Screens
                 {
                     p.ship.Rotation -= 0.10f;
                     soundHandler.PlayMyEngineSound();
+
+                    //reaction-control jet on the right side of the head
+                    EmitRcsJet(p, +1);
                 }
 
                 //Move Up while the W key is pressed
@@ -638,8 +741,8 @@ namespace GalactikWars.Screens
 
                     soundHandler.PlayMyEngineSound();
 
-                    //green plasma back push
-                    EmitExhaust(p);
+                    //twin thrusters venting from the front of the ship
+                    EmitForwardThrusters(p);
                 }
 
                 //Move Down while the S key is pressed

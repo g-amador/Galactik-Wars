@@ -296,8 +296,10 @@ upcoming phases are planned top-down.
 * [x] Brighter model lighting and a background that stretches to fill the
   whole screen (with a subtle ship-following parallax)
 * [x] Bullets and rockets exit from the ship's nose (`RotationMatrix.Backward`)
-* [x] Green jet-engine exhaust burning from the tail, sized per hull
-  (bounding-sphere based) with a heat-graded plume
+* [x] Green jet thrusters sized per hull (bounding-sphere based) with a
+  heat-graded plume: twin bursts venting from the nose on forward thrust
+  (`W`), a tail jet on reverse (`S`), and lateral reaction-control jets
+  when rotating (`A`/`D`)
 * [x] Explosion/burst effects land exactly on their targets at any
   resolution or zoom (camera-projection emitters via `WorldToScreen`)
 * [x] Zoom limits — camera height and playfield size are clamped, so fully
@@ -309,7 +311,7 @@ upcoming phases are planned top-down.
 
 The classic-shooter level structure the 2008 reports already envisioned:
 
-* [ ] Reaction-control jets — a left jet near the nose when pressing `A` and
+* [x] Reaction-control jets — a left jet near the nose when pressing `A` and
   a right jet when pressing `D` (same green jet style as the main `W`/`S`
   exhaust), so rotation and braking read like real maneuvering in space
 * [ ] Red enemy ships and blue ally ships in single-player

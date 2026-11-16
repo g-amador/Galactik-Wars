@@ -117,19 +117,26 @@ How the game plays today — keep these in sync when touching gameplay code:
   a ship/meteor being destroyed together is `explosion2`; the atom bomb is
   `explosion3`; a meteor hitting a shield is `phase_collide_ship1`; a ship
   shield hitting another ship shield (multiplayer) is `shield_collide_ship1`.
-- **Engine exhaust**: while thrusting (`W` or `S`), the single-player screen
-  emits a green **jet-engine plume** behind the ship. The tail is
+- **Engine exhaust / thrusters**: while thrusting (`S`), the single-player
+  screen emits a green **jet-engine plume** behind the ship. The tail is
   `-RotationMatrix.Backward` — `RotationMatrix.Backward` is `(sin r, −cos r,
   0)` and that end is the ship's **nose/front** (it is where bullets and
-  rockets exit); the exhaust must never go back to `+(sin, −cos)` or it
-  burns at the front. The tail distance is the ship model's own
+  rockets exit). Forward thrust (`W`) instead fires **twin thrusters at the
+  nose** (`EmitForwardThrusters`): two nozzles flanking the centerline
+  (±0.35 head distance on the `(cos r, sin r)` lateral axis), flames
+  venting **forward** — the reaction pushes the ship along its W travel
+  direction. The tail distance / head distance is the ship model's own
   bounding-sphere radius (the 6 ship hulls are different sizes); the plume
-  stretches about one hull-length behind the tail (scaled by zoom) with a
-  lateral jitter, and each particle's `lifeSpan` grades from 8 at the tail
-  (bright green) to 1 at the tip (dark green) — bright core, fading plume.
+  stretches about one hull-length (scaled by zoom) with a lateral jitter,
+  and each particle's `lifeSpan` grades from 8 at the nozzle (bright green)
+  to 1 at the tip (dark green) — bright core, fading plume.
   Particles are type 1 (`CreateTrailParticles`, 4/frame), drawn at their
-  `xyorg` only. Reaction-control jets (`A`/`D`, near the nose) are the first
-  step of phase 3. Do not
+  `xyorg` only. Reaction-control jets (`A`/`D`) are also implemented
+  (`EmitRcsJet`): the nozzle sits just off the head, on the lateral side
+  `(cos r, sin r) * side` (`side` = −1 for `A`, +1 for `D`), and the flame
+  points outward from that side — the jet pushes the nose into the turn.
+  Same shared `shipTrail` pool, same heat-graded plume style, shorter puff
+  (0.8× the head screen distance). Do not
   reuse the explosion emitter-count logic for trails — the ship's emitter
   origin changes every frame.
 - **Particle emitters**: every explosion/burst emitter position in the
