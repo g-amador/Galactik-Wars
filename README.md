@@ -309,7 +309,11 @@ upcoming phases are planned top-down.
 
 ### 🌌 Phase 3 — Level 2: Enemy Waves & Bosses 🔜
 
-The classic-shooter level structure the 2008 reports already envisioned:
+The classic-shooter level structure the 2008 reports already envisioned.
+Level 1 stays as it plays today — the free-roaming asteroid arena with red
+enemies and the blue ally escort — while **Level 2 becomes a Raptor-style
+scrolling shooter**: the starfield scrolls continuously and the action
+comes from the top.
 
 * [x] Reaction-control jets — a left jet near the nose when pressing `A` and
   a right jet when pressing `D` (same green jet style as the main `W`/`S`
@@ -318,9 +322,16 @@ The classic-shooter level structure the 2008 reports already envisioned:
   the player with guns locked on (respawning over time), a blue ally escort
   flies alongside, guards the player and engages enemies; both are drawn
   tinted (red/blue) and the atom bomb wipes the squadron
+* [x] Team colors — the player's hull decides the teams: the ally wears the
+  player's colors and the enemies the opposite color (`p1` hulls are blue,
+  `p2` hulls are red)
+* [x] Ship-vs-ship shield collisions — while both shields hold, the hulls
+  bounce apart and both shields drain; when one shield gives in, that ship
+  blows up while the other (still shielded) survives
 * [ ] Pick one ally escort, each with a different advantage: more shield,
   faster, more missiles, more atom bombs or faster normal shooting
 * [ ] A looping starfield background scrolling continuously top → down
+  (Raptor-style, the heart of the Level 2 gameplay)
 * [ ] Waves of enemy ships and asteroids attacking together
 * [ ] One random bigger **Level Boss** per level with a movement/attack
   pattern to learn and avoid

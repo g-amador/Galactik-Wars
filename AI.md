@@ -182,13 +182,13 @@ How the game plays today — keep these in sync when touching gameplay code:
   with no asteroids.
 - **Enemy/ally ships (phase 3, single-player only)**: `EnemyShip`
   (Entities/EnemyShip.cs) covers both roles via `IsAlly` — red enemies
-  (`p1_pencil` model, red ambient tint) hunt the player: they steer the
+  (`p1_pencil` model) hunt the player: they steer the
   nose (`RotationMatrix.Backward`, same convention as the player ship)
   toward the player at `GameVariables.EnemyTurnRate`, strafe toward them
   (thrust independent of facing) until `EnemyStandoff`, and fire along the
   nose when aligned (< 0.35 rad) and in range, on a ~0.9–1.9 s cooldown.
   Destroyed enemies respawn after `EnemySpawnSeconds` while the count is
-  below `NumEnemyShips`. The blue ally (`p1_saucer`, blue tint) escorts:
+  below `NumEnemyShips`. The blue ally (`p1_saucer`) escorts:
   it flies toward the player until `AllyStandoff` (emitting the same twin
   frontal bursts while thrusting), aims at the nearest active enemy and
   fires; it respawns 3 s after falling (only while the player lives). Hits:
@@ -196,8 +196,18 @@ How the game plays today — keep these in sync when touching gameplay code:
   `CheckForRocketEnemyShip`, `CheckForAllyBulletEnemyShip` — ally kills
   credit the player's score —, `CheckForEnemyBulletShip`,
   `CheckForEnemyBulletAlly`); kills score `EnemyShipBonus` (500) and the
-  atom bomb also wipes the squadron. Enemy/ally ships ignore asteroids
-  (future polish) and multiplayer has none of this.
+  atom bomb also wipes the squadron. **Team colors**: the player's hull
+  decides the teams (`p1` hulls = blue team, `p2` = red, resolved in
+  `LoadContent`) — every `EnemyShip` carries a `Tint` set at spawn: the
+  ally wears the player's color, enemies the opposite color; the player
+  hull itself is drawn untinted. **Ship-vs-ship shield collisions**
+  (`CheckForPlayerEnemyShipCollision`, `CheckForAllyEnemyShipCollision`):
+  hull contact drains both shields by `ShipCollideDamage` (15) — while
+  both hold, the ships bounce apart (`BounceApart`: opposing impulses of
+  `ShipBounceSpeed` plus sphere separation, `shield_collide_ship1` cue);
+  when one shield gives in (< 0), that ship blows up while the shielded
+  one survives (both giving in destroys both). Enemy/ally ships ignore
+  asteroids (future polish) and multiplayer has none of this.
 - **Death flow (single-player)**: no manual respawn key. When the ship dies
   with lives left, a 1 s `respawnTimer` calls `WarpToCenter()` with the
   `hyperspace_activate` cue. With zero lives, a 4 s `gameOverTimer` returns
