@@ -11,6 +11,7 @@
 #region Using Statements
 using GalactikWars.Entities;
 using Microsoft.Xna.Framework;
+using System;
 #endregion
 
 namespace GalactikWars.Handlers
@@ -323,6 +324,188 @@ namespace GalactikWars.Handlers
                 }
             }
             return false;
+        }
+
+        //ship-vs-ship shield collisions (phase 3): while both shields hold,
+        //the hulls bounce apart and both shields drain; when one shield
+        //gives in, that ship blows up — the caller plays the sounds and
+        //spawns the explosions from explosionPosition
+        public bool CheckForPlayerEnemyShipCollision(Player p, EnemyShip enemy)
+        {
+            if (!(p.ship.IsActive && enemy.IsActive))
+            {
+                return false;
+            }
+
+            BoundingSphere playerSphere = new(
+                p.ship.Position, p.Radius *
+                GameVariables.shipBoundingSphereScale);
+            BoundingSphere enemySphere = new(
+                enemy.Position, enemy.Radius *
+                GameVariables.shipBoundingSphereScale);
+
+            if (!playerSphere.Intersects(enemySphere))
+            {
+                return false;
+            }
+
+            //both shields drain from the impact
+            p.Shield -= GameVariables.ShipCollideDamage;
+            enemy.Shield -= GameVariables.ShipCollideDamage;
+
+            bool playerDown = p.Shield < 0;
+            bool enemyDown = enemy.Shield < 0;
+
+            if (!playerDown && !enemyDown)
+            {
+                //both shields hold: bounce the hulls apart
+                BounceApart(p.ship.Position,
+                    p.Radius * GameVariables.shipBoundingSphereScale,
+                    enemy.Position,
+                    enemy.Radius * GameVariables.shipBoundingSphereScale,
+                    out Vector3 playerPush,
+                    out Vector3 enemyPush, out Vector3 separation);
+
+                p.ship.Velocity += playerPush;
+                enemy.Velocity += enemyPush;
+                p.ship.Position += separation * 0.5f;
+                enemy.Position -= separation * 0.5f;
+            }
+            else if (playerDown && !enemyDown)
+            {
+                //the player's shield gave in: the player blows up
+                p.ship.IsActive = false;
+                p.lives--;
+                explosionPosition.X = p.ship.Position.X;
+                explosionPosition.Y = p.ship.Position.Y;
+
+                if (p.Score - GameVariables.DeathPenalty < 0)
+                {
+                    p.Score = 0;
+                }
+                else
+                {
+                    p.Score -= GameVariables.DeathPenalty;
+                }
+            }
+            else if (enemyDown && !playerDown)
+            {
+                //the enemy's shield gave in: it blows up
+                enemy.IsActive = false;
+                p.Score += GameVariables.EnemyShipBonus;
+                explosionPosition.X = enemy.Position.X;
+                explosionPosition.Y = enemy.Position.Y;
+            }
+            else
+            {
+                //both shields gave in: both ships blow up
+                p.ship.IsActive = false;
+                p.lives--;
+                enemy.IsActive = false;
+                p.Score += GameVariables.EnemyShipBonus;
+                explosionPosition.X = (p.ship.Position.X + enemy.Position.X) * 0.5f;
+                explosionPosition.Y = (p.ship.Position.Y + enemy.Position.Y) * 0.5f;
+
+                if (p.Score - GameVariables.DeathPenalty < 0)
+                {
+                    p.Score = 0;
+                }
+                else
+                {
+                    p.Score -= GameVariables.DeathPenalty;
+                }
+            }
+
+            return true;
+        }
+
+        //the blue ally ramming a red enemy (kills credit the player)
+        public bool CheckForAllyEnemyShipCollision(EnemyShip ally,
+            EnemyShip enemy, out bool allyDestroyed, out bool enemyDestroyed)
+        {
+            allyDestroyed = false;
+            enemyDestroyed = false;
+
+            if (!(ally.IsActive && enemy.IsActive))
+            {
+                return false;
+            }
+
+            BoundingSphere allySphere = new(ally.Position, ally.Radius);
+            BoundingSphere enemySphere = new(enemy.Position, enemy.Radius);
+
+            if (!allySphere.Intersects(enemySphere))
+            {
+                return false;
+            }
+
+            //both shields drain from the impact
+            ally.Shield -= GameVariables.ShipCollideDamage;
+            enemy.Shield -= GameVariables.ShipCollideDamage;
+
+            bool allyDown = ally.Shield < 0;
+            bool enemyDown = enemy.Shield < 0;
+
+            if (!allyDown && !enemyDown)
+            {
+                //both shields hold: bounce the hulls apart
+                BounceApart(ally.Position, ally.Radius,
+                    enemy.Position, enemy.Radius,
+                    out Vector3 allyPush,
+                    out Vector3 enemyPush, out Vector3 separation);
+
+                ally.Velocity += allyPush;
+                enemy.Velocity += enemyPush;
+                ally.Position += separation * 0.5f;
+                enemy.Position -= separation * 0.5f;
+            }
+            else
+            {
+                if (allyDown)
+                {
+                    ally.IsActive = false;
+                    allyDestroyed = true;
+                    explosionPosition.X = ally.Position.X;
+                    explosionPosition.Y = ally.Position.Y;
+                }
+
+                if (enemyDown)
+                {
+                    enemy.IsActive = false;
+                    enemyDestroyed = true;
+                    explosionPosition.X = enemy.Position.X;
+                    explosionPosition.Y = enemy.Position.Y;
+                }
+            }
+
+            return true;
+        }
+
+        //shared bounce math: pushes the two hulls apart along the collision
+        //normal and reports how far the spheres overlap
+        private static void BounceApart(Vector3 positionA,
+            float radiusA, Vector3 positionB, float radiusB,
+            out Vector3 pushA, out Vector3 pushB, out Vector3 separation)
+        {
+            Vector3 normal = positionA - positionB;
+
+            if (normal.LengthSquared() < 0.0001f)
+            {
+                normal = Vector3.UnitY;
+            }
+
+            normal.Normalize();
+
+            //each ship is pushed away from the other along the normal —
+            //swapping the velocity components would feel too abrupt here,
+            //a firm impulse reads better for shield collisions
+            pushA = normal * GameVariables.ShipBounceSpeed;
+            pushB = -normal * GameVariables.ShipBounceSpeed;
+
+            //separate overlapping spheres so the collision does not repeat
+            float overlap = (radiusA + radiusB)
+                - Vector3.Distance(positionA, positionB);
+            separation = normal * Math.Max(overlap, 0.0f);
         }
 
         #endregion

@@ -25,6 +25,9 @@ namespace GalactikWars.Entities
         public bool IsAlly = false;   //blue allies escort, red enemies attack
         public Model Model = null;
         public Matrix[] Transforms = null;
+        //the ship's team tint (ambient light): allies wear the player's
+        //colors, enemies wear the opposite color
+        public Vector3 Tint = new(0.70f, 0.12f, 0.12f);
         public Bullet[] bulletList = new Bullet[GameVariables.NumBullets];
         public int Shield = GameVariables.Shield;
         public float Radius = 1.0f;

@@ -76,6 +76,12 @@ namespace GalactikWars
         public const float AllyStandoff = 4500.0f;     //escort distance from the player
         public const float AllyFireRange = 35000.0f;
 
+        //ship-vs-ship shield collisions (phase 3): while both shields hold
+        //the hulls bounce apart and drain power; when one shield gives in,
+        //that ship blows up
+        public const int ShipCollideDamage = 15;
+        public const float ShipBounceSpeed = 60.0f;
+
         //playfield variables
         public static float PlayfieldSizeX = 35000f;
         public static float PlayfieldSizeY = 25000f;

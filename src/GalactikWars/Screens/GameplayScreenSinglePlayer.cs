@@ -86,6 +86,11 @@ namespace GalactikWars.Screens
         private float enemyRespawnTimer = 0.0f;
         private float allyRespawnTimer = 0.0f;
 
+        //team colors: the ally wears the player's colors, the enemies the
+        //opposite color (set from the player's hull in LoadContent)
+        private Vector3 playerTeamColor = new(0.15f, 0.30f, 0.70f);
+        private Vector3 enemyTeamColor = new(0.70f, 0.12f, 0.12f);
+
         private Vector2 scorePosition = new(60, 110);
         private Vector2 shieldPosition = new(60, 90);
         private Vector2 remainingLivesPosition = new(60, 70);
@@ -154,29 +159,47 @@ namespace GalactikWars.Screens
             soundHandler.Load(content);
             soundHandler.PlayTrack(SoundHandler.BattleTrack);
 
+            string shipModelName;
+
             if (random.NextDouble() <= 0.17)
             {
-                p.ship.Model = content.Load<Model>("models/p1_pencil");
+                shipModelName = "models/p1_pencil";
             }
             else if (random.NextDouble() <= 0.34)
             {
-                p.ship.Model = content.Load<Model>("models/p2_pencil");
+                shipModelName = "models/p2_pencil";
             }
             else if (random.NextDouble() <= 0.51)
             {
-                p.ship.Model = content.Load<Model>("models/p1_wedge");
+                shipModelName = "models/p1_wedge";
             }
             else if (random.NextDouble() <= 0.68)
             {
-                p.ship.Model = content.Load<Model>("models/p2_wedge");
+                shipModelName = "models/p2_wedge";
             }
             else if (random.NextDouble() <= 0.85)
             {
-                p.ship.Model = content.Load<Model>("models/p1_saucer");
+                shipModelName = "models/p1_saucer";
             }
             else
             {
-                p.ship.Model = content.Load<Model>("models/p2_saucer");
+                shipModelName = "models/p2_saucer";
+            }
+
+            p.ship.Model = content.Load<Model>(shipModelName);
+
+            //team colors: the p1 hulls are the blue team, the p2 hulls the
+            //red team — the ally wears the player's colors and the enemies
+            //the opposite color
+            if (shipModelName.Contains("p1", StringComparison.Ordinal))
+            {
+                playerTeamColor = new Vector3(0.15f, 0.30f, 0.70f);   //blue
+                enemyTeamColor = new Vector3(0.70f, 0.12f, 0.12f);    //red
+            }
+            else
+            {
+                playerTeamColor = new Vector3(0.70f, 0.12f, 0.12f);   //red
+                enemyTeamColor = new Vector3(0.15f, 0.30f, 0.70f);    //blue
             }
 
             p.ship.Transforms = SetupEffectDefaults(p.ship.Model);
@@ -361,6 +384,8 @@ namespace GalactikWars.Screens
                 Model = enemyShipModel,
                 Transforms = enemyShipTransforms,
                 Shield = GameVariables.Shield,
+                //the enemies wear the opposite color of the player's team
+                Tint = enemyTeamColor,
                 //stagger the opening shots between ships
                 fireTimer = 1.5f + (float)random.NextDouble()
             };
@@ -394,6 +419,8 @@ namespace GalactikWars.Screens
             allyShip.Model = allyShipModel;
             allyShip.Transforms = allyShipTransforms;
             allyShip.Shield = GameVariables.Shield;
+            //the ally wears the player's team colors
+            allyShip.Tint = playerTeamColor;
             allyShip.fireTimer = 1.0f;
             allyShip.Radius = allyShipModel.Meshes[0].BoundingSphere.Radius
                 * GameVariables.shipBoundingSphereScale * 2;
@@ -1398,6 +1425,68 @@ namespace GalactikWars.Screens
                     }
                 }
 
+                //hull-vs-hull shield collisions: while both shields hold the
+                //ships bounce apart and drain; when one shield gives in,
+                //that ship blows up
+                foreach (EnemyShip enemy in enemyShips)
+                {
+                    if (!enemy.IsActive || enemy.IsAlly)
+                    {
+                        continue;
+                    }
+
+                    if (p.ship.IsActive
+                        && collisionsHandler.CheckForPlayerEnemyShipCollision(
+                            p, enemy))
+                    {
+                        if (p.ship.IsActive && enemy.IsActive)
+                        {
+                            //both shields held: bounce with a clang
+                            soundHandler.PlayCue("shield_collide_ship1");
+                        }
+                        else
+                        {
+                            //at least one ship blew up
+                            Vector2 ramScreen = WorldToScreen(new Vector3(
+                                collisionsHandler.explosionPosition.X,
+                                collisionsHandler.explosionPosition.Y, 0.0f));
+                            particles.particlesCreate(explosion,
+                                ramScreen.X, ramScreen.Y,
+                                random.Next(14, 18), 2);
+
+                            soundHandler.PlayCue("explosion2");
+                        }
+                    }
+
+                    if (allyShip.IsActive
+                        && collisionsHandler.CheckForAllyEnemyShipCollision(
+                            allyShip, enemy, out bool allyDestroyed,
+                            out bool enemyDestroyed))
+                    {
+                        if (allyDestroyed || enemyDestroyed)
+                        {
+                            Vector2 allyRamScreen = WorldToScreen(new Vector3(
+                                collisionsHandler.explosionPosition.X,
+                                collisionsHandler.explosionPosition.Y, 0.0f));
+                            particles.particlesCreate(explosion,
+                                allyRamScreen.X, allyRamScreen.Y,
+                                random.Next(12, 16), 2);
+
+                            if (enemyDestroyed)
+                            {
+                                //the ally rammed an enemy down: credit the player
+                                p.Score += GameVariables.EnemyShipBonus;
+                            }
+
+                            soundHandler.PlayCue("explosion2");
+                        }
+                        else
+                        {
+                            soundHandler.PlayCue("shield_collide_ship1");
+                        }
+                    }
+                }
+
                 particles.particlesUpdate(explosion, 2);
 
                 //recalculate the ship radius
@@ -1543,7 +1632,7 @@ namespace GalactikWars.Screens
                     Matrix enemyTransform = enemy.RotationMatrix
                         * Matrix.CreateTranslation(enemy.Position);
                     DrawModel(enemy.Model, enemyTransform, enemy.Transforms,
-                        new Vector3(0.70f, 0.12f, 0.12f));
+                        enemy.Tint);
 
                     for (int i = 0; i < GameVariables.NumBullets; i++)
                     {
@@ -1568,7 +1657,7 @@ namespace GalactikWars.Screens
                 Matrix allyTransform = allyShip.RotationMatrix
                     * Matrix.CreateTranslation(allyShip.Position);
                 DrawModel(allyShip.Model, allyTransform, allyShip.Transforms,
-                    new Vector3(0.15f, 0.30f, 0.70f));
+                    allyShip.Tint);
 
                 for (int i = 0; i < GameVariables.NumBullets; i++)
                 {
