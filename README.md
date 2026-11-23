@@ -61,6 +61,8 @@ server required.
 * 🌀 **Hyperspace respawn** — re-enter the fight with a flash
 * 🎆 **Particle explosions** — debris, flashes and trails everywhere
 * 🎥 **Dynamic camera** — 2D top-down and 3D views with zoom in/out
+* 🛡️ **Escort selection** — pick a wingman before each run, each granting one
+  pilot advantage (shield, thrust, rockets, atom bombs or fire rate)
 * 🌌 **Scrolling starfield background** with aurora, galaxy and nebula layers
 * 🎵 **A full soundtrack** — six music tracks, one per game state (menu, loading, battle, lobby, game over, credits), plus engine loops and combat sound effects
 * 🪟 **Modern window** — resizable with maximize, and `F11` for fullscreen
@@ -328,10 +330,18 @@ comes from the top.
 * [x] Ship-vs-ship shield collisions — while both shields hold, the hulls
   bounce apart and both shields drain; when one shield gives in, that ship
   blows up while the other (still shielded) survives
-* [ ] Pick one ally escort, each with a different advantage: more shield,
-  faster, more missiles, more atom bombs or faster normal shooting
-* [ ] A looping starfield background scrolling continuously top → down
-  (Raptor-style, the heart of the Level 2 gameplay)
+* [x] Pick one ally escort, each with a different advantage — the
+  **Choose Your Escort** screen opens on Single Player and offers five
+  escorts, one per advantage: Guardian (+50 shield), Scout (+25% thrust),
+  Rocketeer (+10 rockets), Bombardier (+2 atom bombs) and Gunner (double fire
+  rate). The pick is applied to the pilot's loadout at the start and on every
+  respawn, the escort flies its own hull, and the HUD shows its name
+* [x] A looping starfield background scrolling continuously top → down
+  (Raptor-style, the heart of the Level 2 gameplay) — `ScrollingBackground`
+  now stretches the 1024² starfield over the viewport and samples it with
+  linear wrapping while it scrolls, so it loops seamlessly; level 1 keeps its
+  static, ship-following backdrop and the starfield takes over from level 2
+  (`GameVariables.FirstScrollingLevel`)
 * [ ] Waves of enemy ships and asteroids attacking together
 * [ ] One random bigger **Level Boss** per level with a movement/attack
   pattern to learn and avoid

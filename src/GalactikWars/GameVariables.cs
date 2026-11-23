@@ -51,6 +51,9 @@ namespace GalactikWars
         public const int BulletDamage = 10;
         public const int RocketDamage = 20;
         public const float BulletSpeedAdjustment = 100.0f;
+        //base delay between two bullets while the trigger is held; the
+        //Gunner escort halves it
+        public const float BulletFireInterval = 0.16f;
         public const float RocketSpeedAdjustment = 50.0f;
         public const float shipBoundingSphereScale = 0.5f;  //50% size
         public static int CurrentLevel = 0;
@@ -91,11 +94,14 @@ namespace GalactikWars
         public const int NumAsteroid2Slots = NumAsteroids2 + 2 * NumAsteroids1;
 
         //Volume Variables
-        public const float defaultMusicVolume = 0.5f;
-        public const float defaultEffectsVolume = 1.0f;
+        public const float defaultMusicVolume = 0.25f;
+        public const float defaultEffectsVolume = 0.25f;
 
         //General Aspect Options
-        public static bool ScrollingBackgroundIsActive = false;
+        //the scrolling starfield is the Raptor-style level 2 background; it
+        //starts at FirstScrollingLevel so level 1 keeps its static backdrop
+        public static bool ScrollingBackgroundIsActive = true;
+        public const int FirstScrollingLevel = 2;
         public const bool FlawToleranceOn = true;
         public const bool MouseVisible = true;
         public const bool MouseActive = true;

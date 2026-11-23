@@ -215,6 +215,18 @@ namespace GalactikWars.ScreenManager
 
         ///<summary>
         ///Author: GNPA & STX
+        ///Helper for checking if Mouse Left Button is held down during this
+        ///update (used by the held-trigger fire cooldown).
+        ///</summary>
+        public bool IsMouseLeftButtonStillPressed()
+        {
+            return ((CurrentMouseState.LeftButton == ButtonState.Pressed) &&
+                    GameVariables.MouseActive);
+        }
+
+
+        ///<summary>
+        ///Author: GNPA & STX
         ///Helper for checking if Mouse Middle Button was pressed during this update.
         ///</summary>
         public bool IsMouseMiddleButtonPressed()

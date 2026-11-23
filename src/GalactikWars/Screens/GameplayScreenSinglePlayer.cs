@@ -57,6 +57,7 @@ namespace GalactikWars.Screens
         private Texture2D space3 = null;
         private Texture2D space4 = null;
         private Texture2D space5 = null;
+        private Texture2D starfieldTexture = null;
         private Texture2D particlesTexture = null;
 
         private Model rocketModel = null;
@@ -75,6 +76,13 @@ namespace GalactikWars.Screens
 
         //Player
         private readonly Player p = new();
+
+        //the escort picked before the run: it grants the pilot's loadout
+        //advantage (phase 3)
+        private readonly EscortProfile escort;
+
+        //held-trigger fire cooldown (the Gunner escort halves the interval)
+        private float bulletCooldownTimer = 0.0f;
 
         //red enemy ships and the blue ally escort (phase 3)
         private readonly List<EnemyShip> enemyShips = [];
@@ -99,6 +107,7 @@ namespace GalactikWars.Screens
         private Vector2 levelPosition = new(60, 10);
         private Vector2 remainingRocketsPosition = new(60, 130);
         private Vector2 enemiesPosition = new(60, 150);
+        private Vector2 escortPosition = new(60, 170);
 
         private readonly Random random = new();
 
@@ -110,13 +119,27 @@ namespace GalactikWars.Screens
 
         #endregion
 
+        #region Properties
+
+        ///<summary>
+        ///The scrolling starfield is the level 2+ backdrop (the Raptor-style
+        ///level); level 1 keeps the static, ship-following background.
+        ///</summary>
+        private bool UseScrollingBackground =>
+            GameVariables.ScrollingBackgroundIsActive
+            && GameVariables.CurrentLevel >= GameVariables.FirstScrollingLevel;
+
+        #endregion
+
         #region Initialization
 
         ///<summary>
         ///Constructor.
         ///</summary>
-        public GameplayScreenSinglePlayer()
+        public GameplayScreenSinglePlayer(EscortProfile escort)
         {
+            this.escort = escort ?? EscortProfile.Standard;
+
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -216,20 +239,20 @@ namespace GalactikWars.Screens
             shieldModel = content.Load<Model>("models/sphere");
             shieldTransforms = SetupEffectDefaults(shieldModel);
 
-            //activate the static background or the dinamic "myBackground"
+            //the static backdrops (level 1 and fallback levels) plus the
+            //scrolling starfield that takes over from level 2 onwards
+            space1 = content.Load<Texture2D>("textures/galaxy");
+            space2 = content.Load<Texture2D>("textures/aurora");
+            space3 = content.Load<Texture2D>("textures/nebula");
+            space4 = content.Load<Texture2D>("textures/nebula2");
+            space5 = content.Load<Texture2D>("textures/planets");
+
             if (GameVariables.ScrollingBackgroundIsActive)
             {
                 myBackground = new ScrollingBackground();
-                space1 = content.Load<Texture2D>("textures/starfield");
-                myBackground.LoadContent(ScreenManager.GraphicsDevice, space1);
-            }
-            else
-            {
-                space1 = content.Load<Texture2D>("textures/galaxy");
-                space2 = content.Load<Texture2D>("textures/aurora");
-                space3 = content.Load<Texture2D>("textures/nebula");
-                space4 = content.Load<Texture2D>("textures/nebula2");
-                space5 = content.Load<Texture2D>("textures/planets");
+                starfieldTexture = content.Load<Texture2D>("textures/starfield");
+                myBackground.LoadContent(ScreenManager.GraphicsDevice,
+                    starfieldTexture);
             }
 
             particlesTexture = content.Load<Texture2D>("textures/multicolored");
@@ -238,10 +261,14 @@ namespace GalactikWars.Screens
             spriteBatch = ScreenManager.SpriteBatch;
             font = ScreenManager.Font;
 
+            //the escort's advantage goes into the pilot's loadout, and the
+            //escort flies its own hull
+            p.ApplyEscort(escort);
+
             //red enemy ships and the blue ally escort (phase 3)
             enemyShipModel = content.Load<Model>("models/p1_pencil");
             enemyShipTransforms = SetupEffectDefaults(enemyShipModel);
-            allyShipModel = content.Load<Model>("models/p1_saucer");
+            allyShipModel = content.Load<Model>(escort.AllyModelName);
             allyShipTransforms = SetupEffectDefaults(allyShipModel);
 
             //the starting red squadron and the blue escort
@@ -263,9 +290,14 @@ namespace GalactikWars.Screens
             soundHandler.UnLoad();
 
             //Visual components
-            if (GameVariables.ScrollingBackgroundIsActive)
+            if (myBackground != null)
             {
                 myBackground.UnLoadContent();
+            }
+
+            if (starfieldTexture != null)
+            {
+                starfieldTexture.Dispose();
             }
 
             if (space1 != null)
@@ -952,12 +984,19 @@ namespace GalactikWars.Screens
 
                 particles.particlesUpdate(explosion, 2);
 
-                //are we shooting bullets?
-                if (p.ship.IsActive && (input.IsNewKeyPress(Keys.Space)
-                    || input.IsMouseLeftButtonPressed()))
+                //are we shooting bullets? the trigger can be held: the shot
+                //rate is the escort's fire interval (the Gunner fires twice
+                //as fast)
+                if (p.ship.IsActive && bulletCooldownTimer <= 0.0f
+                    && (input.IsNewKeyPress(Keys.Space)
+                        || input.IsNewKeyStillPress(Keys.Space,
+                            PlayerIndex.One)
+                        || input.IsMouseLeftButtonStillPressed()))
                 {
                     if (p.ShootBullet())
                     {
+                        bulletCooldownTimer = escort.FireInterval;
+
                         // Make a sound when we fire.
                         soundHandler.PlayCue("tx0_fire1");
                     }
@@ -1007,8 +1046,9 @@ namespace GalactikWars.Screens
                     modelVelocityAdd.X = -(float)Math.Sin(p.ship.Rotation);
                     modelVelocityAdd.Y = +(float)Math.Cos(p.ship.Rotation);
 
-                    //Now scale our direction by pressing this key
-                    modelVelocityAdd *= 6;
+                    //Now scale our direction by pressing this key, with the
+                    //escort's thrust bonus (the Scout is 25% faster)
+                    modelVelocityAdd *= 6 * escort.ThrustScale;
 
                     //Finally, add this vector to our velocity.
                     p.ship.Update(modelVelocityAdd);
@@ -1030,8 +1070,9 @@ namespace GalactikWars.Screens
                     modelVelocityAdd.X = +(float)Math.Sin(p.ship.Rotation);
                     modelVelocityAdd.Y = -(float)Math.Cos(p.ship.Rotation);
 
-                    //Now scale our direction by pressing this key
-                    modelVelocityAdd *= 6;
+                    //Now scale our direction by pressing this key, with the
+                    //escort's thrust bonus (the Scout is 25% faster)
+                    modelVelocityAdd *= 6 * escort.ThrustScale;
 
                     //Finally, add this vector to our velocity.
                     p.ship.Update(modelVelocityAdd);
@@ -1113,6 +1154,14 @@ namespace GalactikWars.Screens
             if (IsActive)
             {
                 HomeRockets(gameTime);
+
+                //recharge the held-trigger fire cooldown
+                bulletCooldownTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (bulletCooldownTimer < 0.0f)
+                {
+                    bulletCooldownTimer = 0.0f;
+                }
 
                 //steer the red enemies and the blue ally, then simulate them
                 SteerShips(gameTime);
@@ -1203,7 +1252,7 @@ namespace GalactikWars.Screens
                     }
                 }
 
-                if (GameVariables.ScrollingBackgroundIsActive)
+                if (UseScrollingBackground)
                 {
                     myBackground.Update(gameTime);
                 }
@@ -1550,14 +1599,20 @@ namespace GalactikWars.Screens
             float titleScale = 2.0f;
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
 
-            if (GameVariables.ScrollingBackgroundIsActive)
+            if (UseScrollingBackground)
             {
+                //the starfield samples with linear wrapping, so it loops
+                //seamlessly while it scrolls top -> down
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque,
+                    SamplerState.LinearWrap);
                 myBackground.Draw(spriteBatch);
+                spriteBatch.End();
             }
             else
             {
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
 
                 //stretch the background over the whole screen, with a gentle
@@ -1595,9 +1650,9 @@ namespace GalactikWars.Screens
                 }
 
                 spriteBatch.Draw(background, destination, Color.White);
-            }
 
-            spriteBatch.End();
+                spriteBatch.End();
+            }
 
             for (int i = 0; i < asteroid2List.Length; i++)
             {
@@ -1694,6 +1749,8 @@ namespace GalactikWars.Screens
 
             spriteBatch.DrawString(lucidaConsole, "Enemies: " + activeEnemyCount,
                 enemiesPosition, Color.LightGreen);
+            spriteBatch.DrawString(lucidaConsole, "Escort: " + escort.Name,
+                escortPosition, Color.LightGreen);
 
             if (p.Shield < 0)
             {

@@ -2,15 +2,16 @@
 //-----------------------------------------------------------------------------
 //ScrollingBackground.cs
 //
-//Author: GNPA & STX
-//Microsoft XNA Community Game Platform
-//Copyright (C) Microsoft Corporation. All rights reserved.
+//A looping starfield that scrolls continuously top -> down, the background of
+//the Raptor-style level 2 (phase 3). The texture is sampled with linear
+//wrapping, so one stretched quad tiles vertically with no double-draw math.
 //-----------------------------------------------------------------------------
 #endregion
 
 #region Using Statements
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 #endregion
 
 namespace GalactikWars.Entities
@@ -19,11 +20,13 @@ namespace GalactikWars.Entities
     {
         #region Fields
 
-        //class ScrollingBackground
-        private Vector2 screenpos, origin, texturesize;
-        private Texture2D mytexture;
-        private int screenheight;
-        public bool isActive = GameVariables.ScrollingBackgroundIsActive;
+        //how fast the stars travel down the screen, in pixels per second
+        private const float ScrollSpeed = 120.0f;
+
+        private Texture2D texture;
+
+        //scroll position in texture pixels, always kept in [0, Height)
+        private float scrollY;
 
         #endregion
 
@@ -31,48 +34,71 @@ namespace GalactikWars.Entities
 
         public void LoadContent(GraphicsDevice device, Texture2D backgroundTexture)
         {
-            mytexture = backgroundTexture;
-            screenheight = device.Viewport.Height;
-            int screenwidth = device.Viewport.Width;
-            //Set the origin so that we're drawing from the 
-            //center of the top edge.
-            origin = new Vector2(mytexture.Width / 2, 0);
-            //Set the screen position to the center of the screen.
-            screenpos = new Vector2(screenwidth / 2, screenheight / 2);
-            //Offset to draw the second texture, when necessary.
-            texturesize = new Vector2(0, mytexture.Height);
+            texture = backgroundTexture;
+            scrollY = 0.0f;
         }
 
+        ///<summary>
+        ///Releases the reference only: the gameplay screen owns (and disposes)
+        ///the texture loaded through the content pipeline.
+        ///</summary>
         public void UnLoadContent()
         {
-            mytexture.Dispose();
+            texture = null;
         }
 
         #endregion
 
         #region Update and Draw
 
-        //ScrollingBackground.Update
         public void Update(GameTime gameTime)
         {
-            float deltaY = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
-            screenpos.Y += deltaY;
-            screenpos.Y %= mytexture.Height;
+            if (texture == null)
+            {
+                return;
+            }
+
+            //walk backwards through the texture so the stars move down the
+            //screen (the ship is flying up, Raptor-style)
+            scrollY -= ScrollSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            while (scrollY < 0.0f)
+            {
+                scrollY += texture.Height;
+            }
         }
 
-        //ScrollingBackground.Draw
+        ///<summary>
+        ///Draws the starfield stretched over the whole viewport. The sprite
+        ///batch must use <see cref="SamplerState.LinearWrap"/> so the source
+        ///rectangle can run past the texture height and wrap seamlessly.
+        ///</summary>
         public void Draw(SpriteBatch batch)
         {
-            //Draw the texture, if it is still onscreen.
-            if (screenpos.Y < screenheight)
+            if (texture == null)
             {
-                batch.Draw(mytexture, screenpos, null,
-                     Color.White, 0, origin, 1, SpriteEffects.None, 0f);
+                return;
             }
-            //Draw the texture a second time, behind the first,
-            //to create the scrolling illusion.
-            batch.Draw(mytexture, screenpos - texturesize, null,
-                 Color.White, 0, origin, 1, SpriteEffects.None, 0f);
+
+            Viewport viewport = batch.GraphicsDevice.Viewport;
+
+            if (viewport.Width <= 0 || viewport.Height <= 0)
+            {
+                return;
+            }
+
+            //fit the texture to the window width, then take exactly one
+            //screen-height slice of it (two slices when the window is taller
+            //than it is wide)
+            float scale = (float)viewport.Width / texture.Width;
+            int sourceHeight = (int)Math.Ceiling(viewport.Height / scale);
+            sourceHeight = Math.Max(sourceHeight, 1);
+
+            batch.Draw(
+                texture,
+                new Rectangle(0, 0, viewport.Width, viewport.Height),
+                new Rectangle(0, (int)scrollY, texture.Width, sourceHeight),
+                Color.White);
         }
 
         #endregion

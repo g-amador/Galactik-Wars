@@ -72,6 +72,7 @@ removed.
 | `MainMenuScreen` | Single player / Multiplayer / Options / Credits / Exit |
 | `ControlsScreen`, `OptionsMenuScreen`, `SoundScreen`, `CreditsScreen` | Settings and info |
 | `PauseMenuScreen` | Pause / resume / quit |
+| `EscortSelectionScreen` | Single-player escort pick (one loadout advantage per escort) |
 | `GameplayScreenSinglePlayer` | Single-player combat |
 | `GameplayScreenMultiplayer` | Networked combat (sends/receives game data packets) |
 | `LoadingScreen` | Asynchronous world load with progress animation |
@@ -97,6 +98,10 @@ Root-level classes: `Game` (entry point + F11 fullscreen toggle) and
 `GameVariables` (global tunables). `Handlers/CollisionsHandler` performs the
 collision pass between ships, asteroids and projectiles; `Particles/`
 (`Particle`, `ParticleSystem`) renders explosions and trails.
+`Entities/ScrollingBackground` is the level 2+ Raptor-style backdrop: it
+stretches the starfield texture to the viewport width and loops it top → down
+with linear wrapping (the gameplay screen draws it with
+`SamplerState.LinearWrap`).
 
 ### 2.6 Audio — `Handlers/SoundHandler.cs`
 

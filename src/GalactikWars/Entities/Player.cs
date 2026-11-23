@@ -29,6 +29,10 @@ namespace GalactikWars.Entities
         internal int atomBombs = GameVariables.NumAtomBombs;
         internal int rockets = GameVariables.RocketAmmo;
 
+        //the pilot's escort decides the loadout granted on start and on every
+        //respawn (phase 3)
+        internal EscortProfile Escort = EscortProfile.Standard;
+
         #endregion
 
         #region Gets and Sets
@@ -94,11 +98,25 @@ namespace GalactikWars.Entities
             }
         }
 
+        ///<summary>
+        ///Applies the escort's advantage to the pilot's loadout. Called when
+        ///the gameplay screen loads.
+        ///</summary>
+        internal void ApplyEscort(EscortProfile escort)
+        {
+            Escort = escort;
+
+            shield = escort.Shield;
+            rockets = escort.Rockets;
+            atomBombs = escort.AtomBombs;
+        }
+
         internal void WarpToCenter()
         {
-            shield = GameVariables.Shield;
-            atomBombs = GameVariables.NumAtomBombs;
-            rockets = GameVariables.RocketAmmo;
+            //keep the escort's loadout on every respawn
+            shield = Escort.Shield;
+            atomBombs = Escort.AtomBombs;
+            rockets = Escort.Rockets;
             ship.IsActive = true;
             ship.Position = Vector3.Zero;
             ship.Velocity = Vector3.Zero;

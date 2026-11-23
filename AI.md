@@ -111,7 +111,9 @@ How the game plays today — keep these in sync when touching gameplay code:
   rockets, middle = bomb). Movement is **keyboard-only** — the old
   mouse-steering (`VariationX/Y`, `MouseMoved`) was removed from
   `HandleInput`; `GameVariables.MouseVisible/MouseActive` are `true` for the
-  weapon buttons.
+  weapon buttons. The bullet trigger can be held: shots repeat every
+  `GameVariables.BulletFireInterval` (0.16 s), and the Gunner escort halves
+  that interval.
 - **Sound cue mapping** (the reports' intent, keep it when touching audio):
   engine loops are `engine_1` (own ship) / `engine_2` (others) via
   `PlayMyEngineSound`; a large asteroid breaking into smaller ones is
@@ -208,14 +210,36 @@ How the game plays today — keep these in sync when touching gameplay code:
   when one shield gives in (< 0), that ship blows up while the shielded
   one survives (both giving in destroys both). Enemy/ally ships ignore
   asteroids (future polish) and multiplayer has none of this.
+- **Escort selection (phase 3, single-player only)**: Single Player first
+  pushes `EscortSelectionScreen` **on top of** the main menu (`AddScreen`,
+  not `LoadingScreen.Load`, so Escape returns to the menu). Choosing an entry
+  loads `GameplayScreenSinglePlayer(escort)`. The five escorts live in
+  `Entities/EscortProfile.cs` (`All`); each grants exactly one pilot
+  advantage — Guardian +50 shield, Scout ×1.25 thrust, Rocketeer +10 rockets,
+  Bombardier +2 atom bombs, Gunner half the fire interval. The gameplay
+  screen calls `Player.ApplyEscort` in `LoadContent`, and `WarpToCenter`
+  refills from `Player.Escort`, so the advantage survives every respawn. The
+  escort's hull is `EscortProfile.AllyModelName` (p1 hulls, tinted with the
+  player's team color) and the HUD draws `Escort: <name>`. `EscortProfile.
+  Standard` is the fallback loadout when no escort is picked.
 - **Death flow (single-player)**: no manual respawn key. When the ship dies
   with lives left, a 1 s `respawnTimer` calls `WarpToCenter()` with the
   `hyperspace_activate` cue. With zero lives, a 4 s `gameOverTimer` returns
   to the main menu via `LoadingScreen.Load` (once, guarded by
   `returnedToMenu`).
-- **Background (single-player)**: the level texture is drawn stretched over
-  the whole viewport with a ±5% parallax margin following the ship;
-  multiplayer stretches its background to the viewport as well.
+- **Background (single-player)**: level 1 (and the fallback levels when the
+  feature is off) uses a per-level texture drawn stretched over the whole
+  viewport with a ±5% parallax margin following the ship. From
+  `GameVariables.FirstScrollingLevel` (2) onwards, `ScrollingBackground`
+  draws the `textures/starfield` DDS as the Raptor-style backdrop: the
+  texture is stretched to the window width and sampled with
+  `SamplerState.LinearWrap` while `scrollY` runs backwards through the
+  texture, so the stars move top → down and the loop is seamless. The
+  gameplay screen must `Begin` with `SamplerState.LinearWrap` for that draw
+  (it does), and it owns/disposes the starfield texture —
+  `ScrollingBackground.UnLoadContent` only drops the reference. Multiplayer
+  stretches its background to the viewport as well and has no scrolling
+  starfield.
 - **Lighting**: `SetupEffectDefaults` and `DrawModel` in both gameplay
   screens set `effect.AmbientLightColor` to `(0.55, 0.55, 0.55)` right after
   `EnableDefaultLighting()` — it is a `Vector3`, not a `Color`.
