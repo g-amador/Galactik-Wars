@@ -23,8 +23,9 @@ namespace GalactikWars.Entities
         ///<summary>The single advantage this escort grants, for the menu line.</summary>
         public string Advantage { get; }
 
-        ///<summary>The hull model flown by the escort (a p1 hull, so the team
-        ///tint reads correctly for every pilot).</summary>
+        ///<summary>The hull model flown by the escort, catalogued as a p1 hull;
+        ///gameplay swaps it into the pilot's team family with
+        ///ShipProfile.ForTeam.</summary>
         public string AllyModelName { get; }
 
         //pilot loadout granted by the escort

@@ -77,8 +77,9 @@ namespace GalactikWars.Screens
         ///</summary>
         private void SinglePlayerMenuEntrySelected(object sender, EventArgs e)
         {
-            //pick the escort first; it grants the pilot's loadout advantage
-            ScreenManager.AddScreen(new EscortSelectionScreen());
+            //pick the hull (and team color) first, then the escort; the escort
+            //grants the pilot's loadout advantage
+            ScreenManager.AddScreen(new ShipSelectionScreen());
         }
 
 

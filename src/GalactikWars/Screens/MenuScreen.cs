@@ -44,6 +44,16 @@ namespace GalactikWars.Screens
         }
 
 
+        ///<summary>
+        ///Gets the index of the entry the user has highlighted. Preview
+        ///screens use it to show the model for the current entry.
+        ///</summary>
+        protected int SelectedEntry
+        {
+            get { return selectedEntry; }
+        }
+
+
         #endregion
 
         #region Initialization
@@ -103,6 +113,38 @@ namespace GalactikWars.Screens
             {
                 OnCancel();
             }
+            else
+            {
+                //optional horizontal actions (the ship picker uses them to
+                //change the paint scheme)
+                if (input.MenuLeft)
+                {
+                    OnMenuLeft();
+                }
+
+                if (input.MenuRight)
+                {
+                    OnMenuRight();
+                }
+            }
+        }
+
+
+        ///<summary>
+        ///Handler for a horizontal "left" action. Menus that do not use it
+        ///simply ignore it.
+        ///</summary>
+        protected virtual void OnMenuLeft()
+        {
+        }
+
+
+        ///<summary>
+        ///Handler for a horizontal "right" action. Menus that do not use it
+        ///simply ignore it.
+        ///</summary>
+        protected virtual void OnMenuRight()
+        {
         }
 
 

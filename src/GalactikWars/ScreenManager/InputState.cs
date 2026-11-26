@@ -92,6 +92,38 @@ namespace GalactikWars.ScreenManager
 
 
         ///<summary>
+        ///Checks for a "menu left" input action, from any player,
+        ///on either keyboard or gamepad.
+        ///</summary>
+        public bool MenuLeft
+        {
+            get
+            {
+                return IsNewKeyPress(Keys.Left) ||
+                       IsNewKeyPress(Keys.A) ||
+                       IsNewButtonPress(Buttons.DPadLeft) ||
+                       IsNewButtonPress(Buttons.LeftThumbstickLeft);
+            }
+        }
+
+
+        ///<summary>
+        ///Checks for a "menu right" input action, from any player,
+        ///on either keyboard or gamepad.
+        ///</summary>
+        public bool MenuRight
+        {
+            get
+            {
+                return IsNewKeyPress(Keys.Right) ||
+                       IsNewKeyPress(Keys.D) ||
+                       IsNewButtonPress(Buttons.DPadRight) ||
+                       IsNewButtonPress(Buttons.LeftThumbstickRight);
+            }
+        }
+
+
+        ///<summary>
         ///Checks for a "menu select" input action, from any player,
         ///on either keyboard or gamepad.
         ///</summary>

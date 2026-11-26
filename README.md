@@ -104,8 +104,9 @@ Game Over ──────────────────┘
 | 🛸 Saucer | Round, saucy, hard to hit on a good day |
 | 🔺 Wedge | All attitude, all angles |
 
-Each hull comes in two paint schemes (player 1 and player 2). A hull is
-picked at random at the start of each match.
+Each hull comes in two paint schemes (player 1 and player 2). In
+single-player you pick your hull (and team colour) before the run; multiplayer
+still assigns a random hull at the start of each match.
 
 ### Weapons & Systems
 
@@ -312,30 +313,43 @@ upcoming phases are planned top-down.
 ### 🌌 Phase 3 — Level 2: Enemy Waves & Bosses 🔜
 
 The classic-shooter level structure the 2008 reports already envisioned.
-Level 1 stays as it plays today — the free-roaming asteroid arena with red
-enemies and the blue ally escort — while **Level 2 becomes a Raptor-style
-scrolling shooter**: the starfield scrolls continuously and the action
-comes from the top.
+Level 1 stays as it plays today — the free-roaming asteroid arena with
+enemy ships in the opposite colour and an ally in yours — while **Level 2
+becomes a Raptor-style scrolling shooter**: the starfield scrolls continuously
+and the action comes from the top. Planned movement for that level is
+`W`/`A`/`S`/`D` as up/left/down/right only (no rotation), with the enemies
+entering from above.
 
 * [x] Reaction-control jets — a left jet near the nose when pressing `A` and
   a right jet when pressing `D` (same green jet style as the main `W`/`S`
   exhaust), so rotation and braking read like real maneuvering in space
-* [x] Red enemy ships and blue ally ships in single-player — red ships hunt
-  the player with guns locked on (respawning over time), a blue ally escort
-  flies alongside, guards the player and engages enemies; both are drawn
-  tinted (red/blue) and the atom bomb wipes the squadron
-* [x] Team colors — the player's hull decides the teams: the ally wears the
-  player's colors and the enemies the opposite color (`p1` hulls are blue,
-  `p2` hulls are red)
+* [x] Enemy ships and ally ships in single-player — enemy ships hunt the
+  player with guns locked on (respawning over time), an ally escort flies
+  alongside, guards the player and engages enemies; both are drawn tinted
+  (the ally in the player's colour, enemies in the opposite colour) and the
+  atom bomb wipes the squadron. The three active enemies fly one of each
+  hull: Pencil, Wedge and Saucer
+* [x] Team colors — the paint scheme picked on the **Choose Your Ship** screen
+  decides the teams: the ally wears the player's colors and the enemies the
+  opposite color (`p1` hulls are blue, `p2` hulls are red)
 * [x] Ship-vs-ship shield collisions — while both shields hold, the hulls
   bounce apart and both shields drain; when one shield gives in, that ship
   blows up while the other (still shielded) survives
+* [x] Choose your ship before the run — the **Choose Your Ship** screen opens
+  on Single Player and lists the three hulls (Pencil, Wedge, Saucer). Up/down
+  changes the hull and left/right flips the paint scheme between Blue and
+  Red, so the menu stays at three entries. A rotating 3D preview shows the
+  actual model from the front and labels the team, so the pilot knows their
+  colour before launch; the pick replaces the old random hull and decides
+  which ships the ally and enemies fly
 * [x] Pick one ally escort, each with a different advantage — the
-  **Choose Your Escort** screen opens on Single Player and offers five
+  **Choose Your Escort** screen follows the ship pick and offers five
   escorts, one per advantage: Guardian (+50 shield), Scout (+25% thrust),
   Rocketeer (+10 rockets), Bombardier (+2 atom bombs) and Gunner (double fire
-  rate). The pick is applied to the pilot's loadout at the start and on every
-  respawn, the escort flies its own hull, and the HUD shows its name
+  rate). A 3D preview shows the pilot's hull next to the highlighted escort
+  in the pilot's team colour. The pick is applied to the pilot's loadout at
+  the start and on every respawn, the escort flies its own hull, and the HUD
+  shows its name
 * [x] A looping starfield background scrolling continuously top → down
   (Raptor-style, the heart of the Level 2 gameplay) — `ScrollingBackground`
   now stretches the 1024² starfield over the viewport and samples it with
@@ -350,6 +364,7 @@ comes from the top.
 ### 🔮 Phase 4 — Backlog
 
 * [ ] Single configuration file — move all tunables (volumes, key bindings, ship/rocket/asteroid stats, zoom limits, enemy waves...) into one `config.json`, loaded at startup with `System.Text.Json` (built into .NET 10 — the standard choice for game settings; more portable than a legacy `.ini`, and a `.cs` file is compiled code, not data)
+* [ ] Background texture review — replace the inherited space backdrops (`galaxy`, `aurora`, `nebula`, `nebula2`, `planets`, `starfield`) with better images: higher resolution, seamless tiles for the scrolling starfield, and one consistent style across levels
 * [ ] Better explosions with layered particle effects, and the atom bomb as an expanding EMP-style shockwave ring fired from the ship
 * [ ] Improved volume options — Music and Effect volume on separate rows, adjustable with the mouse (click/drag a `- o +` slider) or the `-`/`+` keys on the selected row, always showing integer percentages (no float rounding artifacts)
 * [ ] Glowing shield effect — a glowing sphere around the ship (shader-based, no model needed) that fades as the shield decreases and flashes when it takes a hit
@@ -360,7 +375,9 @@ comes from the top.
 * [ ] Gamepad support
 * [ ] Full 3D camera controls (a deeper take on the current 2.5D view)
 * [ ] A NeonShooter-style top-down 2D mode for single-player: neon vector ships with bloom, intense additive particles and a warping grid background
-* [ ] Ship selection with per-ship advantages and a feature comparison screen, including custom-built ship models by the original authors
+* [ ] Ship selection extras on top of the current preview menu: per-ship
+  advantages and a feature comparison screen, including custom-built ship
+  models by the original authors
 
 [Back to Table of Contents](#toc)
 

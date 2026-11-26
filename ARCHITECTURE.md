@@ -72,10 +72,17 @@ removed.
 | `MainMenuScreen` | Single player / Multiplayer / Options / Credits / Exit |
 | `ControlsScreen`, `OptionsMenuScreen`, `SoundScreen`, `CreditsScreen` | Settings and info |
 | `PauseMenuScreen` | Pause / resume / quit |
+| `ShipSelectionScreen` | Single-player hull pick with a rotating 3D preview and team colour |
 | `EscortSelectionScreen` | Single-player escort pick (one loadout advantage per escort) |
 | `GameplayScreenSinglePlayer` | Single-player combat |
 | `GameplayScreenMultiplayer` | Networked combat (sends/receives game data packets) |
 | `LoadingScreen` | Asynchronous world load with progress animation |
+
+`ModelPreviewRenderer` draws a hull as a spinning 3D model inside a
+back-buffer rectangle, so the two single-player pickers can show the real
+ships before launch. The camera sits in front of the hull, 30 degrees above
+its plane, far back with a narrow field of view — the ship is seen from the
+front (top and sides) instead of straight from above.
 
 ### 2.4 Networking screens — `Networking/`
 

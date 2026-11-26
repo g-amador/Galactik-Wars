@@ -81,15 +81,20 @@ namespace GalactikWars.Screens
         //advantage (phase 3)
         private readonly EscortProfile escort;
 
+        //the hull picked before the run: it also decides the pilot's team
+        //color (phase 3)
+        private readonly ShipProfile shipProfile;
+
         //held-trigger fire cooldown (the Gunner escort halves the interval)
         private float bulletCooldownTimer = 0.0f;
 
-        //red enemy ships and the blue ally escort (phase 3)
+        //enemy ships and the ally escort (phase 3)
         private readonly List<EnemyShip> enemyShips = [];
         private readonly EnemyShip allyShip = new();
-        private Model enemyShipModel = null;
+        //enemies fly one of each hull, all in the opposite team's model family
+        private readonly Model[] enemyShipModels = new Model[ShipProfile.HullCount];
+        private readonly Matrix[][] enemyShipTransforms = new Matrix[ShipProfile.HullCount][];
         private Model allyShipModel = null;
-        private Matrix[] enemyShipTransforms = null;
         private Matrix[] allyShipTransforms = null;
         private float enemyRespawnTimer = 0.0f;
         private float allyRespawnTimer = 0.0f;
@@ -136,8 +141,9 @@ namespace GalactikWars.Screens
         ///<summary>
         ///Constructor.
         ///</summary>
-        public GameplayScreenSinglePlayer(EscortProfile escort)
+        public GameplayScreenSinglePlayer(ShipProfile ship, EscortProfile escort)
         {
+            shipProfile = ship ?? ShipProfile.Default;
             this.escort = escort ?? EscortProfile.Standard;
 
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -182,48 +188,14 @@ namespace GalactikWars.Screens
             soundHandler.Load(content);
             soundHandler.PlayTrack(SoundHandler.BattleTrack);
 
-            string shipModelName;
-
-            if (random.NextDouble() <= 0.17)
-            {
-                shipModelName = "models/p1_pencil";
-            }
-            else if (random.NextDouble() <= 0.34)
-            {
-                shipModelName = "models/p2_pencil";
-            }
-            else if (random.NextDouble() <= 0.51)
-            {
-                shipModelName = "models/p1_wedge";
-            }
-            else if (random.NextDouble() <= 0.68)
-            {
-                shipModelName = "models/p2_wedge";
-            }
-            else if (random.NextDouble() <= 0.85)
-            {
-                shipModelName = "models/p1_saucer";
-            }
-            else
-            {
-                shipModelName = "models/p2_saucer";
-            }
+            string shipModelName = shipProfile.ModelName;
 
             p.ship.Model = content.Load<Model>(shipModelName);
 
-            //team colors: the p1 hulls are the blue team, the p2 hulls the
-            //red team — the ally wears the player's colors and the enemies
-            //the opposite color
-            if (shipModelName.Contains("p1", StringComparison.Ordinal))
-            {
-                playerTeamColor = new Vector3(0.15f, 0.30f, 0.70f);   //blue
-                enemyTeamColor = new Vector3(0.70f, 0.12f, 0.12f);    //red
-            }
-            else
-            {
-                playerTeamColor = new Vector3(0.70f, 0.12f, 0.12f);   //red
-                enemyTeamColor = new Vector3(0.15f, 0.30f, 0.70f);    //blue
-            }
+            //team colors: the chosen hull decides the teams — the ally wears
+            //the player's colors and the enemies the opposite color
+            playerTeamColor = shipProfile.TeamTint;
+            enemyTeamColor = shipProfile.EnemyTeamTint;
 
             p.ship.Transforms = SetupEffectDefaults(p.ship.Model);
             p.ship.IsActive = true;
@@ -265,13 +237,25 @@ namespace GalactikWars.Screens
             //escort flies its own hull
             p.ApplyEscort(escort);
 
-            //red enemy ships and the blue ally escort (phase 3)
-            enemyShipModel = content.Load<Model>("models/p1_pencil");
-            enemyShipTransforms = SetupEffectDefaults(enemyShipModel);
-            allyShipModel = content.Load<Model>(escort.AllyModelName);
+            //enemy ships and the ally escort (phase 3): both fly the
+            //model family of their own team, so the textures match the tint;
+            //the enemies use all three hulls, one of each
+            for (int i = 0; i < enemyShipModels.Length; i++)
+            {
+                string enemyModelName = ShipProfile.ForTeam(
+                    ShipProfile.Create(i, true).ModelName,
+                    !shipProfile.IsBlueTeam);
+
+                enemyShipModels[i] = content.Load<Model>(enemyModelName);
+                enemyShipTransforms[i] =
+                    SetupEffectDefaults(enemyShipModels[i]);
+            }
+
+            allyShipModel = content.Load<Model>(
+                ShipProfile.ForTeam(escort.AllyModelName, shipProfile.IsBlueTeam));
             allyShipTransforms = SetupEffectDefaults(allyShipModel);
 
-            //the starting red squadron and the blue escort
+            //the starting enemy squadron and the ally escort
             for (int i = 0; i < GameVariables.NumEnemyShips; i++)
             {
                 SpawnEnemyShip();
@@ -404,17 +388,59 @@ namespace GalactikWars.Screens
         }
 
         ///<summary>
-        ///Spawns a red enemy ship at a random spot comfortably away from the
+        ///Picks the enemy hull that is currently the least common in the
+        ///squadron, so the three active enemies are one Pencil, one Wedge and
+        ///one Saucer.
+        ///</summary>
+        private int ChooseEnemyHull()
+        {
+            int[] activePerHull = new int[enemyShipModels.Length];
+
+            foreach (EnemyShip enemy in enemyShips)
+            {
+                if (!enemy.IsActive || enemy.IsAlly)
+                {
+                    continue;
+                }
+
+                for (int i = 0; i < enemyShipModels.Length; i++)
+                {
+                    if (enemy.Model == enemyShipModels[i])
+                    {
+                        activePerHull[i] += 1;
+                        break;
+                    }
+                }
+            }
+
+            int bestHull = 0;
+
+            for (int i = 1; i < activePerHull.Length; i++)
+            {
+                if (activePerHull[i] < activePerHull[bestHull])
+                {
+                    bestHull = i;
+                }
+            }
+
+            return bestHull;
+        }
+
+        ///<summary>
+        ///Spawns a enemy ship at a random spot comfortably away from the
         ///player.
         ///</summary>
         private void SpawnEnemyShip()
         {
+            int hull = ChooseEnemyHull();
+            Model model = enemyShipModels[hull];
+
             EnemyShip enemy = new()
             {
                 IsAlly = false,
                 IsActive = true,
-                Model = enemyShipModel,
-                Transforms = enemyShipTransforms,
+                Model = model,
+                Transforms = enemyShipTransforms[hull],
                 Shield = GameVariables.Shield,
                 //the enemies wear the opposite color of the player's team
                 Tint = enemyTeamColor,
@@ -435,14 +461,14 @@ namespace GalactikWars.Screens
                 < GameVariables.EnemySpawnDistance
                     * GameVariables.EnemySpawnDistance);
 
-            enemy.Radius = enemyShipModel.Meshes[0].BoundingSphere.Radius
+            enemy.Radius = model.Meshes[0].BoundingSphere.Radius
                 * GameVariables.shipBoundingSphereScale * 2;
 
             enemyShips.Add(enemy);
         }
 
         ///<summary>
-        ///Spawns (or respawns) the blue ally escort near the player.
+        ///Spawns (or respawns) the ally escort near the player.
         ///</summary>
         private void SpawnAllyShip()
         {
@@ -464,7 +490,7 @@ namespace GalactikWars.Screens
         }
 
         ///<summary>
-        ///Steers the red enemies and the blue ally: enemies close in on the
+        ///Steers the red enemies and the ally: enemies close in on the
         ///player with their guns locked on, while the ally escorts the
         ///player and shoots at the nearest enemy.
         ///</summary>
@@ -531,7 +557,7 @@ namespace GalactikWars.Screens
                 }
             }
 
-            //the blue ally escorts: it flies with the player, guns on enemies
+            //the ally escorts: it flies with the player, guns on enemies
             if (allyShip.IsActive)
             {
                 Vector3 toPlayer = p.ship.Position - allyShip.Position;
@@ -954,7 +980,7 @@ namespace GalactikWars.Screens
                     activeAsteroids = 0;
                     p.AtomBombs -= 1;
 
-                    //the blast takes the red enemy ships with it
+                    //the blast takes the enemy ships with it
                     foreach (EnemyShip enemy in enemyShips)
                     {
                         if (enemy.IsActive && !enemy.IsAlly)
@@ -1163,7 +1189,7 @@ namespace GalactikWars.Screens
                     bulletCooldownTimer = 0.0f;
                 }
 
-                //steer the red enemies and the blue ally, then simulate them
+                //steer the red enemies and the ally, then simulate them
                 SteerShips(gameTime);
 
                 p.Update(gameTime);
@@ -1181,7 +1207,7 @@ namespace GalactikWars.Screens
                     allyShip.Update(gameTime);
                 }
 
-                //a destroyed red enemy returns after a short delay, as long
+                //a destroyed enemy returns after a short delay, as long
                 //as the squadron is below its quota
                 enemyRespawnTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -1205,7 +1231,7 @@ namespace GalactikWars.Screens
                     }
                 }
 
-                //the blue ally returns a few seconds after it falls, as long
+                //the ally returns a few seconds after it falls, as long
                 //as the player is still flying
                 if (!allyShip.IsActive && p.ship.IsActive && p.lives > 0)
                 {
@@ -1357,7 +1383,7 @@ namespace GalactikWars.Screens
                     }
                 }
 
-                //player and ally fire against the red enemy / blue ally ships
+                //player and ally fire against the enemy / ally ships
                 foreach (EnemyShip enemy in enemyShips)
                 {
                     if (!enemy.IsActive || enemy.IsAlly)
@@ -1378,7 +1404,7 @@ namespace GalactikWars.Screens
                             enemyExplosionScreen.X, enemyExplosionScreen.Y,
                             random.Next(10, 15), 2);
 
-                        //a red enemy ship was destroyed
+                        //a enemy ship was destroyed
                         soundHandler.PlayCue("explosion2");
                     }
 
@@ -1425,7 +1451,7 @@ namespace GalactikWars.Screens
                     }
                 }
 
-                //red enemy fire against the player and the blue ally
+                //enemy fire against the player and the ally
                 foreach (EnemyShip enemy in enemyShips)
                 {
                     if (!enemy.IsActive || enemy.IsAlly)
@@ -1462,7 +1488,7 @@ namespace GalactikWars.Screens
                             allyShip, enemy)
                         && !allyShip.IsActive)
                     {
-                        //the blue escort went down
+                        //the ally escort went down
                         Vector2 allyHitScreen = WorldToScreen(new Vector3(
                             collisionsHandler.explosionPosition.X,
                             collisionsHandler.explosionPosition.Y, 0.0f));
@@ -1677,7 +1703,7 @@ namespace GalactikWars.Screens
             DrawShooting(p);
             DrawPlayer(p);
 
-            //red enemy ships and their bullets
+            //enemy ships and their bullets
             foreach (EnemyShip enemy in enemyShips)
             {
                 if (enemy.IsActive)
@@ -1704,7 +1730,7 @@ namespace GalactikWars.Screens
                 }
             }
 
-            //the blue ally escort
+            //the ally escort
             if (allyShip.IsActive)
             {
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);

@@ -106,7 +106,8 @@ How the game plays today — keep these in sync when touching gameplay code:
 - **Controls**: `W`/`S` move, `A`/`D` rotate, `Space` fires bullets, `R`
   fires rockets, `B` triggers the atom bomb (single-player only). `E`/`Q`
   zoom. Menus are navigable with `W`/`S` as well as the arrow keys
-  (`InputState.MenuUp/MenuDown`; select = `Space`/`Enter`, cancel =
+  (`InputState.MenuUp/MenuDown`, plus `MenuLeft/MenuRight` for horizontal
+  actions such as the ship colour; select = `Space`/`Enter`, cancel =
   `Escape`). Mouse buttons map to the same weapons (left = bullets, right =
   rockets, middle = bomb). Movement is **keyboard-only** — the old
   mouse-steering (`VariationX/Y`, `MouseMoved`) was removed from
@@ -183,26 +184,31 @@ How the game plays today — keep these in sync when touching gameplay code:
   splits). All of this is single-player only: multiplayer is ship-vs-ship
   with no asteroids.
 - **Enemy/ally ships (phase 3, single-player only)**: `EnemyShip`
-  (Entities/EnemyShip.cs) covers both roles via `IsAlly` — red enemies
-  (`p1_pencil` model) hunt the player: they steer the
+  (Entities/EnemyShip.cs) covers both roles via `IsAlly` — enemies
+  (the opposite team's hulls) hunt the player: they steer the
   nose (`RotationMatrix.Backward`, same convention as the player ship)
   toward the player at `GameVariables.EnemyTurnRate`, strafe toward them
   (thrust independent of facing) until `EnemyStandoff`, and fire along the
   nose when aligned (< 0.35 rad) and in range, on a ~0.9–1.9 s cooldown.
   Destroyed enemies respawn after `EnemySpawnSeconds` while the count is
-  below `NumEnemyShips`. The blue ally (`p1_saucer`) escorts:
-  it flies toward the player until `AllyStandoff` (emitting the same twin
-  frontal bursts while thrusting), aims at the nearest active enemy and
-  fires; it respawns 3 s after falling (only while the player lives). Hits:
+  below `NumEnemyShips`; `ChooseEnemyHull` picks the hull that is least
+  common in the squadron, so the three active enemies fly one Pencil, one
+  Wedge and one Saucer. The ally escort (the chosen escort's hull) flies
+  with the pilot: it moves toward the player until `AllyStandoff` (emitting
+  the same twin frontal bursts while thrusting), aims at the nearest active
+  enemy and fires; it respawns 3 s after falling (only while the player
+  lives). Hits:
   bullets −10 shield, rockets destroy outright (`CheckForBulletEnemyShip`,
   `CheckForRocketEnemyShip`, `CheckForAllyBulletEnemyShip` — ally kills
   credit the player's score —, `CheckForEnemyBulletShip`,
   `CheckForEnemyBulletAlly`); kills score `EnemyShipBonus` (500) and the
-  atom bomb also wipes the squadron. **Team colors**: the player's hull
-  decides the teams (`p1` hulls = blue team, `p2` = red, resolved in
-  `LoadContent`) — every `EnemyShip` carries a `Tint` set at spawn: the
-  ally wears the player's color, enemies the opposite color; the player
-  hull itself is drawn untinted. **Ship-vs-ship shield collisions**
+  atom bomb also wipes the squadron. **Team colors**: the paint scheme picked
+  on the ship screen decides the teams (`p1` hulls = blue team, `p2` = red,
+  from `ShipProfile` in `LoadContent`) — every `EnemyShip` carries a `Tint`
+  set at spawn: the ally wears the player's color, enemies the opposite
+  color; the player hull itself is drawn untinted. Enemy and escort models
+  are swapped into their team's family with `ShipProfile.ForTeam` so the
+  textures match the tint. **Ship-vs-ship shield collisions**
   (`CheckForPlayerEnemyShipCollision`, `CheckForAllyEnemyShipCollision`):
   hull contact drains both shields by `ShipCollideDamage` (15) — while
   both hold, the ships bounce apart (`BounceApart`: opposing impulses of
@@ -210,17 +216,34 @@ How the game plays today — keep these in sync when touching gameplay code:
   when one shield gives in (< 0), that ship blows up while the shielded
   one survives (both giving in destroys both). Enemy/ally ships ignore
   asteroids (future polish) and multiplayer has none of this.
-- **Escort selection (phase 3, single-player only)**: Single Player first
-  pushes `EscortSelectionScreen` **on top of** the main menu (`AddScreen`,
-  not `LoadingScreen.Load`, so Escape returns to the menu). Choosing an entry
-  loads `GameplayScreenSinglePlayer(escort)`. The five escorts live in
+- **Ship selection (phase 3, single-player only)**: Single Player pushes
+  `ShipSelectionScreen` **on top of** the main menu (`AddScreen`, not
+  `LoadingScreen.Load`, so Escape returns to the menu). The screen lists the
+  three hulls (Pencil/Wedge/Saucer); up/down changes the hull and
+  left/right flips the paint scheme between Blue (`p1`) and Red (`p2`), so
+  the menu shows three entries instead of six. `ShipProfile.Create(hull,
+  blueTeam)` in `Entities/ShipProfile.cs` builds the picked profile. The
+  preview draws the hull with `ModelPreviewRenderer` (a `BasicEffect` camera
+  in front of the hull, 30 degrees above its plane, far back with a narrow
+  field of view so it keeps its proportions, auto-framed from the model's
+  merged bounding sphere, drawn into a back-buffer sub-viewport); the spin
+  is a yaw turn, so the hull is seen from the front instead of the top. The
+  pick is passed to `EscortSelectionScreen(ship)` and then to
+  `GameplayScreenSinglePlayer(ship, escort)`, which loads exactly that hull
+  (the old random pick is gone) and derives the team tints from it.
+- **Escort selection (phase 3, single-player only)**: `ShipSelectionScreen`
+  pushes `EscortSelectionScreen` **on top of** itself (`AddScreen`, so Escape
+  returns to the ship picker). Choosing an entry loads
+  `GameplayScreenSinglePlayer(ship, escort)`. The five escorts live in
   `Entities/EscortProfile.cs` (`All`); each grants exactly one pilot
   advantage — Guardian +50 shield, Scout ×1.25 thrust, Rocketeer +10 rockets,
   Bombardier +2 atom bombs, Gunner half the fire interval. The gameplay
   screen calls `Player.ApplyEscort` in `LoadContent`, and `WarpToCenter`
   refills from `Player.Escort`, so the advantage survives every respawn. The
-  escort's hull is `EscortProfile.AllyModelName` (p1 hulls, tinted with the
-  player's team color) and the HUD draws `Escort: <name>`. `EscortProfile.
+  escort screen previews the pilot's hull next to the highlighted escort,
+  tinted with the pilot's team color; the escort's hull is
+  `EscortProfile.AllyModelName` swapped into the pilot's team family with
+  `ShipProfile.ForTeam`, and the HUD draws `Escort: <name>`. `EscortProfile.
   Standard` is the fallback loadout when no escort is picked.
 - **Death flow (single-player)**: no manual respawn key. When the ship dies
   with lives left, a 1 s `respawnTimer` calls `WarpToCenter()` with the
@@ -240,6 +263,16 @@ How the game plays today — keep these in sync when touching gameplay code:
   `ScrollingBackground.UnLoadContent` only drops the reference. Multiplayer
   stretches its background to the viewport as well and has no scrolling
   starfield.
+- **Level 2 movement (planned, not implemented yet)**: when the level/boss
+  work lands, level 2 becomes a fixed-screen vertical shooter — `W`/`A`/`S`/`D`
+  move up/left/down/right only (no rotation, no thrust-along-facing) and the
+  enemies enter from the top of the screen. Level 1 keeps the current
+  free-roaming controls.
+- **Background textures (review planned)**: the space backdrops (`galaxy`,
+  `aurora`, `nebula`, `nebula2`, `planets`, `starfield`) are inherited from
+  the port; a later pass should replace them with better images —
+  higher resolution, seamless tiles for the scrolling starfield, and a
+  consistent style across levels.
 - **Lighting**: `SetupEffectDefaults` and `DrawModel` in both gameplay
   screens set `effect.AmbientLightColor` to `(0.55, 0.55, 0.55)` right after
   `EnableDefaultLighting()` — it is a `Vector3`, not a `Color`.
