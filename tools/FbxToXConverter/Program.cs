@@ -17,6 +17,8 @@ using System.Text.RegularExpressions;
 //   - parses Mesh Model nodes (vertices, polygon indices, normals, UVs),
 //   - unrolls polygon-vertex attributes into a split vertex list,
 //   - fan-triangulates polygons,
+//   - flips the V texture coordinate from FBX's bottom-up UV space to the
+//     top-down convention DirectX .x and MonoGame use,
 //   - bakes the node transform into a FrameTransformMatrix, so the bone
 //     hierarchy matches what the original XNA pipeline produced,
 //   - writes a DirectX .x text file next to the source, referencing the
@@ -342,6 +344,12 @@ namespace FbxToXConverter
 
                 u = uvLayer.Data[uvIndex * 2];
                 v = uvLayer.Data[uvIndex * 2 + 1];
+
+                // FBX/Maya UVs have their origin at the bottom-left, while
+                // DirectX .x (and MonoGame) sample textures top-down, so V
+                // must be flipped or the whole atlas lands upside down on the
+                // hull (exhaust strip on the nose, cockpit on the tail).
+                v = 1.0f - v;
             }
 
             outUvs.Add(u);

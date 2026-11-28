@@ -63,7 +63,8 @@ server required.
 * 🎥 **Dynamic camera** — 2D top-down and 3D views with zoom in/out
 * 🛡️ **Escort selection** — pick a wingman before each run, each granting one
   pilot advantage (shield, thrust, rockets, atom bombs or fire rate)
-* 🌌 **Scrolling starfield background** with aurora, galaxy and nebula layers
+* 🌌 **Scrolling starfield background** — a random space backdrop on level 1
+  and a long starfield strip scrolling past from level 2 onward
 * 🎵 **A full soundtrack** — six music tracks, one per game state (menu, loading, battle, lobby, game over, credits), plus engine loops and combat sound effects
 * 🪟 **Modern window** — resizable with maximize, and `F11` for fullscreen
 
@@ -350,12 +351,21 @@ entering from above.
   in the pilot's team colour. The pick is applied to the pilot's loadout at
   the start and on every respawn, the escort flies its own hull, and the HUD
   shows its name
+* [x] Correct ship textures — the FBX → `.x` converter now flips the V
+  texture coordinate (FBX/Maya UVs are bottom-up, DirectX `.x` and MonoGame
+  are top-down), so the hull atlases land on the right faces instead of being
+  stretched across the model
+* [x] Level backdrops — level 1 (and the fallback levels) picks one of the
+  four `Space_Background1-4` images at random per level, drawn stretched over
+  the whole viewport with a subtle ship-following parallax
 * [x] A looping starfield background scrolling continuously top → down
   (Raptor-style, the heart of the Level 2 gameplay) — `ScrollingBackground`
-  now stretches the 1024² starfield over the viewport and samples it with
-  linear wrapping while it scrolls, so it loops seamlessly; level 1 keeps its
-  static, ship-following backdrop and the starfield takes over from level 2
-  (`GameVariables.FirstScrollingLevel`)
+  stretches the rotated `starfield` image (the 10000x4000 source turned 90°
+  and scaled to 1280x3200, so one screen shows a slice of a long strip) over
+  the viewport and samples it with linear wrapping while it scrolls, so it
+  loops seamlessly. The starfield takes over from level 2
+  (`GameVariables.FirstScrollingLevel`); the planned level 2 traverses the
+  strip once from start to end with the boss waiting at the end
 * [ ] Waves of enemy ships and asteroids attacking together
 * [ ] One random bigger **Level Boss** per level with a movement/attack
   pattern to learn and avoid
@@ -364,13 +374,20 @@ entering from above.
 ### 🔮 Phase 4 — Backlog
 
 * [ ] Single configuration file — move all tunables (volumes, key bindings, ship/rocket/asteroid stats, zoom limits, enemy waves...) into one `config.json`, loaded at startup with `System.Text.Json` (built into .NET 10 — the standard choice for game settings; more portable than a legacy `.ini`, and a `.cs` file is compiled code, not data)
-* [ ] Background texture review — replace the inherited space backdrops (`galaxy`, `aurora`, `nebula`, `nebula2`, `planets`, `starfield`) with better images: higher resolution, seamless tiles for the scrolling starfield, and one consistent style across levels
+* [ ] Background texture review — the level 1 backdrops now use
+  `Space_Background1-4` and level 2 uses the rotated `starfield`, but they
+  should be re-authored as one consistent set: seamless tiles for the
+  scrolling starfield, a higher-resolution source for the long level-2 strip,
+  and matching colour grading across levels
 * [ ] Better explosions with layered particle effects, and the atom bomb as an expanding EMP-style shockwave ring fired from the ship
 * [ ] Improved volume options — Music and Effect volume on separate rows, adjustable with the mouse (click/drag a `- o +` slider) or the `-`/`+` keys on the selected row, always showing integer percentages (no float rounding artifacts)
 * [ ] Glowing shield effect — a glowing sphere around the ship (shader-based, no model needed) that fades as the shield decreases and flashes when it takes a hit
 * [ ] Event prediction (predicting collisions/movements ahead of time — the one failed objective from the original reports)
 * [ ] More multiplayer modes: up to 3 game instances on one PC with distinct controls per player, and AI-controlled opponents in multiplayer
 * [ ] Show all controls on the pause screen
+* [ ] Pause option — freeze the match while the pause menu is open and resume
+  exactly where it stopped (`ESC` already opens the menu; add it to the
+  menus too and confirm the simulation is really frozen)
 * [ ] Rebindable controls with a "reset to default" option in the menus
 * [ ] Gamepad support
 * [ ] Full 3D camera controls (a deeper take on the current 2.5D view)

@@ -184,26 +184,9 @@ namespace GalactikWars.Screens
             shieldModel = content.Load<Model>("models/sphere");
             shieldTransforms = SetupEffectDefaults(shieldModel);
 
-            if (random.NextDouble() <= 0.2)
-            {
-                stars = content.Load<Texture2D>("textures/galaxy");
-            }
-            else if (random.NextDouble() <= 0.4)
-            {
-                stars = content.Load<Texture2D>("textures/aurora");
-            }
-            else if (random.NextDouble() <= 0.6)
-            {
-                stars = content.Load<Texture2D>("textures/nebula");
-            }
-            else if (random.NextDouble() <= 0.8)
-            {
-                stars = content.Load<Texture2D>("textures/nebula2");
-            }
-            else
-            {
-                stars = content.Load<Texture2D>("textures/planets");
-            }
+            //one of the static space backdrops, picked at random per match
+            stars = content.Load<Texture2D>(
+                "textures/Space_Background" + (random.Next(4) + 1));
 
             particlesTexture = content.Load<Texture2D>("textures/multicolored");
 

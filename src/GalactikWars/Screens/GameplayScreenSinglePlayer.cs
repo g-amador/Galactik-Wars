@@ -52,11 +52,13 @@ namespace GalactikWars.Screens
 
         //Visual components
         private ScrollingBackground myBackground;
-        private Texture2D space1 = null;
-        private Texture2D space2 = null;
-        private Texture2D space3 = null;
-        private Texture2D space4 = null;
-        private Texture2D space5 = null;
+
+        //level 1 picks one of the static space backdrops at random; the
+        //scrolling starfield replaces them from level 2 onwards
+        private const int SpaceBackgroundCount = 4;
+        private readonly Texture2D[] spaceBackgrounds =
+            new Texture2D[SpaceBackgroundCount];
+        private Texture2D levelBackground = null;
         private Texture2D starfieldTexture = null;
         private Texture2D particlesTexture = null;
 
@@ -211,13 +213,15 @@ namespace GalactikWars.Screens
             shieldModel = content.Load<Model>("models/sphere");
             shieldTransforms = SetupEffectDefaults(shieldModel);
 
-            //the static backdrops (level 1 and fallback levels) plus the
-            //scrolling starfield that takes over from level 2 onwards
-            space1 = content.Load<Texture2D>("textures/galaxy");
-            space2 = content.Load<Texture2D>("textures/aurora");
-            space3 = content.Load<Texture2D>("textures/nebula");
-            space4 = content.Load<Texture2D>("textures/nebula2");
-            space5 = content.Load<Texture2D>("textures/planets");
+            //the static space backdrops (one is picked at random per level)
+            //plus the scrolling starfield that takes over from level 2 onwards
+            for (int i = 0; i < spaceBackgrounds.Length; i++)
+            {
+                spaceBackgrounds[i] = content.Load<Texture2D>(
+                    "textures/Space_Background" + (i + 1));
+            }
+
+            ChooseSpaceBackground();
 
             if (GameVariables.ScrollingBackgroundIsActive)
             {
@@ -284,29 +288,12 @@ namespace GalactikWars.Screens
                 starfieldTexture.Dispose();
             }
 
-            if (space1 != null)
+            for (int i = 0; i < spaceBackgrounds.Length; i++)
             {
-                space1.Dispose();
-            }
-
-            if (space2 != null)
-            {
-                space2.Dispose();
-            }
-
-            if (space3 != null)
-            {
-                space3.Dispose();
-            }
-
-            if (space4 != null)
-            {
-                space4.Dispose();
-            }
-
-            if (space5 != null)
-            {
-                space5.Dispose();
+                if (spaceBackgrounds[i] != null)
+                {
+                    spaceBackgrounds[i].Dispose();
+                }
             }
 
             if (particlesTexture != null)
@@ -321,6 +308,21 @@ namespace GalactikWars.Screens
 
         #region Auxiliar Functions
 
+        ///<summary>
+        ///Picks one of the static space backdrops at random. Called once the
+        ///textures are loaded and again whenever a level restarts, so a run
+        ///does not always open on the same sky.
+        ///</summary>
+        private void ChooseSpaceBackground()
+        {
+            if (spaceBackgrounds[0] == null)
+            {
+                return;
+            }
+
+            levelBackground = spaceBackgrounds[random.Next(spaceBackgrounds.Length)];
+        }
+
         private void ResetAsteroids()
         {
             float xStart;
@@ -330,6 +332,10 @@ namespace GalactikWars.Screens
             {
                 GameVariables.CurrentLevel += 1;
             }
+
+            //every level gets a fresh backdrop; the starfield only kicks in
+            //from level 2 onwards
+            ChooseSpaceBackground();
 
             for (int i = 0; i < GameVariables.NumAsteroids2; i++)
             {
@@ -1656,24 +1662,7 @@ namespace GalactikWars.Screens
                     (int)(viewport.Width + 2 * marginX),
                     (int)(viewport.Height + 2 * marginY));
 
-                Texture2D background = space1;
-
-                if (GameVariables.CurrentLevel == 2)
-                {
-                    background = space2;
-                }
-                else if (GameVariables.CurrentLevel == 3)
-                {
-                    background = space3;
-                }
-                else if (GameVariables.CurrentLevel == 4)
-                {
-                    background = space4;
-                }
-                else if (GameVariables.CurrentLevel > 4)
-                {
-                    background = space5;
-                }
+                Texture2D background = levelBackground ?? spaceBackgrounds[0];
 
                 spriteBatch.Draw(background, destination, Color.White);
 

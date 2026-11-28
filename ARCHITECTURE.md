@@ -106,9 +106,12 @@ Root-level classes: `Game` (entry point + F11 fullscreen toggle) and
 collision pass between ships, asteroids and projectiles; `Particles/`
 (`Particle`, `ParticleSystem`) renders explosions and trails.
 `Entities/ScrollingBackground` is the level 2+ Raptor-style backdrop: it
-stretches the starfield texture to the viewport width and loops it top → down
-with linear wrapping (the gameplay screen draws it with
-`SamplerState.LinearWrap`).
+stretches the rotated `textures/starfield` (the 10000x4000 source turned 90°
+and scaled to 1280x3200, so one screen shows a slice of a long strip) to the
+viewport width and loops it top → down with linear wrapping (the gameplay
+screen draws it with `SamplerState.LinearWrap`). Level 1 instead picks one of
+`textures/Space_Background1-4` at random per level and draws it with a
+parallax shift.
 
 ### 2.6 Audio — `Handlers/SoundHandler.cs`
 
@@ -206,9 +209,10 @@ source tree — and its paths are relative to that folder. It imports:
 - **Models** — 11 DirectX `.x` meshes under `assets/models/`: the 4 original
   asteroids plus the 7 ships/sphere converted from FBX (see §5). Built with
   the `XImporter`.
-- **Textures** — `.png`, `.tga` and `.dds` files under `assets/textures/`
-  (plus UI textures under `assets/ui/`), built with their respective
-  importers.
+- **Textures** — `.png` and `.tga` files under `assets/textures/` (plus UI
+  textures under `assets/ui/`), built with their respective importers. The
+  level backdrops are `Space_Background1-4.png` (1920x1080) and
+  `starfield.png` (the rotated 1280x3200 level-2 strip).
 - **Fonts** — 3 spritefonts under `assets/fonts/` (`gamefont`, `menufont`,
   `LucidaConsole`). The original `Lucida Console.spritefont` was renamed to
   `LucidaConsole.spritefont` (the MGCB parser does not strip quotes from
@@ -235,6 +239,10 @@ small converter tool lives in `tools/FbxToXConverter/`:
   `Model … "Mesh"` node; arrays are inline, spanning multiple lines).
 - Unrolls polygon-vertex attributes (normals `ByVertice`/`ByPolygonVertex`,
   UVs `Direct`/`IndexToDirect`) into a split vertex list.
+- Flips the V texture coordinate (`v = 1 - v`): FBX/Maya UV space is
+  bottom-up, DirectX `.x` and MonoGame sample top-down. Without the flip the
+  hull atlas lands upside down on the model and reads as stretched or
+  misaligned.
 - Fan-triangulates polygons.
 - Bakes the owning node transform into a `FrameTransformMatrix` so the bone
   hierarchy matches what the original XNA pipeline produced.

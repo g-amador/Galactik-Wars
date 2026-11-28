@@ -251,28 +251,35 @@ How the game plays today — keep these in sync when touching gameplay code:
   to the main menu via `LoadingScreen.Load` (once, guarded by
   `returnedToMenu`).
 - **Background (single-player)**: level 1 (and the fallback levels when the
-  feature is off) uses a per-level texture drawn stretched over the whole
-  viewport with a ±5% parallax margin following the ship. From
-  `GameVariables.FirstScrollingLevel` (2) onwards, `ScrollingBackground`
-  draws the `textures/starfield` DDS as the Raptor-style backdrop: the
-  texture is stretched to the window width and sampled with
+  scrolling feature is off) picks one of `textures/Space_Background1-4` at
+  random per level (`ChooseSpaceBackground`, re-rolled in `ResetAsteroids`),
+  drawn stretched over the whole viewport with a ±5% parallax margin
+  following the ship. From `GameVariables.FirstScrollingLevel` (2) onwards,
+  `ScrollingBackground` draws `textures/starfield` as the Raptor-style
+  backdrop: the texture is stretched to the window width and sampled with
   `SamplerState.LinearWrap` while `scrollY` runs backwards through the
   texture, so the stars move top → down and the loop is seamless. The
   gameplay screen must `Begin` with `SamplerState.LinearWrap` for that draw
   (it does), and it owns/disposes the starfield texture —
   `ScrollingBackground.UnLoadContent` only drops the reference. Multiplayer
-  stretches its background to the viewport as well and has no scrolling
+  picks one of the same four backdrops at random and has no scrolling
   starfield.
+- **Starfield asset**: `assets/textures/starfield.jpg` is the 10000x4000
+  source; the build uses `starfield.png`, the same image rotated 90° and
+  scaled to 1280x3200, so a 720p screen shows one slice of a long vertical
+  strip instead of squashing the whole panorama. The planned level 2
+  traverses that strip once from start to end with the boss at the end; for
+  now it loops.
 - **Level 2 movement (planned, not implemented yet)**: when the level/boss
   work lands, level 2 becomes a fixed-screen vertical shooter — `W`/`A`/`S`/`D`
   move up/left/down/right only (no rotation, no thrust-along-facing) and the
   enemies enter from the top of the screen. Level 1 keeps the current
   free-roaming controls.
-- **Background textures (review planned)**: the space backdrops (`galaxy`,
-  `aurora`, `nebula`, `nebula2`, `planets`, `starfield`) are inherited from
-  the port; a later pass should replace them with better images —
-  higher resolution, seamless tiles for the scrolling starfield, and a
-  consistent style across levels.
+- **Background textures (review planned)**: the space backdrops are now the
+  `Space_Background1-4` images plus the rotated `starfield`; a later pass
+  should re-author them as one consistent set — seamless tiles for the
+  scrolling starfield, a higher-resolution level-2 strip, and matching
+  colour grading across levels.
 - **Lighting**: `SetupEffectDefaults` and `DrawModel` in both gameplay
   screens set `effect.AmbientLightColor` to `(0.55, 0.55, 0.55)` right after
   `EnableDefaultLighting()` — it is a `Vector3`, not a `Color`.
@@ -310,9 +317,13 @@ dotnet run --project tools/FbxToXConverter -- assets/models/<name>.fbx
 
 It writes `<name>.x` next to the source, bakes the node transform into a
 `FrameTransformMatrix`, unrolls polygon-vertex attributes and fan-triangulates
-polygons. The FBX parser only understands the FBX 6.0 *inline array* syntax
-(`Vertices: 1,2,…` terminated by a blank line) and name-based `Connect:` links
-— not FBX 6.1+ `*N { a: … }` arrays or numeric-ID connections.
+polygons. It also **flips V** (`v = 1 - v`): FBX/Maya UVs are bottom-up while
+DirectX `.x` and MonoGame sample top-down, and without the flip the hull
+atlases land upside down (exhaust strip on the nose, cockpit on the tail) and
+read as stretched/misaligned. The FBX parser only understands the FBX 6.0
+*inline array* syntax (`Vertices: 1,2,…` terminated by a blank line) and
+name-based `Connect:` links — not FBX 6.1+ `*N { a: … }` arrays or numeric-ID
+connections.
 
 ## Networking library invariants
 
